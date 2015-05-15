@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{29B98EA3-F17B-4214-96A7-93900A78B117}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\font-awesome.min.css">
+      <DependentUpon>font-awesome.css</DependentUpon>
+    </Content>
+    <Content Include="css\fonts\fontawesome-webfont.svg" />
+    <Content Include="css\index.css" />
+    <Content Include="css\normalize.css" />
+    <Content Include="css\normalize.min.css">
+      <DependentUpon>normalize.css</DependentUpon>
+    </Content>
+    <Content Include="img\logo.png" />
+    <Content Include="index.html" />
+    <Content Include="lib\angular.min.js" />
+    <Content Include="lib\three.min.js" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="js\app.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-resource.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-route.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-sanitize.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\detector.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-canvasrenderer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-copyshader.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-css3drenderer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-effectcomposer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-maskpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-orbitcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-projector.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-renderpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-shaderpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-trackballcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\webaudioapi\waa-20120802.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\webaudioapi\waa-nightly.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\webaudioapi\waa.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\webrtc\MediaStream.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\webrtc\RTCPeerConnection.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="etc\plen2_model.json" />
+    <Content Include="packages.config" />
+    <Content Include="css\fonts\fontawesome-webfont.eot" />
+    <Content Include="css\fonts\fontawesome-webfont.ttf" />
+    <Content Include="css\fonts\fontawesome-webfont.woff" />
+    <Content Include="css\fonts\fontawesome-webfont.woff2" />
+    <Content Include="css\fonts\FontAwesome.otf" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js\controllers\" />
+    <Folder Include="js\directives\" />
+    <Folder Include="js\filters\" />
+    <Folder Include="js\services\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>web_motion_editor</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54146</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:54146/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

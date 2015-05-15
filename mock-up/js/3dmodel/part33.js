@@ -1,0 +1,80 @@
+// name = thigh r
+// verticesNum = 24
+// indicesNum = 44
+// center = ( -23.549801, -42.849998, -2.250000 )
+// length = ( 34.900002, 31.299999, 12.500000 ) 
+function initPartsValues33() {
+	var geometry = new THREE.Geometry();
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -41.7000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3(  -7.2998, -41.7000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -39.7998, -41.7000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -54.0500,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -41.7000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -54.0500,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -41.7000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3( -39.7998, -41.7000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -7.2998, -41.7000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -54.0500,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -41.7000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -54.0500,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -27.2000,  -2.0000 ));
+	geometry.vertices.push(new THREE.Vector3(  -7.2998, -27.2000,  -2.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -39.7998, -28.5000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -28.5000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -40.9998, -28.5000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3( -39.7998, -28.5000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -7.2998, -27.2000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3(  -6.0998, -27.2000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3( -10.5498, -58.5000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -36.5498, -58.5000,   4.0000 ));
+	geometry.vertices.push(new THREE.Vector3( -36.5498, -58.5000,  -8.5000 ));
+	geometry.vertices.push(new THREE.Vector3( -10.5498, -58.5000,  -8.5000 ));
+	geometry.faces.push(new THREE.Face3(   2,   20,    1, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   2,   21,   20, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   8,   22,    7, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   8,   23,   22, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  21,   23,   20, new THREE.Vector3( 0.00, -1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  21,   22,   23, new THREE.Vector3( 0.00, -1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   1,    7,    2, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   1,    8,    7, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  11,   20,   23, new THREE.Vector3( 0.71, -0.71, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  11,    3,   20, new THREE.Vector3( 0.71, -0.71, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  22,    5,    9, new THREE.Vector3( -0.71, -0.71, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  22,   21,    5, new THREE.Vector3( -0.71, -0.71, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  14,   16,   15, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  14,   17,   16, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  12,   18,   13, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  12,   19,   18, new THREE.Vector3( 0.00, 1.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  13,    0,   12, new THREE.Vector3( 0.00, 0.38, 0.92 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  13,    1,    0, new THREE.Vector3( 0.00, 0.38, 0.92 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   7,    9,    6, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   7,   22,    9, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  21,    4,    5, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  21,    2,    4, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  15,    2,   14, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  15,    4,    2, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  17,    6,   16, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  17,    7,    6, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   8,   19,   10, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   8,   18,   19, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  23,   10,   11, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  23,    8,   10, new THREE.Vector3( 0.00, 0.00, -1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   3,    1,   20, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   3,    0,    1, new THREE.Vector3( 0.00, 0.00, 1.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   4,    9,    5, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   4,    6,    9, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   3,   10,    0, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   3,   11,   10, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   6,   15,   16, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   6,    4,   15, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   0,   19,   12, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(   0,   10,   19, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  13,    8,    1, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  13,   18,    8, new THREE.Vector3( -1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  17,    2,    7, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	geometry.faces.push(new THREE.Face3(  17,   14,    2, new THREE.Vector3( 1.00, 0.00, 0.00 ).normalize()));
+	var material = new THREE.MeshLambertMaterial( {color:0xF1F1F1} );
+	var mesh = new THREE.Mesh( geometry, material );
+	var center = new THREE.Vector3( -23.549801, -42.849998, -2.250000 );
+	return [mesh,center];
+}

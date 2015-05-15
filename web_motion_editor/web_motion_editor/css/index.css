@@ -1,0 +1,89 @@
+﻿html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #44B549;
+	overflow: hidden;
+}
+
+button {
+	display: inline-block;
+	border: solid 4px #FFFFFF;
+	border-radius: 10px;
+	margin: 10px 0 0 10px;
+	color: #FFFFFF;
+	background-color: transparent;
+}
+
+button:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+#logo {
+    margin: 10px 0;
+}
+
+#logo img {
+	display: block;
+	margin: 0 auto;
+}
+
+#model_viewer canvas {
+    margin: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #33A02B;
+}
+
+#left_pain {
+    float: left;
+    width: 240px;
+	height: 100%;
+    margin-right: -244px;
+	border-right: dashed 4px #FFFFFF;
+}
+
+#right_pain {
+    float: right;
+    width: 100%;
+    height: 100%;
+}
+
+#indent_container {
+    margin-left: 244px;
+}
+
+#model_viewer {
+	width: 100%;
+	height: 100%;
+}
+
+#scrollable_container {
+	position: absolute;
+	overflow: hidden;
+    padding: 15px 0;
+	border-top: dashed 4px #FFFFFF;
+    height: 158px;
+	width: 100%;
+    bottom: 0;
+}
+
+#frame_editor {
+	width: 4000px;
+    height: 158px;
+}
+
+.frame {
+	display: inline-block;
+	border: solid 4px #FFFFFF;
+	border-radius: 10px;
+	opacity: 0.5;
+	width: 150px;
+	height: 150px;
+	margin: 0 0 0 15px;
+}
+
+.selected-frame {
+	opacity: 1;
+}
