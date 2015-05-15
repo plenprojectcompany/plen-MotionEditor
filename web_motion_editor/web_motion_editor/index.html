@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="description" content="fix me." />
+    <meta name="author" content="Kazuyuki TAKASE" />
+    <title>PLEN2 - Motion Editor.</title>
+
+    <!-- スタイルファイルのロード -->
+    <link rel="stylesheet" href="./css/normalize.min.css" type="text/css" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="./css/index.css" type="text/css" />
+
+    <!-- 外部ライブラリのロード -->
+    <script src="./lib/three.min.js"></script>
+    <script src="./lib/angular.min.js"></script>
+
+    <!-- アプリケーションのロード -->
+    <script src="./js/app.js"></script>
+</head>
+
+<body ng-app="PLEN2WebMotionEditor" ng-strict-di>
+    <div id="left_pain">
+        <div id="logo">
+            <img src="./img/logo.png" width="161" height="202" alt="logo">
+        </div>
+
+        <div id="menu">
+            <div class="group">
+                <button id="open" type="button" title="モーションをファイルから開きます。"><i class="fa fa-fw fa-folder-open fa-4x"></i></button>
+                <button id="save" type="button" title="モーションをファイルに保存します。"><i class="fa fa-fw fa-floppy-o fa-4x"></i></button>
+            </div>
+            <div class="group">
+                <button id="new" type="button" title="新規にモーションを作成します。"><i class="fa fa-fw fa-user-plus fa-4x"></i></button>
+                <button id="home" type="button" title="3Dモデルを初期姿勢に戻します。"><i class="fa fa-fw fa-male fa-4x"></i></button>
+            </div>
+            <div class="group">
+                <button id="play" type="button" title="モーションを再生します。"><i class="fa fa-fw fa-play fa-4x"></i></button>
+                <button id="reset" type="button" title="開始フレームを表示します。"><i class="fa fa-fw fa-stop fa-4x"></i></button>
+            </div>
+            <div class="group">
+                <button id="prev" type="button" title="フレームを1つ戻します。"><i class="fa fa-fw fa-backward fa-4x"></i></button>
+                <button id="next" type="button" title="フレームを1つ進めます。"><i class="fa fa-fw fa-forward fa-4x"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="right_pain">
+        <div id="indent_container">
+            <div id="model_viewer" ng-controller="WebGLController">
+                <!-- THREE.jsのrenderer canvasをここに生成します。 -->
+            </div>
+
+            <div id="scrollable_container">
+                <div id="frame_editor">
+                    <div class="frame selected-frame" data-frame-id="0"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog_new" title="本当に新規にモーションを作成しますか？" style="visibility: hidden">
+        <i class="fa fa-warning fa-3x" style="float: left; color: #FFB300; margin: 20px 10px"></i>
+        <p>
+            現在の作業内容が破棄されます。<br>
+            保存がまだの場合は&quot;いいえ&quot;をクリックしてください。
+        </p>
+    </div>
+</body>
+
+</html>

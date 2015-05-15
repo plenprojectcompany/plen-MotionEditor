@@ -1,0 +1,676 @@
+<!doctype html>
+
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+	<meta name="author" content="Kazuyuki TAKASE" />
+	<title>PLEN2 - Motion Editor.</title>
+
+	<!-- TASK: CDNを用いず，すべてローカルに展開する -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.9/perfect-scrollbar.min.js"></script>
+	<script src="./js/OrbitControls.js"></script>
+	<script src="./js/TransformControls.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/south-street/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.9/perfect-scrollbar.min.css">
+
+	<!-- TASK: グリッドレイアウト化 -->
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #44B549;
+			overflow: hidden;
+		}
+
+		button {
+			display: inline-block;
+			border: solid 4px #FFFFFF;
+			border-radius: 10px;
+			margin: 10px 0 0 10px;
+			color: #FFFFFF;
+			background-color: #44B549;
+		}
+
+		button:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+
+		#logo img {
+			display: block;
+			margin: 0 auto 10px;
+		}
+
+		#model_viewer canvas {
+			padding: 10px;
+			border-radius: 10px;
+			margin-left: 240px;
+			background-color: #33A02B;
+		}
+
+		#container {
+			width: 100%;
+			height: 577px;
+			border-bottom: dashed 4px #FFFFFF;
+			padding: 10px 10px 15px 0;
+		    box-sizing: border-box;
+			-moz-box-sizing: border-box;
+		}
+
+		#menu {
+			float: left;
+			width: 240px;
+		}
+
+		#model_viewer {
+			float: left;
+			width: 100%;
+			height: 100%;
+			margin-left: -240px;
+		}
+
+		#scrollable_container {
+			clear: both;
+			position: relative;
+			overflow: hidden;
+			width: 100%;
+		}
+
+		#frame_editor {
+			width: 4000px;
+			padding-bottom: 20px;
+		}
+
+		.frame {
+			display: inline-block;
+			border: solid 4px #FFFFFF;
+			border-radius: 10px;
+			opacity: 0.5;
+			width: 150px;
+			height: 150px;
+			margin: 15px 0 0 15px;
+		}
+
+		.selected-frame {
+			opacity: 1;
+		}
+	</style>
+
+	<script type="text/javascript">
+		// TASK:
+		// ---
+		// ・クラスへの分割
+		// ・GUIとロジックの分離
+		// ・TypeScriptに変換
+		$(function() {
+			"use strict";
+
+			var scene  = new THREE.Scene();
+
+			var camera = new THREE.PerspectiveCamera(75, ($("#model_viewer").width() - 260) / ($("#model_viewer").height() - 20), 0.1, 5000);
+			camera.up.set(0, 1, 0);
+			camera.position.set(0, 500, 500);
+
+			var renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
+			renderer.setSize($("#model_viewer").width() - 260, $("#model_viewer").height() - 20);
+			renderer.setClearColor(new THREE.Color(0xCCCCCC));
+			renderer.shadowMapEnabled = true;
+			$("#model_viewer").append(renderer.domElement);
+
+			var grid = new THREE.GridHelper(1000, 100);
+			grid.position.set(0, 0, 0);
+			scene.add(grid);
+
+			var controls1 = new THREE.OrbitControls(camera, renderer.domElement);
+			var controls2 = new THREE.TransformControls(camera, renderer.domElement);
+			controls2.setSpace("local");
+			controls2.setMode("rotate");
+			scene.add(controls2);
+
+			var light = new THREE.SpotLight(0xDDDDDD);
+			light.position.set(1000, 1000, 1000);
+			scene.add(light);
+
+			// TASK: クラスの作成
+			var home_quaternions = [];
+			var rotation_axes = [];
+			function addRotationAxis(object)
+			{
+				if (/roll/.test(object.name))
+				{
+					rotation_axes.push(object);
+					home_quaternions.push(object.quaternion.clone());
+				}
+				else if (/pitch/.test(object.name))
+				{
+					rotation_axes.push(object);
+					home_quaternions.push(object.quaternion.clone());
+				}
+				else if (/yaw/.test(object.name))
+				{
+					rotation_axes.push(object);
+					home_quaternions.push(object.quaternion.clone());
+				}
+
+				if (object.children.length > 0)
+				{
+					$.each(object.children, function()
+					{
+						addRotationAxis(this);
+					});
+				}
+			}
+
+			function addObject(object)
+			{
+				scene.add(object);
+				
+				addRotationAxis(object);
+			}
+
+			// TASK: クラスの作成
+			function setScene(scene)
+			{
+				scene.uuid = scene.uuid;
+				scene.name = scene.name;
+				scene.userData = JSON.parse(JSON.stringify(scene.userData));
+
+				while (scene.children.length > 0)
+				{
+					addObject(scene.children[0]);
+				}
+			}
+
+			// TASK: クラスの作成
+			function handleJSON(data, file, filename)
+			{
+				if (data.metadata === undefined)
+				{
+					data.metadata = { type: 'Geometry' };
+				}
+
+				if (data.metadata.type === undefined)
+				{
+					data.metadata.type = 'Geometry';
+				}
+
+				if (data.metadata.version === undefined)
+				{
+					data.metadata.version = data.metadata.formatVersion;
+				}
+
+				if (data.metadata.type === 'BufferGeometry')
+				{
+					var loader = new THREE.BufferGeometryLoader();
+					var result = loader.parse( data );
+
+					var mesh = new THREE.Mesh( result );
+
+					addObject( mesh );
+				}
+				else if (data.metadata.type.toLowerCase() === 'geometry')
+				{
+					var loader = new THREE.JSONLoader();
+					var result = loader.parse( data );
+
+					var geometry = result.geometry;
+					var material;
+
+					if (result.materials !== undefined)
+					{
+						if (result.materials.length > 1)
+						{
+							material = new THREE.MeshFaceMaterial( result.materials );
+						} 
+						else
+						{
+							material = result.materials[ 0 ];
+						}
+					}
+					else
+					{
+						material = new THREE.MeshPhongMaterial();
+					}
+
+					geometry.sourceType = "ascii";
+					geometry.sourceFile = file.name;
+
+					var mesh;
+
+					if (geometry.animation && geometry.animation.hierarchy)
+					{
+						mesh = new THREE.SkinnedMesh( geometry, material );
+					}
+					else
+					{
+						mesh = new THREE.Mesh( geometry, material );
+					}
+
+					mesh.name = filename;
+
+					addObject( mesh );
+				}
+				else if (data.metadata.type.toLowerCase() === 'object')
+				{
+					var loader = new THREE.ObjectLoader();
+					var result = loader.parse( data );
+
+					if (result instanceof THREE.Scene)
+					{
+						setScene(result);
+					}
+					else
+					{
+						addObject( result );
+					}
+				}
+				else if (data.metadata.type.toLowerCase() === 'scene')
+				{
+					var loader = new THREE.SceneLoader();
+					loader.parse( data, function ( result ) {
+						setScene(result.scene);
+					}, '' );
+				}
+			}
+
+			//　TASK: クラスの作成
+			function loadModelJSON(file)
+			{
+				var reader = new FileReader();
+				reader.addEventListener('load', function(event)
+				{
+					var contents = event.target.result;
+
+					if (contents.indexOf('postmessage') !== -1)
+					{
+						var blob = new Blob([contents], { type: 'text/javascript' });
+						var url = URL.createObjectURL(blob);
+
+						var worker = new Worker(url);
+
+						worker.onmessage = function(event)
+						{
+							event.data.metadata = { version: 2 };
+							handleJSON(event.data, file, file.name);
+						};
+
+						worker.postMessage(Date.now());
+
+						return;
+					}
+
+					var data;
+
+					try
+					{
+						data = JSON.parse(contents);
+					}
+					catch(error)
+					{
+						alert(error);
+
+						return;
+					}
+
+					handleJSON(data, file, file.name);
+				}, false);
+
+				reader.readAsText(file);
+			}
+
+			// リサイズイベントのキャプチャ
+			var timer = false;
+			$(window).resize(function()
+			{
+				if (timer !== false)
+				{
+					clearTimeout(timer);
+				}
+
+				timer = setTimeout(function()
+				{
+					camera.aspect = ($("#model_viewer").width() - 260) / ($("#model_viewer").height() - 20);
+					camera.updateProjectionMatrix();
+
+					renderer.setSize($("#model_viewer").width() - 260, $("#model_viewer").height() - 20);
+
+					$("#scrollable_container").perfectScrollbar("update");
+				}, 100);
+			});
+
+			$(document).tooltip({
+				show : { delay : 1000, },
+			});
+
+			$("#scrollable_container").perfectScrollbar({
+				useBothWheelAxes : true,
+				suppressScrollY : true,
+			});
+
+			$("#frame_editor").sortable({
+				revert : true,
+			});
+
+			$("#frame_editor").disableSelection();
+
+			$("#container").droppable({
+				accept : ".frame",
+				tolerance : "fit",
+				drop : function(event, ui)
+				{
+					if ($(".frame").size() != 2)
+					{
+						if(ui.draggable.next().is($(".frame").last()))
+						{
+							ui.draggable.prev().addClass("selected-frame");
+						}
+						else
+						{
+							ui.draggable.next().next().addClass("selected-frame");
+						}
+						ui.draggable.remove();
+					}
+				},
+			});
+
+			$("#frame_editor").mousedown(function()
+			{
+				if ($(event.target).hasClass("frame"))
+				{
+					$(".frame").removeClass("selected-frame");
+					$(event.target).addClass("selected-frame");
+				}
+				else
+				{
+					if ($(".ui-sortable-placeholder").size() != 0)
+					{
+						return;
+					}
+
+					// TASK:  内部状態として最大フレームIDを保持し、data属性に付与する
+					if ($(".frame").size() != 20)
+					{
+						var $frame = $(".selected-frame").clone().removeClass("selected-frame");
+
+						var clicked_x = event.clientX;
+						var $near_next;
+
+						$(".frame").each(function() {
+							if ($(this).offset().left > clicked_x)
+							{
+								$near_next = $(this);
+
+								return false;
+							}
+						});
+
+						if ($near_next !== undefined)
+						{
+							$near_next.before($frame);
+						}
+						else
+						{
+							$("#frame_editor").append($frame);
+						}
+					}
+				}
+			});
+
+			$("#dialog_new").dialog({
+				autoOpen : false,
+				modal : true,
+				draggable : false,
+				resizable : false,
+				width : 550,
+				position : { my: "center", at: "center", of: window },
+				buttons : {
+					"はい" : function()
+					{
+						$(".frame").remove();
+
+						var canvas = $('#model_viewer canvas')[0];
+						var image  = canvas.toDataURL('image/png');
+						var $frame = $("<div/>")
+							.addClass("frame selected-frame")
+							.css({
+								"background" : 'url(' + image + ') no-repeat 50% 50%',
+								"background-size" : "cover",
+							});
+						$("#frame_editor").append($frame);
+
+						$("#scrollable_container").scrollLeft(0);
+						$("#scrollable_container").perfectScrollbar("update");
+
+						$(this).dialog("close");
+					},
+					"いいえ" : function()
+					{
+						$(this).dialog("close");
+					},
+				},
+			});
+
+			// 「新規作成」ボタン
+			$("#new").click(function()
+			{
+				$("#dialog_new").dialog("open");
+			});
+
+			$("#reset").click(function()
+			{
+				$(".selected-frame").removeClass("selected-frame");
+				$(".frame").first().addClass("selected-frame");
+
+				$("#scrollable_container").scrollLeft(0);
+				$("#scrollable_container").perfectScrollbar("update");
+			});
+
+			$("#prev").click(function()
+			{
+				if ($(".selected-frame").is($(".frame").first()))
+				{
+					return;
+				}
+				else
+				{
+					var $selected_frame = $(".selected-frame");
+					$selected_frame.removeClass("selected-frame");
+					$selected_frame.prev().addClass("selected-frame");
+
+					var position = $(".selected-frame").offset().left;
+					if (position < 0)
+					{
+						var scroll_left = $("#scrollable_container").scrollLeft();
+						$("#scrollable_container").scrollLeft(scroll_left - $(window).width());
+						$("#scrollable_container").perfectScrollbar("update");
+					}
+				}
+			});
+
+			$("#next").click(function()
+			{
+				if ($(".selected-frame").is($(".frame").last()))
+				{
+					return;
+				}
+				else
+				{
+					var $selected_frame = $(".selected-frame");
+					$selected_frame.removeClass("selected-frame");
+					$selected_frame.next().addClass("selected-frame");
+
+					var position = $(".selected-frame").offset().left + 150;
+					if (position > $(window).width())
+					{
+						var scroll_left = $("#scrollable_container").scrollLeft();
+						$("#scrollable_container").scrollLeft(scroll_left + $(window).width());
+						$("#scrollable_container").perfectScrollbar("update");
+					}
+				}
+			});
+
+			$("#home").click(function()
+			{
+				$.each(rotation_axes, function(index)
+				{
+					this.quaternion.copy(home_quaternions[index]);
+				});
+			});
+
+			var pointer = { x: 0, y: 0 };
+
+			// TASK: ドラッグ終了後も衝突判定がされるのを修正する
+			var clicked_object = null;
+			$("#model_viewer canvas").mousedown(function()
+			{
+				var vector = new THREE.Vector3(pointer.x, pointer.y, 1);
+				vector.unproject(camera);
+
+				var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+				var intersects = ray.intersectObjects(rotation_axes);
+
+				if (intersects.length > 0)
+				{
+					clicked_object = intersects[0].object;
+				}
+				else
+				{
+					clicked_object = null;
+				}
+			});
+
+			$("#model_viewer canvas").mouseup(function()
+			{
+				var vector = new THREE.Vector3(pointer.x, pointer.y, 1);
+				vector.unproject(camera);
+
+				var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+				var intersects = ray.intersectObjects(rotation_axes);
+
+				if (intersects.length > 0)
+				{
+					if (clicked_object === intersects[0].object)
+					{
+						controls2.detach();
+						controls2.attach(clicked_object);
+					}
+				}
+				else
+				{
+					controls2.detach();
+					clicked_object = null;
+				}
+
+				var image = event.target.toDataURL('image/png');
+				$(".selected-frame").css({
+					"background" : 'url(' + image + ') no-repeat 50% 50%',
+					"background-size" : "cover",
+				});
+			});
+
+			// ファイルのドラッグ&ドロップ処理
+			document.addEventListener('dragover', function(event)
+			{
+				event.preventDefault();
+				event.dataTransfer.dropEffect = 'copy';
+			}, false);
+
+			document.addEventListener('drop', function(event)
+			{
+				event.preventDefault();
+
+				if (event.dataTransfer.files.length > 0)
+				{
+					console.log();
+					loadModelJSON(event.dataTransfer.files[0]);
+				}
+			}, false);
+
+			// マウス座標のキャプチャ
+			document.addEventListener('mousemove', function(event)
+			{
+				var clicked_x = event.clientX - $("#model_viewer canvas").offset().left;
+				var clicked_y = event.clientY - $("#model_viewer canvas").offset().top;
+				pointer.x = (clicked_x / renderer.domElement.width) * 2 - 1;
+				pointer.y = - (clicked_y / renderer.domElement.height) * 2 + 1;
+			});
+
+			// 描画ループ
+			// TASK: 照明の追随処理の改善
+			(function loop()
+			{
+				renderer.clear();
+
+				controls1.update();
+				controls2.update();
+
+				renderer.render(scene, camera);
+
+				window.requestAnimationFrame(loop);
+			})();
+
+			var canvas = $('#model_viewer canvas')[0];
+			var image  = canvas.toDataURL('image/png');
+			$("#frame_editor .frame").css({
+				"background" : 'url(' + image + ') no-repeat 50% 50%',
+				"background-size" : "cover",
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<div id="menu">
+			<div id="logo">
+				<img src="./img/logo.png" width="161" height="202" alt="logo">
+			</div>
+
+			<div class="group">
+				<button id="open" type="button" title="モーションをファイルから開きます。"><i class="fa fa-fw fa-folder-open fa-4x"></i></button>
+				<button id="save" type="button" title="モーションをファイルに保存します。"><i class="fa fa-fw fa-floppy-o fa-4x"></i></button>
+			</div>
+			<div class="group">
+				<button id="new" type="button" title="新規にモーションを作成します。"><i class="fa fa-fw fa-user-plus fa-4x"></i></button>
+				<button id="home" type="button" title="3Dモデルを初期姿勢に戻します。"><i class="fa fa-fw fa-male fa-4x"></i></button>
+			</div>
+			<div class="group">
+				<button id="play" type="button" title="モーションを再生します。"><i class="fa fa-fw fa-play fa-4x"></i></button>
+				<button id="reset" type="button" title="開始フレームを表示します。"><i class="fa fa-fw fa-stop fa-4x"></i></button>
+			</div>
+			<div class="group">
+				<button id="prev" type="button" title="フレームを1つ戻します。"><i class="fa fa-fw fa-backward fa-4x"></i></button>
+				<button id="next" type="button" title="フレームを1つ進めます。"><i class="fa fa-fw fa-forward fa-4x"></i></button>
+			</div>
+		</div>
+
+		<div id="model_viewer"></div>
+	</div>
+
+	<div id="scrollable_container">
+		<div id="frame_editor">
+			<div class="frame selected-frame" data-frame-id="0"></div>
+		</div>
+	</div>
+
+	<div id="dialog_new" title="本当に新規にモーションを作成しますか？">
+		<i class="fa fa-warning fa-3x" style="float: left; color: #FFB300; margin: 20px 10px"></i>
+		<p>
+			現在の作業内容が破棄されます。<br>
+			保存がまだの場合は&quot;いいえ&quot;をクリックしてください。
+		</p>
+	</div>
+</body>
+
+</html>
