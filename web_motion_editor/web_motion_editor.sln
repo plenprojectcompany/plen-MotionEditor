@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web_motion_editor", "web_motion_editor\web_motion_editor.csproj", "{29B98EA3-F17B-4214-96A7-93900A78B117}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD22B7BD-C468-441C-8BAB-DE47139987CA}"
+	ProjectSection(SolutionItems) = preProject
+		WebEssentials-Settings.json = WebEssentials-Settings.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
