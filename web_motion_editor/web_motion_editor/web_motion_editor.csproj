@@ -19,6 +19,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="angularjs\components\InstallButton\view.html" />
+    <Content Include="angularjs\components\ModelEditor\view.html" />
     <Content Include="angularjs\components\NewButton\view.html" />
     <Content Include="angularjs\components\NextButton\view.html" />
     <Content Include="angularjs\components\OpenButton\view.html" />

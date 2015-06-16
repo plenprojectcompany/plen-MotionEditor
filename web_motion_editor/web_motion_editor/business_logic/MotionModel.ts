@@ -70,6 +70,7 @@ class MotionModel
         insertion_frame.selected = false;
 
         this.frames.splice(index, 0, insertion_frame);
+        this.selectFrame(index, false);
     }
 
     selectFrame(index: number, old_save: boolean = true): void

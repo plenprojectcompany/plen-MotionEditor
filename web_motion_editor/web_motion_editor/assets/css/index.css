@@ -37,7 +37,7 @@ html, body {
  */
 #social_icons {
     margin: 0 auto;
-    width: 140px;
+    width: 9em;
 }
 
 .fa-circle {
@@ -179,16 +179,18 @@ html, body {
 #model_editor {
     width: 100%;
     height: 100%;
+    padding-top: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-    #model_editor canvas {
-        margin: 10px;
-        margin-left: 15px;
-        border: 10px solid white;
-        border-radius: 10px;
-        box-shadow: rgba(0, 0, 0, 0.4) 2px 2px 3px;
-    }
-
+#canvas_wrapper {
+    margin: 0 10px 0 15px;
+    border: 10px solid white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.4) 2px 2px 3px;
+}
 
 /**
  * フレームエディタのデザイン
@@ -225,18 +227,18 @@ html, body {
     height: 158px;
 }
 
-    .frame_editor-disabled {
-        position: absolute;
-        bottom: 0;
-        z-index: 9999;
-        cursor: not-allowed;
-        width: 3600px;
-        height: 192px;
-    }
+.frame_editor-disabled {
+    position: absolute;
+    bottom: 0;
+    z-index: 9999;
+    cursor: not-allowed;
+    width: 3600px;
+    height: 192px;
+}
 
-    .frame_editor-enabled {
-        display: none;
-    }
+.frame_editor-enabled {
+    display: none;
+}
 
 .frame {
     position: relative;
@@ -314,13 +316,15 @@ html, body {
 }
 
 .btn-close {
+    outline: none;
+    background-color: transparent;
     display: inline-block;
+    border: none;
+    padding: 0;
+    padding-right: 2px;
     float: right;
     cursor: pointer;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-    font-size: 40px;
-    padding-left: 1px;
-    margin-right: 2px;
 }
 
 .input-transition_time {

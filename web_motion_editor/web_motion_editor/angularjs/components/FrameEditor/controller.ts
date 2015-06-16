@@ -5,6 +5,7 @@
 class FrameEditorController
 {
     disabled: boolean = false;
+    touch_disabled: boolean = 'ontouchend' in document;
 
     sortable_options = {
         axis: "x",

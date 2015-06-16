@@ -59,6 +59,7 @@ class ThreeModel
         this.renderer.setClearColor(0x66BB6A);
 
         this.orbit_controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.orbit_controls.zoomSpeed = 0.3;
 
         this.transform_controls = new THREE.TransformControls(this.camera, this.renderer.domElement);
         this.transform_controls.setSpace("local");

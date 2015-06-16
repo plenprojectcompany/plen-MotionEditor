@@ -88,8 +88,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 	var rotateDelta = new THREE.Vector2();
 
 	var panStart = new THREE.Vector2();
+	var panStart2 = new THREE.Vector2();
 	var panEnd = new THREE.Vector2();
+	var panEnd2 = new THREE.Vector2();
 	var panDelta = new THREE.Vector2();
+	var panDelta2 = new THREE.Vector2();
 	var panOffset = new THREE.Vector3();
 
 	var offset = new THREE.Vector3();
@@ -108,7 +111,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	var lastPosition = new THREE.Vector3();
 	var lastQuaternion = new THREE.Quaternion();
 
-	var STATE = { NONE : -1, ROTATE : 0, DOLLY : 1, PAN : 2, TOUCH_ROTATE : 3, TOUCH_DOLLY : 4, TOUCH_PAN : 5 };
+	var STATE = { NONE : -1, ROTATE : 0, DOLLY : 1, PAN : 2, TOUCH_ROTATE : 3, TOUCH_DOLLY : 4, TOUCH_PAN : 5, TOUCH_DOLLY_AND_PAN : 6 };
 
 	var state = STATE.NONE;
 
@@ -528,34 +531,35 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		switch ( event.touches.length ) {
 
-			case 1:	// one-fingered touch: rotate
+		    case 1:	// one-fingered touch: rotate
 
-				if ( scope.noRotate === true ) return;
+		        if ( scope.noRotate === true ) return;
 
-				state = STATE.TOUCH_ROTATE;
+		        state = STATE.TOUCH_ROTATE;
 
-				rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
-				break;
+		        rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+		        break;
 
-			case 2:	// two-fingered touch: dolly
+		    case 2:	// two-fingered touch: dolly and pan
 
-				if ( scope.noZoom === true ) return;
+		        if (scope.noZoom === false)
+		        {
+		            state = STATE.TOUCH_DOLLY_AND_PAN;
 
-				state = STATE.TOUCH_DOLLY;
+		            var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+		            var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+		            var distance = Math.sqrt( dx * dx + dy * dy );
+		            dollyStart.set( 0, distance );
+		        }
 
-				var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-				var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-				var distance = Math.sqrt( dx * dx + dy * dy );
-				dollyStart.set( 0, distance );
-				break;
+			    if (scope.noPan === false)
+			    {
+			        state = STATE.TOUCH_DOLLY_AND_PAN;
 
-			case 3: // three-fingered touch: pan
+			        panStart.set(event.touches[0].pageX, event.touches[0].pageY);
+			        panStart2.set(event.touches[1].pageX, event.touches[1].pageY);
+			    }
 
-				if ( scope.noPan === true ) return;
-
-				state = STATE.TOUCH_PAN;
-
-				panStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 				break;
 
 			default:
@@ -597,47 +601,61 @@ THREE.OrbitControls = function ( object, domElement ) {
 				scope.update();
 				break;
 
-			case 2: // two-fingered touch: dolly
+		    case 2: // two-fingered touch: dolly
 
-				if ( scope.noZoom === true ) return;
-				if ( state !== STATE.TOUCH_DOLLY ) return;
+		        if (scope.noPan === false) {
 
-				var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-				var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-				var distance = Math.sqrt( dx * dx + dy * dy );
+		            if (state !== STATE.TOUCH_DOLLY_AND_PAN) return;
 
-				dollyEnd.set( 0, distance );
-				dollyDelta.subVectors( dollyEnd, dollyStart );
+		            panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+		            panEnd2.set(event.touches[1].pageX, event.touches[1].pageY);
+		            panDelta.subVectors(panEnd, panStart);
+		            panDelta2.subVectors(panEnd2, panStart2);
 
-				if ( dollyDelta.y > 0 ) {
+		            if (panDelta.dot(panDelta2) / (panDelta.length() * panDelta2.length()) > Math.cos(Math.PI / 3))
+		            {
+		                scope.pan(panDelta.x, panDelta.y);
 
-					scope.dollyOut();
+		                panStart.copy(panEnd);
+		                panStart2.copy(panEnd2);
 
-				} else if ( dollyDelta.y < 0 ) {
+		                scope.update();
 
-					scope.dollyIn();
+		                break;
+		            }
 
-				}
+		            panStart.copy(panEnd);
+		            panStart2.copy(panEnd2);
+		        }
 
-				dollyStart.copy( dollyEnd );
+		        if (scope.noZoom === false) {
+		            if (state !== STATE.TOUCH_DOLLY_AND_PAN) return;
 
-				scope.update();
-				break;
+		            var dx = event.touches[0].pageX - event.touches[1].pageX;
+		            var dy = event.touches[0].pageY - event.touches[1].pageY;
+		            var distance = Math.sqrt(dx * dx + dy * dy);
 
-			case 3: // three-fingered touch: pan
+		            dollyEnd.set(0, distance);
+		            dollyDelta.subVectors(dollyEnd, dollyStart);
 
-				if ( scope.noPan === true ) return;
-				if ( state !== STATE.TOUCH_PAN ) return;
+		            if (dollyDelta.y > 0) {
 
-				panEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
-				panDelta.subVectors( panEnd, panStart );
+		                scope.dollyOut();
 
-				scope.pan( panDelta.x, panDelta.y );
+		            } else if (dollyDelta.y < 0) {
 
-				panStart.copy( panEnd );
+		                scope.dollyIn();
 
-				scope.update();
-				break;
+		            }
+
+		            dollyStart.copy(dollyEnd);
+
+		            scope.update();
+
+		            break;
+		        }
+
+		        break;
 
 			default:
 
