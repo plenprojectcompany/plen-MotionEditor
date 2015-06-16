@@ -1,0 +1,24 @@
+﻿<div id="frame_editor" ui-sortable="frame_editor.sortable_options" ng-click="frame_editor.onClick($event)" ng-model="frame_editor.motion.frames">
+    <div class="frame"
+        ng-repeat="frame in frame_editor.motion.frames"
+        ng-class="{ 'frame-selected': frame.selected }"
+        ng-mousedown="frame_editor.motion.selectFrame($index)"
+        ng-style="{ background: 'url(' + frame.image_uri + ')' }"
+    >
+        <div class="frame-property">
+            <span class="frame-id">Frame : {{ $index + 1 }}</span>
+            <button class="btn-close" type="button"
+                ng-mousedown="$event.stopPropagation(); frame_editor.motion.removeFrame($index);"
+                title="フレームを削除します。"
+            >
+                <i class="fa fa-inverse fa-3x fa-times-circle-o"></i>
+            </button>
+        </div>
+        <div class="input-transition_time" title="このフレームに移り変わるまでの時間を設定します。">
+            <div>Transition time :</div>
+            <input type="number" min="1" max="10000" ng-disabled="frame_editor.touch_disabled" ng-model="frame.transition_time_ms"> [ms]
+            <input type="range" min="1" max="10000" step="1" ng-model="frame.transition_time_ms">
+        </div>
+    </div>
+</div>
+<div ng-class="{ 'frame_editor-disabled': frame_editor.disabled, 'frame_editor-enabled': !frame_editor.disabled }"></div>

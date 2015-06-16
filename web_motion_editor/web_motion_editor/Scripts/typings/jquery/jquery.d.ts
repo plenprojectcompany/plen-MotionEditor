@@ -506,6 +506,7 @@ interface JQuerySupport {
     style?: boolean;
     submitBubbles?: boolean;
     tbody?: boolean;
+    touch?: boolean;
 }
 
 interface JQueryParam {
