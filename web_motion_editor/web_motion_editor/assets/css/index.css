@@ -27,7 +27,29 @@ html, body {
 #right_pain {
     width: 100%;
     height: 100%;
-    background-color: rgba(102,187,106,1);
+    /*background-color: rgba(102,187,106,1);*/
+    background-size: 20px 20px;
+    background-color: #3cb371;
+    background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+        color-stop(.25, #66BB6A), color-stop(.25, transparent),
+        color-stop(.5, transparent), color-stop(.5, #66BB6A),
+        color-stop(.75, #66BB6A), color-stop(.75, transparent),
+        to(transparent));
+    background-image: -webkit-linear-gradient(-45deg, #66BB6A 25%, transparent 25%,
+        transparent 50%, #66BB6A 50%, #66BB6A 75%,
+        transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, #66BB6A 25%, transparent 25%,
+        transparent 50%, #66BB6A 50%, #66BB6A 75%,
+        transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, #66BB6A 25%, transparent 25%,
+        transparent 50%, #66BB6A 50%, #66BB6A 75%,
+        transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, #66BB6A 25%, transparent 25%,
+        transparent 50%, #66BB6A 50%, #66BB6A 75%,
+        transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, #66BB6A 25%, transparent 25%,
+        transparent 50%, #66BB6A 50%, #66BB6A 75%,
+        transparent 75%, transparent);
 }
 
 
@@ -205,7 +227,6 @@ html, body {
     height: 158px;
     width: 100%;
     bottom: 0;
-    background-color: rgba(102,187,106,1);
 }
 
     #scrollable_container::-webkit-scrollbar {
@@ -326,6 +347,10 @@ html, body {
     cursor: pointer;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+    .btn-close .fa-times-circle-o {
+        font-size: 40px;
+    }
 
 .input-transition_time {
     position: absolute;
