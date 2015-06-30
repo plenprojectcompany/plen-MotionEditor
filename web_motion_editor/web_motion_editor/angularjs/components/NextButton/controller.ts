@@ -8,11 +8,13 @@ class NextButtonController
 
     static $inject = [
         "$rootScope",
+        "SharedMotionService",
         "$scope"
     ];
 
     constructor(
         public $rootScope: ng.IRootScopeService,
+        public motion_model: MotionModel,
         $scope: ng.IScope
     )
     {
@@ -23,6 +25,7 @@ class NextButtonController
     onClick(): void
     {
         this.$rootScope.$broadcast("ComponentDisabled");
+        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
         this.$rootScope.$broadcast("AnimationNext");
     }
 }  

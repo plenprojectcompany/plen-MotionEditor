@@ -10,7 +10,7 @@ class FacebookButtonController
         public $window: ng.IWindowService
     )
     {
-        this.href = "http://www.facebook.com/share.php?u=http://plen.jp/developer/motion-editor/";
+        this.href = "http://www.facebook.com/share.php?u=http://plen.jp/playground/motion-editor/";
     }
 
     click(): void
