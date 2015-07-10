@@ -1,6 +1,8 @@
 ﻿/// <reference path="./controller.ts" />
 
-function OpenButtonDirective()
+function OpenButtonDirective(
+    model_loader: ModelLoader
+)
 {
     "use strict";
 
@@ -18,7 +20,7 @@ function OpenButtonDirective()
                 var reader = new FileReader();
                 reader.onload = (event: any) =>
                 {
-                    scope.open_button.motion.loadJSON(event.target.result);
+                    scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
                     scope.$apply();
                 };
 
@@ -28,4 +30,9 @@ function OpenButtonDirective()
     };
 }
 
-angular.module(app_name).directive("openButton", OpenButtonDirective); 
+angular.module(app_name).directive("openButton",
+    [
+        "ModelLoaderService",
+        OpenButtonDirective
+    ]
+); 

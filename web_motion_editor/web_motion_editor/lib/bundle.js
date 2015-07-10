@@ -159,7 +159,7 @@ var MotionModel = (function () {
         this.frames = [this.frame_factory.getFrame()];
         this.$rootScope.$broadcast("FrameLoad", 0);
     };
-    MotionModel.prototype.loadJSON = function (motion_json) {
+    MotionModel.prototype.loadJSON = function (motion_json, axis_map) {
         var _this = this;
         try {
             var motion_obj = JSON.parse(motion_json);
@@ -224,7 +224,7 @@ var MotionModel = (function () {
             _.each(motion_obj.frames, function (frame) {
                 var outputs = [];
                 _.each(frame.outputs, function (output) {
-                    outputs.push(new OutputDeviceModel(output.device, output.value));
+                    outputs[axis_map[output.device]] = new OutputDeviceModel(output.device, output.value);
                 });
                 _this.frames.push(new FrameModel(frame.transition_time_ms, outputs, false, ""));
             });
@@ -757,6 +757,13 @@ var ModelLoader = (function () {
             this.addObject(scene.children[0]);
         }
     };
+    ModelLoader.prototype.getAxisMap = function () {
+        var axis_map = {};
+        _.each(this.rotation_axes, function (rotation_axis, index) {
+            axis_map[rotation_axis.name] = index;
+        });
+        return axis_map;
+    };
     ModelLoader.prototype.loadJSON = function () {
         var _this = this;
         this.$http.get("./assets/etc/plen_model.min.json").success(function (data) {
@@ -934,7 +941,7 @@ var OpenButtonController = (function () {
     ];
     return OpenButtonController;
 })();
-function OpenButtonDirective() {
+function OpenButtonDirective(model_loader) {
     "use strict";
     return {
         restrict: "E",
@@ -947,7 +954,7 @@ function OpenButtonDirective() {
             $(element[0].children[1]).on("change", function (event) {
                 var reader = new FileReader();
                 reader.onload = function (event) {
-                    scope.open_button.motion.loadJSON(event.target.result);
+                    scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
                     scope.$apply();
                 };
                 reader.readAsText(event.target.files[0]);
@@ -955,7 +962,10 @@ function OpenButtonDirective() {
         }
     };
 }
-angular.module(app_name).directive("openButton", OpenButtonDirective);
+angular.module(app_name).directive("openButton", [
+    "ModelLoaderService",
+    OpenButtonDirective
+]);
 "use strict";
 var PlayButtonController = (function () {
     function PlayButtonController($scope, $rootScope, motion_model) {
@@ -1068,8 +1078,9 @@ function ResetButtonDirective() {
 angular.module(app_name).directive("resetButton", ResetButtonDirective);
 "use strict";
 var SaveButtonController = (function () {
-    function SaveButtonController($scope, $element, motion) {
+    function SaveButtonController($rootScope, $scope, $element, motion) {
         var _this = this;
+        this.$rootScope = $rootScope;
         this.$element = $element;
         this.motion = motion;
         this.disabled = false;
@@ -1085,6 +1096,7 @@ var SaveButtonController = (function () {
     }
     SaveButtonController.prototype.onClick = function () {
         if (!this.disabled) {
+            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
             this.setDownloadLink();
         }
     };
@@ -1103,6 +1115,7 @@ var SaveButtonController = (function () {
         }
     };
     SaveButtonController.$inject = [
+        "$rootScope",
         "$scope",
         "$element",
         "SharedMotionService"

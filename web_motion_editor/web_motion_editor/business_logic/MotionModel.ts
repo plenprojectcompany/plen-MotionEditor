@@ -112,7 +112,7 @@ class MotionModel
         this.$rootScope.$broadcast("FrameLoad", 0);
     }
 
-    loadJSON(motion_json: string): void
+    loadJSON(motion_json: string, axis_map: any): void
     {
         try {
             var motion_obj = JSON.parse(motion_json);
@@ -211,7 +211,7 @@ class MotionModel
                 var outputs = [];
                 _.each(frame.outputs, (output: OutputDeviceModel) =>
                 {
-                    outputs.push(new OutputDeviceModel(output.device, output.value));
+                    outputs[axis_map[output.device]] = new OutputDeviceModel(output.device, output.value);
                 });
 
                 this.frames.push(new FrameModel(frame.transition_time_ms, outputs, false, ""));

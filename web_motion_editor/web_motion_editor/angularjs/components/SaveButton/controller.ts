@@ -7,12 +7,14 @@ class SaveButtonController
     disabled: boolean = false;
 
     static $inject = [
+        "$rootScope",
         "$scope",
         "$element",
         "SharedMotionService"
     ];
 
     constructor(
+        public $rootScope: ng.IRootScopeService,
         $scope: ng.IScope,
         public $element,
         public motion: MotionModel
@@ -28,6 +30,7 @@ class SaveButtonController
     {
         if (!this.disabled)
         {
+            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
             this.setDownloadLink();
         }
     }
