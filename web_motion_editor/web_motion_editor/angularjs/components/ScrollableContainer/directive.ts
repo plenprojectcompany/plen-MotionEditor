@@ -2,7 +2,7 @@
 
 class ScrollableContainerDirective
 {
-    static width_offset: number = 240;
+    static width_offset: number = 220;
 
     static getDDO(
         $window: ng.IWindowService

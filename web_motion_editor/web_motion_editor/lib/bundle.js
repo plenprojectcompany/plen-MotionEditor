@@ -832,7 +832,7 @@ var ModelEditorDirective = (function () {
             }
         };
     };
-    ModelEditorDirective.width_offset = 240 + 45;
+    ModelEditorDirective.width_offset = 220 + 45;
     ModelEditorDirective.height_offset = 186 + 40;
     return ModelEditorDirective;
 })();
@@ -1160,7 +1160,7 @@ var ScrollableContainerDirective = (function () {
             }
         };
     };
-    ScrollableContainerDirective.width_offset = 240;
+    ScrollableContainerDirective.width_offset = 220;
     return ScrollableContainerDirective;
 })();
 angular.module(app_name).directive("scrollableContainer", [
@@ -1304,4 +1304,21 @@ angular.module(app_name).directive("autoResize", [
     "$timeout",
     AutoResizeDirective.getDDO
 ]);
+var SERVER_STATE;
+(function (SERVER_STATE) {
+    SERVER_STATE[SERVER_STATE["DISCONNECTED"] = 0] = "DISCONNECTED";
+    SERVER_STATE[SERVER_STATE["CONNECTED"] = 1] = "CONNECTED";
+    SERVER_STATE[SERVER_STATE["WAITING"] = 2] = "WAITING";
+    SERVER_STATE[SERVER_STATE["DONE"] = 3] = "DONE";
+})(SERVER_STATE || (SERVER_STATE = {}));
+;
+var PLENControlServerService = (function () {
+    function PLENControlServerService() {
+        this._state = 0 /* DISCONNECTED */;
+    }
+    PLENControlServerService.$inject = [
+    ];
+    return PLENControlServerService;
+})();
+angular.module(app_name).service("PLENControlServerService", PLENControlServerService);
 //# sourceMappingURL=bundle.js.map
