@@ -59,7 +59,7 @@ html, body {
  */
 #social_icons {
     margin: 0 auto;
-    width: 9em;
+    width: 12em;
 }
 
 .fa-circle {
@@ -112,6 +112,18 @@ html, body {
 
 .btn-social:hover .fa-google-plus {
     color: #DB4A39;
+}
+
+.btn-shoppingcart {
+    -moz-transition: 0.3s ease-in-out all;
+    -o-transition: 0.3s ease-in-out all;
+    -webkit-transition: 0.3s ease-in-out all;
+    transition: 0.3s ease-in-out all;
+    color: #F897A6;
+}
+
+.btn-social:hover .fa-shopping-cart {
+    color: #F897A6;
 }
 
 #logo {

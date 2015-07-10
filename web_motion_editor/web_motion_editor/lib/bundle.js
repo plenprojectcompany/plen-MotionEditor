@@ -1167,6 +1167,22 @@ angular.module(app_name).directive("scrollableContainer", [
     "$window",
     ScrollableContainerDirective.getDDO
 ]);
+var ShoppingcartButtonDirective = (function () {
+    function ShoppingcartButtonDirective() {
+    }
+    ShoppingcartButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            scope: {},
+            templateUrl: "./angularjs/components/ShoppingcartButton/view.html",
+            replace: true
+        };
+    };
+    return ShoppingcartButtonDirective;
+})();
+angular.module(app_name).directive("shoppingcartButton", [
+    ShoppingcartButtonDirective.getDDO
+]);
 "use strict";
 var StopButtonController = (function () {
     function StopButtonController($rootScope) {

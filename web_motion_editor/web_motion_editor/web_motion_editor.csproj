@@ -30,6 +30,7 @@
     <Content Include="angularjs\components\FacebookButton\view.html" />
     <Content Include="angularjs\components\FrameEditor\view.html" />
     <Content Include="angularjs\components\GoogleplusButton\view.html" />
+    <Content Include="angularjs\components\ShoppingcartButton\view.html" />
     <Content Include="angularjs\components\StopButton\view.html" />
     <Content Include="angularjs\components\SyncButton\view.html" />
     <Content Include="angularjs\views\NewDialogView.html" />
