@@ -284,6 +284,7 @@ html, body {
     color: white;
     text-shadow: 0 0 3px #000;
     font-weight: bold;
+    font-size: 16px;
 }
 
     .frame.ng-enter {
@@ -382,5 +383,6 @@ html, body {
 
     .input-transition_time input[type=range] {
         cursor: default;
+        padding-bottom: 5px;
         width: 140px;
     }

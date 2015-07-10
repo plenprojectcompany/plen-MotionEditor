@@ -1,0 +1,26 @@
+﻿<div class="modal-header">
+    <button type="button" ng-click="modal.cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">"PLEN - Control Server"と接続します。</h4>
+</div>
+<div class="modal-body">
+    <article>
+        <h2>接続手順 (Windows only, for now.)</h2>
+        <ol>
+            <li>"BLED112"をPCに接続します。</li>
+            <li>"PLEN - Control Server"をコマンドプロンプトから起動します。</li>
+            <li>起動メッセージを確認し、サーバのIPアドレスをコピーします。</li>
+            <li>"Server IP Address (and Port)."欄に、3. でコピーしたIPアドレスを記入します。</li>
+            <li>"Connect"ボタンをクリックします。</li>
+        </ol>
+
+        <h2>サーバ設定</h2>
+        <div class="form-group">
+            <label for="server-ipaddr-input">Server IP Address (and Port).</label>
+            <input type="text" class="form-control" id="server-ipaddr-input" ng-model="modal.ip_addr" />
+        </div>
+    </article>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="modal.connect()">Connect</button>
+    <button class="btn btn-default" ng-click="modal.cancel()">Cancel</button>
+</div>

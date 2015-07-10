@@ -1,17 +1,20 @@
-﻿"use strict";
+﻿/// <reference path="../../../Scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
+
+"use strict";
 
 class SyncButtonController
 {
     disabled: boolean = false;
+    syncing: boolean = false;
 
     static $inject = [
         "$scope",
-        "$window"
+        "$modal"
     ];
 
     constructor(
         $scope: ng.IScope,
-        public $window: ng.IWindowService
+        public $modal: angular.ui.bootstrap.IModalService
     )
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
@@ -20,6 +23,12 @@ class SyncButtonController
 
     click(): void
     {
-        this.$window.alert("現在未実装の機能です。");
+        var modal = this.$modal.open({
+            controller: ModalController,
+            controllerAs: "modal",
+            templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
+        });
+
+        this.syncing = !this.syncing;
     }
 }

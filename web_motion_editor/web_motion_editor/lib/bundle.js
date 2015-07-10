@@ -1,6 +1,6 @@
 "use strict";
 var app_name = "PLEN2MotionEditorForWeb";
-angular.module(app_name, ["ngAnimate", "ui.sortable"]);
+angular.module(app_name, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
 "use strict";
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
@@ -465,9 +465,9 @@ function GoogleplusButtonDirective() {
 angular.module(app_name).directive("googleplusButton", GoogleplusButtonDirective);
 "use strict";
 var InstallButtonController = (function () {
-    function InstallButtonController($window, $scope) {
+    function InstallButtonController($modal, $scope) {
         var _this = this;
-        this.$window = $window;
+        this.$modal = $modal;
         this.disabled = false;
         $scope.$on("ComponentDisabled", function () {
             _this.disabled = true;
@@ -477,10 +477,14 @@ var InstallButtonController = (function () {
         });
     }
     InstallButtonController.prototype.onClick = function () {
-        this.$window.alert("現在未実装の機能です。");
+        var modal = this.$modal.open({
+            controller: ModalController,
+            controllerAs: "modal",
+            templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
+        });
     };
     InstallButtonController.$inject = [
-        "$window",
+        "$modal",
         "$scope"
     ];
     return InstallButtonController;
@@ -1005,6 +1009,29 @@ function PlayButtonDirective() {
 }
 angular.module(app_name).directive("playButton", PlayButtonDirective);
 "use strict";
+var ModalController = (function () {
+    function ModalController($modalInstance) {
+        this.$modalInstance = $modalInstance;
+        this.ip_addr = "";
+    }
+    ModalController.prototype.connect = function () {
+        var regexp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}$/;
+        if (regexp.test(this.ip_addr)) {
+            this.$modalInstance.close(this.ip_addr);
+        }
+        else {
+            alert("IPアドレスの形式が不正です。");
+        }
+    };
+    ModalController.prototype.cancel = function () {
+        this.$modalInstance.dismiss();
+    };
+    ModalController.$inject = [
+        "$modalInstance"
+    ];
+    return ModalController;
+})();
+"use strict";
 var PreviousButtonController = (function () {
     function PreviousButtonController($scope, motion_model, $rootScope) {
         var _this = this;
@@ -1210,10 +1237,11 @@ function StopButtonDirective() {
 angular.module(app_name).directive("stopButton", StopButtonDirective);
 "use strict";
 var SyncButtonController = (function () {
-    function SyncButtonController($scope, $window) {
+    function SyncButtonController($scope, $modal) {
         var _this = this;
-        this.$window = $window;
+        this.$modal = $modal;
         this.disabled = false;
+        this.syncing = false;
         $scope.$on("ComponentDisabled", function () {
             _this.disabled = true;
         });
@@ -1222,11 +1250,16 @@ var SyncButtonController = (function () {
         });
     }
     SyncButtonController.prototype.click = function () {
-        this.$window.alert("現在未実装の機能です。");
+        var modal = this.$modal.open({
+            controller: ModalController,
+            controllerAs: "modal",
+            templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
+        });
+        this.syncing = !this.syncing;
     };
     SyncButtonController.$inject = [
         "$scope",
-        "$window"
+        "$modal"
     ];
     return SyncButtonController;
 })();

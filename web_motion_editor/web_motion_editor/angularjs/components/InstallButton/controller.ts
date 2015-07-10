@@ -1,16 +1,18 @@
-﻿"use strict";
+﻿/// <reference path="../../../Scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
+
+"use strict";
 
 class InstallButtonController
 {
     disabled: boolean = false;
 
     static $inject = [
-        "$window",
+        "$modal",
         "$scope"
     ];
 
     constructor(
-        public $window: ng.IWindowService,
+        public $modal: angular.ui.bootstrap.IModalService,
         $scope: ng.IScope
     )
     {
@@ -20,6 +22,10 @@ class InstallButtonController
 
     onClick(): void
     {
-        this.$window.alert("現在未実装の機能です。");
+        var modal = this.$modal.open({
+            controller: ModalController,
+            controllerAs: "modal",
+            templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
+        });
     }
 } 

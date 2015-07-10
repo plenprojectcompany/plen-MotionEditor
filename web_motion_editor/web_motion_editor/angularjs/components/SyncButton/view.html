@@ -1,3 +1,3 @@
 ﻿<button ng-click="sync_button.click()" ng-disabled="sync_button.disabled" class="button-menu" type="button" title="PLENと姿勢を同期します。">
-    <i class="fa fa-fw fa-refresh fa-4x"></i>
+    <i class="fa fa-fw fa-refresh fa-4x" ng-class="{ 'fa-spin': sync_button.syncing }"></i>
 </button>
