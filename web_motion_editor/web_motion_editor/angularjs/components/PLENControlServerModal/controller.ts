@@ -2,7 +2,7 @@
 
 "use strict";
 
-class ModalController
+class PLENControlServerModalController
 {
     ip_addr: string = "";
 

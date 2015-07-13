@@ -22,7 +22,7 @@ class FrameEditorController
     static $inject = [
         "$scope",
         "$rootScope",
-        "$q",
+        // "$q",
         "$interval",
         "SharedMotionService"
     ];
@@ -32,7 +32,7 @@ class FrameEditorController
     constructor(
         $scope: ng.IScope,
         public $rootScope: ng.IRootScopeService,
-        public $q: ng.IQService,
+        // public $q: ng.IQService,
         public $interval: ng.IIntervalService,
         public motion: MotionModel
     )

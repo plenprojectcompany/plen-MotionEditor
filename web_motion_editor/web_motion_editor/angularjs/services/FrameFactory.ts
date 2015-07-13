@@ -17,7 +17,7 @@ class FrameFactory
     getFrame(selected: boolean = true): FrameModel
     {
         return new FrameModel(
-            100,
+            500,
             [],
             selected,
             this.image_store_service.get()

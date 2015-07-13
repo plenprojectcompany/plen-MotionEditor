@@ -5,7 +5,7 @@
 
 class MotionModel
 {
-    slot: number = 0;
+    slot: number = 44;
     name: string = "Test Motion";
     codes: Array<CodeModel>   = [];
     frames: Array<FrameModel> = [];

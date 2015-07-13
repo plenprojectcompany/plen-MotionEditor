@@ -7,13 +7,17 @@ class InstallButtonController
     disabled: boolean = false;
 
     static $inject = [
-        "$modal",
-        "$scope"
+        "PLENControlServerService",
+        "$scope",
+        "$rootScope",
+        "SharedMotionService"
     ];
 
     constructor(
-        public $modal: angular.ui.bootstrap.IModalService,
-        $scope: ng.IScope
+        public plen_controll_server_service: PLENControlServerService,
+        $scope: ng.IScope,
+        public $rootScope: ng.IRootScopeService,
+        public motion: MotionModel
     )
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
@@ -22,10 +26,23 @@ class InstallButtonController
 
     onClick(): void
     {
-        var modal = this.$modal.open({
-            controller: ModalController,
-            controllerAs: "modal",
-            templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
-        });
+        if (this.plen_controll_server_service.getStatus() === SERVER_STATE.DISCONNECTED)
+        {
+            this.plen_controll_server_service.connect();
+        }
+
+        if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)
+        {
+            var success_callback = () =>
+            {
+                this.plen_controll_server_service.play(this.motion.slot, () =>
+                {
+                    this.$rootScope.$broadcast("AnimationPlay");
+                });
+            };
+
+            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
+            this.plen_controll_server_service.install(JSON.parse(this.motion.saveJSON()), success_callback);
+        }
     }
 } 
