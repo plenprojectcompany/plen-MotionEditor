@@ -63,6 +63,18 @@ class ModelLoader
         }
     }
 
+    getAxisMap(): any
+    {
+        var axis_map = {};
+
+        _.each(this.rotation_axes, (rotation_axis: THREE.Object3D, index: number) =>
+        {
+            axis_map[rotation_axis.name] = index;
+        });
+
+        return axis_map;
+    }
+
     loadJSON(): void
     {
         this.$http.get("./assets/etc/plen_model.min.json")

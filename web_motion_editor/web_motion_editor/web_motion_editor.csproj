@@ -30,10 +30,16 @@
     <Content Include="angularjs\components\FacebookButton\view.html" />
     <Content Include="angularjs\components\FrameEditor\view.html" />
     <Content Include="angularjs\components\GoogleplusButton\view.html" />
+    <Content Include="angularjs\components\ShoppingcartButton\view.html" />
     <Content Include="angularjs\components\StopButton\view.html" />
+    <Content Include="angularjs\components\PLENControlServerModal\view.html" />
     <Content Include="angularjs\components\SyncButton\view.html" />
     <Content Include="angularjs\views\NewDialogView.html" />
     <Content Include="angularjs\components\TwitterButton\view.html" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\bootstrap.min.css">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\font-awesome.css" />
     <Content Include="assets\css\font-awesome.min.css">
       <DependentUpon>font-awesome.css</DependentUpon>
@@ -42,10 +48,6 @@
     <Content Include="assets\css\index.css" />
     <Content Include="assets\css\index.min.css">
       <DependentUpon>index.css</DependentUpon>
-    </Content>
-    <Content Include="assets\css\normalize.css" />
-    <Content Include="assets\css\normalize.min.css">
-      <DependentUpon>normalize.css</DependentUpon>
     </Content>
     <Content Include="assets\img\logo.png" />
     <Content Include="index.html" />
@@ -56,26 +58,28 @@
     </Content>
     <Content Include="lib\angular.js" />
     <Content Include="lib\angular.min.js" />
+    <Content Include="lib\bootstrap.min.js" />
     <Content Include="lib\bundle.js" />
     <Content Include="lib\bundle.min.js">
       <DependentUpon>bundle.js</DependentUpon>
     </Content>
     <Content Include="lib\jquery-ui-sortable.min.js" />
-    <Content Include="lib\jquery.min.js" />
-    <Content Include="lib\jquery.ui.touch-punch.js" />
-    <Content Include="lib\jquery.ui.touch-punch.min.js">
-      <DependentUpon>jquery.ui.touch-punch.js</DependentUpon>
+    <Content Include="lib\jquery-ui-touch-punch.fixed.min.js">
+      <DependentUpon>jquery-ui-touch-punch.fixed.js</DependentUpon>
     </Content>
+    <Content Include="lib\jquery.min.js" />
+    <Content Include="lib\jquery-ui-touch-punch.fixed.js" />
     <Content Include="lib\lodash.min.js" />
-    <Content Include="lib\OrbitControlsFixed.js" />
-    <Content Include="lib\OrbitControlsFixed.min.js">
-      <DependentUpon>OrbitControlsFixed.js</DependentUpon>
+    <Content Include="lib\OrbitControls.fixed.js" />
+    <Content Include="lib\OrbitControls.fixed.min.js">
+      <DependentUpon>OrbitControls.fixed.js</DependentUpon>
     </Content>
     <Content Include="lib\three.min.js" />
-    <Content Include="lib\TransformControlsFixed.js" />
-    <Content Include="lib\TransformControlsFixed.min.js">
-      <DependentUpon>TransformControlsFixed.js</DependentUpon>
+    <Content Include="lib\TransformControls.fixed.js" />
+    <Content Include="lib\TransformControls.fixed.min.js">
+      <DependentUpon>TransformControls.fixed.js</DependentUpon>
     </Content>
+    <Content Include="lib\angular-ui-bootstrap-custom-tpls.min.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -89,9 +93,11 @@
     <TypeScriptCompile Include="angularjs\components\NextButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\OpenButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\PlayButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\PLENControlServerModal\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\PreviousButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\ResetButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\ShoppingcartButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\StopButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\controller.ts" />
@@ -113,6 +119,7 @@
     <TypeScriptCompile Include="angularjs\components\SyncButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />
+    <TypeScriptCompile Include="angularjs\services\PLENControlServerService.ts" />
     <TypeScriptCompile Include="angularjs\services\ThreeFactory.ts" />
     <TypeScriptCompile Include="business_logic\CodeModel.ts" />
     <TypeScriptCompile Include="business_logic\FrameModel.ts" />
@@ -123,6 +130,7 @@
     <TypeScriptCompile Include="angularjs\services\FrameFactory.ts" />
     <TypeScriptCompile Include="angularjs\services\SharedMotionService.ts" />
     <TypeScriptCompile Include="business_logic\ThreeModel.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angular-ui-bootstrap\angular-ui-bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
@@ -153,24 +161,24 @@
     <Content Include="lib\angular-ui-sortable.min.js.map">
       <DependentUpon>angular-ui-sortable.min.js</DependentUpon>
     </Content>
-    <Content Include="lib\OrbitControlsFixed.min.js.map">
-      <DependentUpon>OrbitControlsFixed.min.js</DependentUpon>
-    </Content>
-    <Content Include="lib\TransformControlsFixed.min.js.map">
-      <DependentUpon>TransformControlsFixed.min.js</DependentUpon>
-    </Content>
     <Content Include="assets\css\fonts\fontawesome-webfont.eot" />
     <Content Include="assets\css\fonts\fontawesome-webfont.ttf" />
     <Content Include="assets\css\fonts\fontawesome-webfont.woff" />
     <Content Include="assets\css\fonts\fontawesome-webfont.woff2" />
     <Content Include="assets\css\fonts\FontAwesome.otf" />
     <Content Include="assets\etc\plen_model.json" />
-    <Content Include="lib\jquery.ui.touch-punch.min.js.map">
-      <DependentUpon>jquery.ui.touch-punch.min.js</DependentUpon>
-    </Content>
     <Content Include="assets\etc\plen_model.min.json" />
     <Content Include="lib\bundle.min.js.map">
       <DependentUpon>bundle.min.js</DependentUpon>
+    </Content>
+    <Content Include="lib\OrbitControls.fixed.min.js.map">
+      <DependentUpon>OrbitControls.fixed.min.js</DependentUpon>
+    </Content>
+    <Content Include="lib\TransformControls.fixed.min.js.map">
+      <DependentUpon>TransformControls.fixed.min.js</DependentUpon>
+    </Content>
+    <Content Include="lib\jquery-ui-touch-punch.fixed.min.js.map">
+      <DependentUpon>jquery-ui-touch-punch.fixed.min.js</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

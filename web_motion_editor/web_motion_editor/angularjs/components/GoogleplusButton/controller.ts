@@ -10,7 +10,7 @@ class GoogleplusButtonController
         public $window: ng.IWindowService
     )
     {
-        this.href = "https://plus.google.com/share?url=http://plen.jp/developer/motion-editor/";
+        this.href = "https://plus.google.com/share?url=http://plen.jp/playground/motion-editor/";
     }
 
     click(): void

@@ -5,7 +5,7 @@
 
 class ModelEditorDirective
 {
-    static width_offset: number  = 240 + 45;
+    static width_offset: number  = 220 + 45;
     static height_offset: number = 186 + 40;
 
     static getDDO(

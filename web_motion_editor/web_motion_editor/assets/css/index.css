@@ -18,7 +18,7 @@ html, body {
 #left_pain {
     position: absolute;
     z-index: 100;
-    width: 240px;
+    width: 220px;
     height: 100%;
     box-shadow: rgba(0, 0, 0, 0.5) 2px 0 5px;
     background-color: rgba(76,175,80,1);
@@ -27,7 +27,15 @@ html, body {
 #right_pain {
     width: 100%;
     height: 100%;
-    background-color: rgba(102,187,106,1);
+    /*background-color: rgba(102,187,106,1);*/
+    background-size: 20px 20px;
+    background-color: #3cb371;
+    background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #66BB6A), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, #66BB6A), color-stop(.75, #66BB6A), color-stop(.75, transparent), to(transparent));
+    background-image: -webkit-linear-gradient(-45deg, #66BB6A 25%, transparent 25%, transparent 50%, #66BB6A 50%, #66BB6A 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, #66BB6A 25%, transparent 25%, transparent 50%, #66BB6A 50%, #66BB6A 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, #66BB6A 25%, transparent 25%, transparent 50%, #66BB6A 50%, #66BB6A 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, #66BB6A 25%, transparent 25%, transparent 50%, #66BB6A 50%, #66BB6A 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, #66BB6A 25%, transparent 25%, transparent 50%, #66BB6A 50%, #66BB6A 75%, transparent 75%, transparent);
 }
 
 
@@ -37,18 +45,18 @@ html, body {
  */
 #social_icons {
     margin: 0 auto;
-    width: 9em;
+    width: 12em;
 }
 
 .fa-circle {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.btn-social {
+.button-social {
     cursor: pointer;
 }
 
-    .btn-social:hover .fa-circle {
+    .button-social:hover .fa-circle {
         -moz-transition: 0.3s ease-in-out all;
         -o-transition: 0.3s ease-in-out all;
         -webkit-transition: 0.3s ease-in-out all;
@@ -56,7 +64,7 @@ html, body {
         color: white;
     }
 
-.btn-twitter {
+.button-twitter {
     -moz-transition: 0.3s ease-in-out all;
     -o-transition: 0.3s ease-in-out all;
     -webkit-transition: 0.3s ease-in-out all;
@@ -64,11 +72,11 @@ html, body {
     color: #00ACED;
 }
 
-.btn-social:hover .fa-twitter {
+.button-social:hover .fa-twitter {
     color: #00ACED;
 }
 
-.btn-facebook {
+.button-facebook {
     -moz-transition: 0.3s ease-in-out all;
     -o-transition: 0.3s ease-in-out all;
     -webkit-transition: 0.3s ease-in-out all;
@@ -76,11 +84,11 @@ html, body {
     color: #305097;
 }
 
-.btn-social:hover .fa-facebook {
+.button-social:hover .fa-facebook {
     color: #305097;
 }
 
-.btn-googleplus {
+.button-googleplus {
     -moz-transition: 0.3s ease-in-out all;
     -o-transition: 0.3s ease-in-out all;
     -webkit-transition: 0.3s ease-in-out all;
@@ -88,8 +96,20 @@ html, body {
     color: #DB4A39;
 }
 
-.btn-social:hover .fa-google-plus {
+.button-social:hover .fa-google-plus {
     color: #DB4A39;
+}
+
+.button-shoppingcart {
+    -moz-transition: 0.3s ease-in-out all;
+    -o-transition: 0.3s ease-in-out all;
+    -webkit-transition: 0.3s ease-in-out all;
+    transition: 0.3s ease-in-out all;
+    color: #F897A6;
+}
+
+.button-social:hover .fa-shopping-cart {
+    color: #F897A6;
 }
 
 #logo {
@@ -107,16 +127,16 @@ html, body {
         margin: 0 auto;
     }
 
-.btn-group {
+.button-group {
     margin: 10px 0;
 }
 
-.btn-open {
+.button-open {
     display: inline-block;
     position: relative;
 }
 
-    .btn-open:hover .btn-menu {
+    .button-open:hover .button-menu {
         background-color: rgba(255, 255, 255, 0.2);
     }
 
@@ -124,8 +144,8 @@ html, body {
     position: absolute;
     top: 0;
     left: 10px;
-    width: 102.281px;
-    height: 74px;
+    width: 92px;
+    height: 66px;
     opacity: 0;
     cursor: pointer;
 }
@@ -134,7 +154,7 @@ html, body {
         cursor: not-allowed;
     }
 
-.btn-menu {
+.button-menu {
     outline: none;
     display: inline-block;
     border: solid 4px #FFFFFF;
@@ -150,16 +170,21 @@ html, body {
     transition: 0.2s ease-in-out all;
 }
 
-    .btn-menu:hover {
+    .button-menu:hover {
         background-color: rgba(255, 255, 255, 0.2);
+        color: white;
     }
 
-    .btn-menu:disabled {
+    .button-menu:disabled {
         cursor: not-allowed;
     }
 
-    .btn-menu.disabled {
+    .button-menu.disabled {
         cursor: not-allowed;
+    }
+
+    .button-menu:focus {
+        color: white;
     }
 
 
@@ -168,21 +193,15 @@ html, body {
  * ============================================================================
  */
 #indent_container {
-    padding-left: 240px;
+    padding-left: 220px;
     width: 100%;
     height: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 #model_editor {
     width: 100%;
     height: 100%;
     padding-top: 10px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 #canvas_wrapper {
@@ -202,10 +221,9 @@ html, body {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
     padding: 12px 0 22px;
-    height: 158px;
+    height: 192px;
     width: 100%;
     bottom: 0;
-    background-color: rgba(102,187,106,1);
 }
 
     #scrollable_container::-webkit-scrollbar {
@@ -233,7 +251,7 @@ html, body {
     z-index: 9999;
     cursor: not-allowed;
     width: 3600px;
-    height: 192px;
+    height: 158px;
 }
 
 .frame_editor-enabled {
@@ -254,8 +272,12 @@ html, body {
     cursor: move;
     overflow: hidden;
     color: white;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
     text-shadow: 0 0 3px #000;
     font-weight: bold;
+    font-size: 16px;
 }
 
     .frame.ng-enter {
@@ -315,7 +337,7 @@ html, body {
     float: left;
 }
 
-.btn-close {
+.button-close {
     outline: none;
     background-color: transparent;
     display: inline-block;
@@ -326,6 +348,10 @@ html, body {
     cursor: pointer;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+    .button-close .fa-times-circle-o {
+        font-size: 40px;
+    }
 
 .input-transition_time {
     position: absolute;
@@ -344,7 +370,12 @@ html, body {
         width: 75px;
     }
 
+        .input-transition_time input[type=number]:disabled {
+            opacity: inherit;
+        }
+
     .input-transition_time input[type=range] {
         cursor: default;
+        padding-bottom: 5px;
         width: 140px;
     }

@@ -8,11 +8,13 @@ class PreviousButtonController
 
     static $inject = [
         "$scope",
+        "SharedMotionService",
         "$rootScope"
     ];
 
     constructor(
         $scope: ng.IScope,
+        public motion_model: MotionModel,
         public $rootScope: ng.IRootScopeService
     )
     {
@@ -23,6 +25,7 @@ class PreviousButtonController
     onClick(): void
     {
         this.$rootScope.$broadcast("ComponentDisabled");
+        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
         this.$rootScope.$broadcast("AnimationPrevious");
     }
 } 

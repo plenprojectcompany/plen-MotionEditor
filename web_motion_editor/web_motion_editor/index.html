@@ -12,25 +12,27 @@
     <!-- Open Graph Protocolの定義 -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="PLEN - Motion Editor for Web." />
-    <meta property="og:url" content="http://plen.jp/developer/motion-editor/" />
-    <meta property="og:image" content="http://plen.jp/developer/motion-editor/assets/img/og-image.gif" />
+    <meta property="og:url" content="http://plen.jp/playground/motion-editor/" />
+    <meta property="og:image" content="http://plen.jp/playground/motion-editor/assets/img/og-image.gif" />
 
     <!-- スタイルファイルのロード -->
-    <link rel="stylesheet" href="./assets/css/normalize.min.css" type="text/css" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="./assets/css/font-awesome.min.css" type="text/css" />
     <link rel="stylesheet" href="./assets/css/index.min.css" type="text/css" />
 
     <!-- 外部ライブラリのロード -->
     <script src="./lib/jquery.min.js"></script>
     <script src="./lib/jquery-ui-sortable.min.js"></script>
-    <script src="./lib/jquery.ui.touch-punch.min.js"></script>
+    <script src="./lib/jquery-ui-touch-punch.fixed.min.js"></script>
+    <script src="./lib/bootstrap.min.js"></script>
     <script src="./lib/lodash.min.js"></script>
     <script src="./lib/three.min.js"></script>
-    <script src="./lib/OrbitControlsFixed.min.js"></script>
-    <script src="./lib/TransformControlsFixed.min.js"></script>
+    <script src="./lib/OrbitControls.fixed.min.js"></script>
+    <script src="./lib/TransformControls.fixed.min.js"></script>
     <script src="./lib/angular.min.js"></script>
     <script src="./lib/angular-animate.min.js"></script>
     <script src="./lib/angular-ui-sortable.min.js"></script>
+    <script src="./lib/angular-ui-bootstrap-custom-tpls.min.js"></script>
 
     <!-- アプリケーションのロード -->
     <script src="./lib/bundle.min.js"></script>
@@ -43,7 +45,7 @@
 <body ng-app="PLEN2MotionEditorForWeb" ng-strict-di>
     <div id="left_pain">
         <div id="logo">
-            <a href="/developer/">
+            <a href="/playground/">
                 <img src="./assets/img/logo.png" width="128" height="160" alt="logo">
             </a>
         </div>
@@ -53,25 +55,26 @@
                 <twitter-button></twitter-button>
                 <facebook-button></facebook-button>
                 <googleplus-button></googleplus-button>
+                <shoppingcart-button></shoppingcart-button>
             </div>
 
-            <div class="btn-group">
+            <div class="button-group">
                 <open-button></open-button>
                 <save-button></save-button>
             </div>
-            <div class="btn-group">
+            <div class="button-group">
                 <new-button></new-button>
                 <reset-button></reset-button>
             </div>
-            <div class="btn-group">
+            <div class="button-group">
                 <sync-button></sync-button>
                 <install-button></install-button>
             </div>
-            <div class="btn-group">
+            <div class="button-group">
                 <play-button></play-button>
                 <stop-button></stop-button>
             </div>
-            <div class="btn-group">
+            <div class="button-group">
                 <previous-button></previous-button>
                 <next-button></next-button>
             </div>
