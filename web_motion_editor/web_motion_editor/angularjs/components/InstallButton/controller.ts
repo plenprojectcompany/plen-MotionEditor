@@ -5,6 +5,7 @@
 class InstallButtonController
 {
     disabled: boolean = false;
+    installing: boolean = false;
 
     static $inject = [
         "PLENControlServerService",
@@ -22,6 +23,7 @@ class InstallButtonController
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
+        $scope.$on("InstallFinished", () => { this.installing = false; });
     }
 
     onClick(): void
@@ -43,6 +45,7 @@ class InstallButtonController
 
             this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
             this.plen_controll_server_service.install(JSON.parse(this.motion.saveJSON()), success_callback);
+            this.installing = true;
         }
     }
 } 

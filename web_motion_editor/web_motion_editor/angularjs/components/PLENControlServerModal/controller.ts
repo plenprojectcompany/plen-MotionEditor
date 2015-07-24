@@ -4,7 +4,7 @@
 
 class PLENControlServerModalController
 {
-    ip_addr: string = "";
+    ip_addr: string = "127.0.0.1:17264";
 
     static $inject = [
         "$modalInstance"

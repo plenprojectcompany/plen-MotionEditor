@@ -21,12 +21,12 @@ class PLENControlServerService
     constructor(
         public $http: ng.IHttpService,
         public $modal: angular.ui.bootstrap.IModalService,
-        $rootScope: ng.IRootScopeService,
+        public $rootScope: ng.IRootScopeService,
         public motion: MotionModel
     )
     {
-        $rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
-        $rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
+        this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
+        this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
     }
 
     connect(success_callback = null): void
@@ -88,9 +88,14 @@ class PLENControlServerService
                         }
                     }
                 })
+                .error(() =>
+                {
+                    this._state = SERVER_STATE.DISCONNECTED;
+                })
                 .finally(() =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
+                    this.$rootScope.$broadcast("InstallFinished");
                 });
         }
     }
@@ -111,6 +116,10 @@ class PLENControlServerService
                             success_callback();
                         }
                     }
+                })
+                .error(() =>
+                {
+                    this._state = SERVER_STATE.DISCONNECTED;
                 })
                 .finally(() =>
                 {
