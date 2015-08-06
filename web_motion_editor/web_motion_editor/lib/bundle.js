@@ -231,7 +231,7 @@ var MotionModel = (function () {
             this.selectFrame(0, false);
         }
         catch (exception) {
-            alert("不正なモーションファイルのため、読み込みに失敗しました。");
+            alert("Loading a motion file failed. This file has invalid format.");
         }
     };
     MotionModel.prototype.saveJSON = function () {
@@ -827,7 +827,7 @@ var ModelLoader = (function () {
                 _this.$rootScope.$broadcast("3DModelLoaded");
             }
         }).error(function () {
-            alert("3Dモデルの読み込みに失敗しました。");
+            alert("Loading a 3D model failed. (Please refresh this page.)");
         });
     };
     return ModelLoader;
@@ -905,7 +905,7 @@ var NewButtonController = (function () {
         });
     }
     NewButtonController.prototype.click = function () {
-        var result = this.$window.confirm("本当に新規にモーションを作成しますか？\n\n" + "現在の作業内容が破棄されます。\n" + '保存がまだの場合は"キャンセル"をクリックしてください。');
+        var result = this.$window.confirm("Are you sure you want to create a new motion?\n\n" + "Working contents will have destroyed.\n" + 'If your motion has not been saved yet, please click to the "Cancel" button.');
         if (result === true) {
             this.motion.reset();
             this.$rootScope.$broadcast("3DModelReset");
@@ -1069,7 +1069,7 @@ var PLENControlServerModalController = (function () {
             this.$modalInstance.close(this.ip_addr);
         }
         else {
-            alert("IPアドレスの形式が不正です。");
+            alert("IP address has invalid format.");
         }
     };
     PLENControlServerModalController.prototype.cancel = function () {

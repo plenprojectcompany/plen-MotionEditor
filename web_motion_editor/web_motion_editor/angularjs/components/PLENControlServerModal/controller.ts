@@ -27,7 +27,7 @@ class PLENControlServerModalController
         }
         else
         {
-            alert("IPアドレスの形式が不正です。");
+            alert("IP address has invalid format.");
         }
     }
 

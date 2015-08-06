@@ -221,7 +221,7 @@ class MotionModel
         }
         catch (exception)
         {
-            alert("不正なモーションファイルのため、読み込みに失敗しました。");
+            alert("Loading a motion file failed. This file has invalid format.");
         }
     }
 

@@ -1,20 +1,20 @@
 ﻿<div class="modal-header">
     <button type="button" ng-click="modal.cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">"PLEN - Control Server"と接続します。</h4>
+    <h4 class="modal-title">Connect to "PLEN - Control Server".</h4>
 </div>
 <div class="modal-body">
     <article>
-        <h2>接続手順 (Windows only, for now.)</h2>
+        <h2>Connecting procedure (Windows only, for now.)</h2>
         <ol>
-            <li><a href="https://www.bluegiga.com/en-US/products/bled112-bluetooth-smart-dongle/" target="_blank">&quot;BLED112&quot;</a>をPCに接続します。</li>
-            <li><a href="https://drive.google.com/open?id=0B5Wd2RxpBbWQfm9DT0JodmU0SGpfaWg4ZmxQQXg5TGFEWGVseFhmeVFOYTZDYXpYeXY5OU0" target="_blank">&quot;PLEN - Control Server&quot;</a>をダブルクリックで起動します。</li>
+            <li>Connect the <a href="https://www.bluegiga.com/en-US/products/bled112-bluetooth-smart-dongle/" target="_blank">&quot;BLED112&quot;</a>.</li>
+            <li>Run the <a href="https://drive.google.com/open?id=0B5Wd2RxpBbWQfm9DT0JodmU0SGpfaWg4ZmxQQXg5TGFEWGVseFhmeVFOYTZDYXpYeXY5OU0" target="_blank">&quot;PLEN - Control Server&quot;</a>.</li>
             <!-- <li>起動メッセージを確認し、サーバのIPアドレスをコピーします。</li> -->
             <!-- <li>&quot;Server IP Address (and Port).&quot;欄に、3. でコピーしたIPアドレスを記入します。</li> -->
-            <li>&quot;Connect&quot;ボタンをクリックします。</li>
-            <li>PLENの目が緑色に光れば接続完了です。</li>
+            <li>Click to the &quot;Connect&quot; button.</li>
+            <li>When the connection is completed, PLEN's eyes emit green.</li>
         </ol>
 
-        <h2>サーバ設定</h2>
+        <h2>Server setting</h2>
         <div class="form-group">
             <label for="server-ipaddr-input">Server IP Address (and Port).</label>
             <input type="text" class="form-control" id="server-ipaddr-input" ng-model="modal.ip_addr" />

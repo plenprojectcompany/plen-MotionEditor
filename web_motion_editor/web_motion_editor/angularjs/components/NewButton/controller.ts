@@ -27,10 +27,10 @@ class NewButtonController
     click(): void
     {
         var result = this.$window.confirm(
-            "本当に新規にモーションを作成しますか？\n\n" +
+            "Are you sure you want to create a new motion?\n\n" +
 
-            "現在の作業内容が破棄されます。\n" +
-            '保存がまだの場合は"キャンセル"をクリックしてください。'
+            "Working contents will have destroyed.\n" +
+            'If your motion has not been saved yet, please click to the "Cancel" button.'
         );
 
         if (result === true)
