@@ -4,7 +4,7 @@
 
 class PLENControlServerModalController
 {
-    ip_addr: string = "";
+    ip_addr: string = "127.0.0.1:17264";
 
     static $inject = [
         "$modalInstance"
@@ -27,7 +27,7 @@ class PLENControlServerModalController
         }
         else
         {
-            alert("IPアドレスの形式が不正です。");
+            alert("IP address has invalid format.");
         }
     }
 

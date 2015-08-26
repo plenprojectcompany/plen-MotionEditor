@@ -101,7 +101,7 @@ class ModelLoader
             })
             .error(() =>
             {
-                alert("3Dモデルの読み込みに失敗しました。");
+            alert("Loading a 3D model failed. (Please refresh this page.)");
             });
     }
 } 
