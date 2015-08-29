@@ -18,7 +18,7 @@ class GoogleplusButtonController
         this.$window.open(
             encodeURI(this.href),
             "googleplus_window",
-            "width=650, height=450, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes"
+            "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes"
         );
     }
 }   

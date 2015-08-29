@@ -8,7 +8,7 @@ var FacebookButtonController = (function () {
         this.href = "http://www.facebook.com/share.php?u=http://plen.jp/playground/motion-editor/";
     }
     FacebookButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), "facebook_window", "width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes");
+        this.$window.open(encodeURI(this.href), "facebook_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=no");
     };
     FacebookButtonController.$inject = ["$window"];
     return FacebookButtonController;
@@ -444,7 +444,7 @@ var GoogleplusButtonController = (function () {
         this.href = "https://plus.google.com/share?url=http://plen.jp/playground/motion-editor/";
     }
     GoogleplusButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), "googleplus_window", "width=650, height=450, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes");
+        this.$window.open(encodeURI(this.href), "googleplus_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes");
     };
     GoogleplusButtonController.$inject = ["$window"];
     return GoogleplusButtonController;
@@ -1344,7 +1344,7 @@ var TwitterButtonController = (function () {
         this.href = "http://twitter.com/share?text=あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。&url=http://plen.jp/playground/motion-editor/&hashtags=PLEN";
     }
     TwitterButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes');
+        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes');
     };
     TwitterButtonController.$inject = ['$window'];
     return TwitterButtonController;

@@ -18,7 +18,7 @@ class TwitterButtonController
         this.$window.open(
             encodeURI(this.href),
             'tweeter_window',
-            'width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes'
+            'width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes'
         );
     }
 }  
