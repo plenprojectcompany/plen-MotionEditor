@@ -34,7 +34,6 @@
     <Content Include="angularjs\components\StopButton\view.html" />
     <Content Include="angularjs\components\PLENControlServerModal\view.html" />
     <Content Include="angularjs\components\SyncButton\view.html" />
-    <Content Include="angularjs\views\NewDialogView.html" />
     <Content Include="angularjs\components\TwitterButton\view.html" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css">
