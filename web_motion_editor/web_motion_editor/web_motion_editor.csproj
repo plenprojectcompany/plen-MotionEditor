@@ -32,7 +32,6 @@
     <Content Include="angularjs\components\FrameEditor\view.html" />
     <Content Include="angularjs\components\GoogleplusButton\view.html" />
     <Content Include="angularjs\components\ShoppingcartButton\view.html" />
-    <Content Include="angularjs\components\StopButton\view.html" />
     <Content Include="angularjs\components\PLENControlServerModal\view.html" />
     <Content Include="angularjs\components\SyncButton\view.html" />
     <Content Include="angularjs\components\TwitterButton\view.html" />
@@ -101,7 +100,6 @@
     <TypeScriptCompile Include="angularjs\components\ResetButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\ShoppingcartButton\directive.ts" />
-    <TypeScriptCompile Include="angularjs\components\StopButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\FacebookButton\directive.ts" />
@@ -117,7 +115,6 @@
     <TypeScriptCompile Include="angularjs\components\ResetButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ScrollableContainer\directive.ts" />
-    <TypeScriptCompile Include="angularjs\components\StopButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />

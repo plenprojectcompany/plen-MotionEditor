@@ -11,10 +11,10 @@ declare module THREE
     }
 }
 
-"use strict";
-
 class ThreeModel
 {
+    "use strict";
+
     layout: any;
 
     scene: THREE.Scene;
@@ -52,8 +52,7 @@ class ThreeModel
         this.grid.setColors(0xB2DB11, 0xFFFFFF);
         this.scene.add(this.grid);
 
-        this.light = new THREE.SpotLight(0xCCCCCC);
-        this.light.position.set(1000, 1000, 1000);
+        this.light = new THREE.SpotLight(0xBBBBBB);
         this.scene.add(this.light);
 
         this.renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
@@ -105,6 +104,14 @@ class ThreeModel
     {
         this.orbit_controls.update();
         this.transform_controls.update();
+
+        var theta  = Math.atan2(this.camera.position.x, this.camera.position.z);
+        var phi    = Math.atan2(Math.sqrt(this.camera.position.x * this.camera.position.x + this.camera.position.z * this.camera.position.z), this.camera.position.y);
+        var radius = Math.sqrt(3) * 1000;
+        
+        this.light.position.x = radius * Math.sin(phi) * Math.sin(theta);
+        this.light.position.y = radius * Math.cos(phi);
+        this.light.position.z = radius * Math.sin(phi) * Math.cos(theta);
 
         this.renderer.render(this.scene, this.camera);
     }

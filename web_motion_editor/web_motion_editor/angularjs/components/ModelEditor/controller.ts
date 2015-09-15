@@ -51,6 +51,13 @@ class ModelEditorController
         this.three_model.home_quaternions = this.model_loader.home_quaternions;
         this.three_model.rotation_axes = this.model_loader.rotation_axes;
         this.three_model.not_axes = this.model_loader.not_axes;
+
+        var json = localStorage.getItem("motion");
+
+        if (!_.isNull(json))
+        {
+            this.motion.loadJSON(json, this.model_loader.getAxisMap());
+        }
     }
 
     on3DModelReset(): void

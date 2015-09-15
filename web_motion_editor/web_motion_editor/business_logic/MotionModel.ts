@@ -1,10 +1,10 @@
 ﻿/// <reference path="./CodeModel.ts" />
 /// <reference path="./FrameModel.ts" />
 
-"use strict";
-
 class MotionModel
 {
+    "use strict";
+
     slot: number = 44;
     name: string = "Test Motion";
     codes: Array<CodeModel>   = [];
@@ -19,6 +19,11 @@ class MotionModel
     )
     {
         this.frames.push(this.frame_factory.getFrame());
+
+        $(window).on("beforeunload", () =>
+        {
+            localStorage.setItem("motion", this.saveJSON());
+        });
     }
 
     getSelectedFrameIndex(): number
@@ -139,15 +144,15 @@ class MotionModel
                     throw "Bad format!.";
                 }
 
-                if (_.isUndefined(code.argments) || !_.isArray(code.argments))
+                if (_.isUndefined(code.args) || !_.isArray(code.args))
                 {
                     throw "Bad format!.";
                 }
                 else
                 {
-                    _.each(code.argments, (argment: string) =>
+                    _.each(code.args, (argment: number) =>
                     {
-                        if (!_.isString(argment))
+                        if (!_.isNumber(argment))
                         {
                             throw "Bad format!.";
                         }
@@ -196,13 +201,13 @@ class MotionModel
             this.codes = [];
             _.each(motion_obj.codes, (code: CodeModel) =>
             {
-                var argments = [];
-                _.each(code.argments, (argment: string) =>
+                var args = [];
+                _.each(code.args, (argment: string) =>
                 {
-                    argments.push(argment);
+                    args.push(argment);
                 });
 
-                this.codes.push(new CodeModel(code.func, argments));
+                this.codes.push(new CodeModel(code.func, args));
             });
 
             this.frames = [];

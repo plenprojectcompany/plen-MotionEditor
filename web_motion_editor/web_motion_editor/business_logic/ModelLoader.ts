@@ -13,6 +13,7 @@ class ModelLoader
         public $http: ng.IHttpService
     )
     {
+        // noop.
     }
 
     addRotationAxis(object: THREE.Object3D): void
@@ -101,7 +102,7 @@ class ModelLoader
             })
             .error(() =>
             {
-            alert("Loading a 3D model failed. (Please refresh this page.)");
+                alert("Loading a 3D model failed. (Please refresh this page.)");
             });
     }
 } 

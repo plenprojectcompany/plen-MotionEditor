@@ -61,9 +61,9 @@ function FacebookButtonDirective() {
 angular.module(app_name).directive("facebookButton", FacebookButtonDirective);
 "use strict";
 var CodeModel = (function () {
-    function CodeModel(func, argments) {
+    function CodeModel(func, args) {
         this.func = func;
-        this.argments = argments;
+        this.args = args;
     }
     return CodeModel;
 })();
@@ -110,9 +110,9 @@ var FrameModel = (function () {
     };
     return FrameModel;
 })();
-"use strict";
 var MotionModel = (function () {
     function MotionModel($rootScope, frame_factory) {
+        var _this = this;
         this.$rootScope = $rootScope;
         this.frame_factory = frame_factory;
         this.slot = 44;
@@ -120,6 +120,9 @@ var MotionModel = (function () {
         this.codes = [];
         this.frames = [];
         this.frames.push(this.frame_factory.getFrame());
+        $(window).on("beforeunload", function () {
+            localStorage.setItem("motion", _this.saveJSON());
+        });
     }
     MotionModel.prototype.getSelectedFrameIndex = function () {
         return _.findIndex(this.frames, function (frame) {
@@ -210,12 +213,12 @@ var MotionModel = (function () {
                 if (_.isUndefined(code.func) || !_.isString(code.func)) {
                     throw "Bad format!.";
                 }
-                if (_.isUndefined(code.argments) || !_.isArray(code.argments)) {
+                if (_.isUndefined(code.args) || !_.isArray(code.args)) {
                     throw "Bad format!.";
                 }
                 else {
-                    _.each(code.argments, function (argment) {
-                        if (!_.isString(argment)) {
+                    _.each(code.args, function (argment) {
+                        if (!_.isNumber(argment)) {
                             throw "Bad format!.";
                         }
                     });
@@ -248,11 +251,11 @@ var MotionModel = (function () {
             this.name = motion_obj.name;
             this.codes = [];
             _.each(motion_obj.codes, function (code) {
-                var argments = [];
-                _.each(code.argments, function (argment) {
-                    argments.push(argment);
+                var args = [];
+                _.each(code.args, function (argment) {
+                    args.push(argment);
                 });
-                _this.codes.push(new CodeModel(code.func, argments));
+                _this.codes.push(new CodeModel(code.func, args));
             });
             this.frames = [];
             _.each(motion_obj.frames, function (frame) {
@@ -517,7 +520,9 @@ var InstallButtonController = (function () {
     InstallButtonController.prototype.onClick = function () {
         var _this = this;
         if (this.plen_controll_server_service.getStatus() === 0 /* DISCONNECTED */) {
-            this.plen_controll_server_service.connect();
+            this.plen_controll_server_service.connect(function () {
+                _this.onClick();
+            });
         }
         if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
             var success_callback = function () {
@@ -550,7 +555,6 @@ function InstallButtonDirective() {
     };
 }
 angular.module(app_name).directive("installButton", InstallButtonDirective);
-"use strict";
 var ThreeModel = (function () {
     function ThreeModel() {
         this.home_quaternions = [];
@@ -569,8 +573,7 @@ var ThreeModel = (function () {
         this.grid.position.set(0, 0, 0);
         this.grid.setColors(0xB2DB11, 0xFFFFFF);
         this.scene.add(this.grid);
-        this.light = new THREE.SpotLight(0xCCCCCC);
-        this.light.position.set(1000, 1000, 1000);
+        this.light = new THREE.SpotLight(0xBBBBBB);
         this.scene.add(this.light);
         this.renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
         this.renderer.setSize(width, height);
@@ -609,6 +612,12 @@ var ThreeModel = (function () {
     ThreeModel.prototype.refresh = function () {
         this.orbit_controls.update();
         this.transform_controls.update();
+        var theta = Math.atan2(this.camera.position.x, this.camera.position.z);
+        var phi = Math.atan2(Math.sqrt(this.camera.position.x * this.camera.position.x + this.camera.position.z * this.camera.position.z), this.camera.position.y);
+        var radius = Math.sqrt(3) * 1000;
+        this.light.position.x = radius * Math.sin(phi) * Math.sin(theta);
+        this.light.position.y = radius * Math.cos(phi);
+        this.light.position.z = radius * Math.sin(phi) * Math.cos(theta);
         this.renderer.render(this.scene, this.camera);
     };
     ThreeModel.prototype.intersect = function (screen_x, screen_y) {
@@ -718,6 +727,10 @@ var ModelEditorController = (function () {
         this.three_model.home_quaternions = this.model_loader.home_quaternions;
         this.three_model.rotation_axes = this.model_loader.rotation_axes;
         this.three_model.not_axes = this.model_loader.not_axes;
+        var json = localStorage.getItem("motion");
+        if (!_.isNull(json)) {
+            this.motion.loadJSON(json, this.model_loader.getAxisMap());
+        }
     };
     ModelEditorController.prototype.on3DModelReset = function () {
         this.three_model.reset();
@@ -1057,9 +1070,11 @@ var PlayPauseButtonController = (function () {
         this.title = "Play a motion.";
         $scope.$on("ComponentDisabled", function () {
             _this.playing = true;
+            _this.title = "Pause a motion.";
         });
         $scope.$on("ComponentEnabled", function () {
             _this.playing = false;
+            _this.title = "Play a motion.";
         });
     }
     PlayPauseButtonController.prototype.onClick = function () {
@@ -1071,11 +1086,9 @@ var PlayPauseButtonController = (function () {
             if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
                 this.plen_controll_server_service.play(this.motion_model.slot);
             }
-            this.title = "Pause a motion.";
         }
         else {
             this.$rootScope.$broadcast("AnimationStop");
-            this.title = "Play a motion.";
         }
     };
     PlayPauseButtonController.$inject = [
@@ -1458,10 +1471,10 @@ var PLENControlServerService = (function () {
                 _this._ip_addr = ip_addr;
                 _this.$http.jsonp("http://" + _this._ip_addr + "/connect/?callback=JSON_CALLBACK").success(function (response) {
                     if (response.result === true) {
+                        _this._state = 1 /* CONNECTED */;
                         if (!_.isNull(success_callback)) {
                             success_callback();
                         }
-                        _this._state = 1 /* CONNECTED */;
                     }
                     else {
                         _this._state = 0 /* DISCONNECTED */;
@@ -1487,7 +1500,6 @@ var PLENControlServerService = (function () {
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
             }).finally(function () {
-                _this._state = 1 /* CONNECTED */;
                 _this.$rootScope.$broadcast("InstallFinished");
             });
         }
@@ -1498,6 +1510,7 @@ var PLENControlServerService = (function () {
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
             this.$http.jsonp("http://" + this._ip_addr + "/play/" + slot.toString() + "/?callback=JSON_CALLBACK").success(function (response) {
+                _this._state = 1 /* CONNECTED */;
                 if (response.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
@@ -1505,8 +1518,6 @@ var PLENControlServerService = (function () {
                 }
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
-            }).finally(function () {
-                _this._state = 1 /* CONNECTED */;
             });
         }
     };

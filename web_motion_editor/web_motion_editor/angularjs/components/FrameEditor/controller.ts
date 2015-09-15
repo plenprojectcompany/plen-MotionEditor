@@ -128,6 +128,7 @@ class FrameEditorController
         {
             var offset_x;
 
+            // firefox対策
             if (_.isUndefined($event.offsetX))
             {
                 offset_x = $event.pageX - $($event.target).offset().left;

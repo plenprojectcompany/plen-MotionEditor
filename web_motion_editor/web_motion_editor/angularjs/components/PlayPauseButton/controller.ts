@@ -19,8 +19,8 @@
         public plen_controll_server_service: PLENControlServerService
         )
     {
-        $scope.$on("ComponentDisabled",() => { this.playing = true; });
-        $scope.$on("ComponentEnabled",() => { this.playing = false; });
+        $scope.$on("ComponentDisabled", () => { this.playing = true; this.title = "Pause a motion."; });
+        $scope.$on("ComponentEnabled", () => { this.playing = false; this.title = "Play a motion."; });
     }
 
     onClick(): void
@@ -36,13 +36,10 @@
             {
                 this.plen_controll_server_service.play(this.motion_model.slot);
             }
-
-            this.title = "Pause a motion.";
         }
         else
         {
             this.$rootScope.$broadcast("AnimationStop");
-            this.title = "Play a motion.";
         }
     }
 }   
