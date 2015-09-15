@@ -1,6 +1,40 @@
 "use strict";
 var app_name = "PLEN2MotionEditorForWeb";
 angular.module(app_name, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
+var EditCodesButtonController = (function () {
+    function EditCodesButtonController($scope) {
+        var _this = this;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    EditCodesButtonController.$inject = [
+        "$scope"
+    ];
+    return EditCodesButtonController;
+})();
+var EditCodesButtonDirective = (function () {
+    function EditCodesButtonDirective() {
+    }
+    EditCodesButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: EditCodesButtonController,
+            controllerAs: "edit_codes_button",
+            scope: {},
+            templateUrl: "./angularjs/components/EditCodesButton/view.html",
+            replace: true
+        };
+    };
+    return EditCodesButtonDirective;
+})();
+angular.module(app_name).directive("editCodesButton", [
+    EditCodesButtonDirective.getDDO
+]);
 "use strict";
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
@@ -1013,50 +1047,63 @@ angular.module(app_name).directive("openButton", [
     "ModelLoaderService",
     OpenButtonDirective
 ]);
-"use strict";
-var PlayButtonController = (function () {
-    function PlayButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
+var PlayPauseButtonController = (function () {
+    function PlayPauseButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
         var _this = this;
         this.$rootScope = $rootScope;
         this.motion_model = motion_model;
         this.plen_controll_server_service = plen_controll_server_service;
-        this.disabled = false;
+        this.playing = false;
+        this.title = "Play a motion.";
         $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
+            _this.playing = true;
         });
         $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
+            _this.playing = false;
         });
     }
-    PlayButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("ComponentDisabled");
-        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-        this.motion_model.selectFrame(0);
-        this.$rootScope.$broadcast("AnimationPlay");
-        if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-            this.plen_controll_server_service.play(this.motion_model.slot);
+    PlayPauseButtonController.prototype.onClick = function () {
+        if (this.playing === false) {
+            this.$rootScope.$broadcast("ComponentDisabled");
+            this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
+            this.motion_model.selectFrame(0);
+            this.$rootScope.$broadcast("AnimationPlay");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.play(this.motion_model.slot);
+            }
+            this.title = "Pause a motion.";
+        }
+        else {
+            this.$rootScope.$broadcast("AnimationStop");
+            this.title = "Play a motion.";
         }
     };
-    PlayButtonController.$inject = [
+    PlayPauseButtonController.$inject = [
         "$scope",
         "$rootScope",
         "SharedMotionService",
         "PLENControlServerService"
     ];
-    return PlayButtonController;
+    return PlayPauseButtonController;
 })();
-function PlayButtonDirective() {
-    "use strict";
-    return {
-        restrict: "E",
-        controller: PlayButtonController,
-        controllerAs: 'play_button',
-        scope: {},
-        templateUrl: "./angularjs/components/PlayButton/view.html",
-        replace: true
+var PlayPauseButtonDirective = (function () {
+    function PlayPauseButtonDirective() {
+    }
+    PlayPauseButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: PlayPauseButtonController,
+            controllerAs: "play_pause_button",
+            scope: {},
+            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
+            replace: true
+        };
     };
-}
-angular.module(app_name).directive("playButton", PlayButtonDirective);
+    return PlayPauseButtonDirective;
+})();
+angular.module(app_name).directive("playPauseButton", [
+    PlayPauseButtonDirective.getDDO
+]);
 "use strict";
 var PLENControlServerModalController = (function () {
     function PLENControlServerModalController($modalInstance) {
@@ -1259,31 +1306,6 @@ var ShoppingcartButtonDirective = (function () {
 angular.module(app_name).directive("shoppingcartButton", [
     ShoppingcartButtonDirective.getDDO
 ]);
-"use strict";
-var StopButtonController = (function () {
-    function StopButtonController($rootScope) {
-        this.$rootScope = $rootScope;
-    }
-    StopButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("AnimationStop");
-    };
-    StopButtonController.$inject = [
-        "$rootScope"
-    ];
-    return StopButtonController;
-})();
-function StopButtonDirective() {
-    "use strict";
-    return {
-        restrict: 'E',
-        controller: StopButtonController,
-        controllerAs: 'stop_button',
-        scope: {},
-        templateUrl: "./angularjs/components/StopButton/view.html",
-        replace: true
-    };
-}
-angular.module(app_name).directive("stopButton", StopButtonDirective);
 "use strict";
 var SyncButtonController = (function () {
     function SyncButtonController($scope, $rootScope, plen_controll_server_service) {

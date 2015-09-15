@@ -18,12 +18,13 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="angularjs\components\EditCodesButton\view.html" />
     <Content Include="angularjs\components\InstallButton\view.html" />
     <Content Include="angularjs\components\ModelEditor\view.html" />
     <Content Include="angularjs\components\NewButton\view.html" />
     <Content Include="angularjs\components\NextButton\view.html" />
     <Content Include="angularjs\components\OpenButton\view.html" />
-    <Content Include="angularjs\components\PlayButton\view.html" />
+    <Content Include="angularjs\components\PlayPauseButton\view.html" />
     <Content Include="angularjs\components\PreviousButton\view.html" />
     <Content Include="angularjs\components\ResetButton\view.html" />
     <Content Include="angularjs\components\SaveButton\view.html" />
@@ -83,6 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularjs\AppEntry.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditCodesButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditCodesButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\FacebookButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\FrameEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\GoogleplusButton\controller.ts" />
@@ -91,7 +94,8 @@
     <TypeScriptCompile Include="angularjs\components\NewButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\NextButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\OpenButton\controller.ts" />
-    <TypeScriptCompile Include="angularjs\components\PlayButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\PlayPauseButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\PlayPauseButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\PLENControlServerModal\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\PreviousButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\ResetButton\controller.ts" />
@@ -109,7 +113,6 @@
     <TypeScriptCompile Include="angularjs\components\NextButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\OpenButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\directives\AutoResizeDirective.ts" />
-    <TypeScriptCompile Include="angularjs\components\PlayButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\PreviousButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ResetButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\directive.ts" />
