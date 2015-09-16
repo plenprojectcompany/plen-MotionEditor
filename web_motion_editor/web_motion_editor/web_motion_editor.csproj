@@ -165,8 +165,6 @@
     <Content Include="assets\css\fonts\fontawesome-webfont.woff" />
     <Content Include="assets\css\fonts\fontawesome-webfont.woff2" />
     <Content Include="assets\css\fonts\FontAwesome.otf" />
-    <Content Include="assets\etc\plen_model.json" />
-    <Content Include="assets\etc\plen_model.min.json" />
     <Content Include="lib\bundle.min.js.map">
       <DependentUpon>bundle.min.js</DependentUpon>
     </Content>
@@ -179,6 +177,8 @@
     <Content Include="lib\jquery-ui-touch-punch.fixed.min.js.map">
       <DependentUpon>jquery-ui-touch-punch.fixed.min.js</DependentUpon>
     </Content>
+    <Content Include="assets\etc\plen2_3dmodel.json" />
+    <Content Include="assets\etc\plen2_3dmodel.min.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
