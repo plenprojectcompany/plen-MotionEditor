@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../services/SharedMotionService.ts" />
 
-"use strict";
-
 class FrameEditorController
 {
     disabled: boolean = false;
@@ -41,7 +39,7 @@ class FrameEditorController
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
 
         $scope.$on("AnimationPlay", () => { this.onAnimationPlay(); });
-        $scope.$on("AnimationPause", () => { /* this.onAnimationPause(); */ });
+        // $scope.$on("AnimationPause", () => { this.onAnimationPause(); });
         $scope.$on("AnimationStop", () => { this.onAnimationStop(); });
         $scope.$on("AnimationNext", () => { this.onAnimationPlay(false, true); });
         $scope.$on("AnimationPrevious", () => { this.onAnimationPlay(true, true); });
@@ -94,7 +92,6 @@ class FrameEditorController
         }, (1000 / FrameEditorController.FPS), frame_count)
         .catch(() =>
         {
-            console.log("abort");
             this.load_next = false;
         })
         .finally(() =>

@@ -20,6 +20,7 @@
   <ItemGroup>
     <Content Include="angularjs\components\EditCodesButton\view.html" />
     <Content Include="angularjs\components\InstallButton\view.html" />
+    <Content Include="angularjs\components\ModelEditorPanel\view.html" />
     <Content Include="angularjs\components\ModelEditor\view.html" />
     <Content Include="angularjs\components\NewButton\view.html" />
     <Content Include="angularjs\components\NextButton\view.html" />
@@ -89,6 +90,8 @@
     <TypeScriptCompile Include="angularjs\components\FrameEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\GoogleplusButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\InstallButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\ModelEditorPanel\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\ModelEditorPanel\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ModelEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\NewButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\NextButton\controller.ts" />
@@ -119,7 +122,7 @@
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />
     <TypeScriptCompile Include="angularjs\services\PLENControlServerService.ts" />
-    <TypeScriptCompile Include="angularjs\services\ThreeFactory.ts" />
+    <TypeScriptCompile Include="angularjs\services\SharedThreeService.ts" />
     <TypeScriptCompile Include="business_logic\CodeModel.ts" />
     <TypeScriptCompile Include="business_logic\FrameModel.ts" />
     <TypeScriptCompile Include="business_logic\ModelLoader.ts" />

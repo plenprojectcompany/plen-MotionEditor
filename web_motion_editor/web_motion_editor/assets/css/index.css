@@ -27,7 +27,6 @@ html, body {
 #right_pain {
     width: 100%;
     height: 100%;
-    /*background-color: rgba(102,187,106,1);*/
     background-size: 20px 20px;
     background-color: #3cb371;
     background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #66BB6A), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, #66BB6A), color-stop(.75, #66BB6A), color-stop(.75, transparent), to(transparent));
@@ -209,6 +208,27 @@ html, body {
     border: 10px solid white;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.4) 2px 2px 3px;
+}
+
+#model_editor_panel {
+    position: absolute;
+    top: 30px;
+    left: 250px;
+}
+
+#model_editor_panel button {
+    outline: none;
+    border: none;
+    background: none;
+    color: #fff;
+}
+
+#model_editor_panel button:hover {
+    text-shadow: 0 0 10px #333;
+}
+
+#model_editor_panel button:disabled {
+    cursor: not-allowed;
 }
 
 /**

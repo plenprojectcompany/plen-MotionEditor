@@ -336,13 +336,11 @@ var FrameFactory = (function () {
     return FrameFactory;
 })();
 angular.module(app_name).service("FrameFactory", FrameFactory);
-"use strict";
 angular.module(app_name).service("SharedMotionService", [
     "$rootScope",
     "FrameFactory",
     MotionModel
 ]);
-"use strict";
 var FrameEditorController = (function () {
     function FrameEditorController($scope, $rootScope, $interval, motion) {
         var _this = this;
@@ -367,8 +365,6 @@ var FrameEditorController = (function () {
         });
         $scope.$on("AnimationPlay", function () {
             _this.onAnimationPlay();
-        });
-        $scope.$on("AnimationPause", function () {
         });
         $scope.$on("AnimationStop", function () {
             _this.onAnimationStop();
@@ -412,7 +408,6 @@ var FrameEditorController = (function () {
             });
             _this.$rootScope.$broadcast("FrameLoad", now_frame_index);
         }, (1000 / FrameEditorController.FPS), frame_count).catch(function () {
-            console.log("abort");
             _this.load_next = false;
         }).finally(function () {
             _.each(now_frame.outputs, function (output, index) {
@@ -647,15 +642,34 @@ var ThreeModel = (function () {
             this.orbit_controls.enabled = true;
         }
     };
-    ThreeModel.prototype.getDiffAngle = function () {
-        var _this = this;
-        var angle = {
-            axis_name: null,
-            diff_angle: null
-        };
-        if (!_.isUndefined(this.transform_controls.object)) {
+    ThreeModel.prototype.reverse3DModel = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+        }
+    };
+    ThreeModel.prototype.copyRightToLeft = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+        }
+    };
+    ThreeModel.prototype.copyLeftToRight = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
+        }
+    };
+    ThreeModel.prototype.getDiffAngle = function (axis_object) {
+        var angle_diff = null;
+        if (!_.isUndefined(axis_object)) {
             var selected_axis_index = _.findIndex(this.rotation_axes, function (axis) {
-                return axis === _this.transform_controls.object;
+                return axis === axis_object;
             });
             var home_quaternion = this.home_quaternions[selected_axis_index].clone();
             var axis_quaternion = this.rotation_axes[selected_axis_index].quaternion.clone();
@@ -670,32 +684,34 @@ var ThreeModel = (function () {
             else {
                 var theta_diff = theta_half_diff * 2;
             }
-            angle.axis_name = this.rotation_axes[selected_axis_index].name;
-            angle.diff_angle = Math.round(theta_diff * 1800 / Math.PI);
+            angle_diff = Math.round(theta_diff * 1800 / Math.PI);
         }
-        return angle;
+        return angle_diff;
+    };
+    ThreeModel.prototype.setDiffAngle = function (axis_object, angle_diff) {
+        var theta_diff = angle_diff * Math.PI / 1800;
+        var index = _.findIndex(this.rotation_axes, function (axis) {
+            return axis === axis_object;
+        });
+        var home_quaternion = this.home_quaternions[index].clone();
+        var target_quaternion = new THREE.Quaternion();
+        target_quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), theta_diff);
+        home_quaternion.multiply(target_quaternion);
+        this.rotation_axes[index].quaternion.copy(home_quaternion);
     };
     return ThreeModel;
 })();
-"use strict";
-var ThreeFactory = (function () {
-    function ThreeFactory() {
-    }
-    ThreeFactory.prototype.getThree = function () {
-        return new ThreeModel();
-    };
-    return ThreeFactory;
-})();
-angular.module(app_name).service("ThreeFactory", ThreeFactory);
-"use strict";
+angular.module(app_name).service("SharedThreeService", [
+    ThreeModel
+]);
 var ModelEditorController = (function () {
-    function ModelEditorController($scope, model_loader, three_factory, motion, image_store_service) {
+    function ModelEditorController($scope, model_loader, three_model, motion, image_store_service) {
         var _this = this;
         this.model_loader = model_loader;
+        this.three_model = three_model;
         this.motion = motion;
         this.image_store_service = image_store_service;
         this.disabled = false;
-        this.three_model = three_factory.getThree();
         $scope.$on("ComponentDisabled", function () {
             _this.disabled = true;
         });
@@ -710,6 +726,9 @@ var ModelEditorController = (function () {
         });
         $scope.$on("3DModelReset", function () {
             _this.on3DModelReset();
+        });
+        $scope.$on("RefreshThumbnail", function () {
+            _this.onRefreshThumbnail();
         });
         $scope.$on("FrameSave", function (event, frame_index) {
             _this.onFrameSave(frame_index);
@@ -734,6 +753,9 @@ var ModelEditorController = (function () {
     };
     ModelEditorController.prototype.on3DModelReset = function () {
         this.three_model.reset();
+        this.setImage();
+    };
+    ModelEditorController.prototype.onRefreshThumbnail = function () {
         this.setImage();
     };
     ModelEditorController.prototype.onFrameSave = function (frame_index) {
@@ -802,7 +824,7 @@ var ModelEditorController = (function () {
     ModelEditorController.$inject = [
         "$scope",
         "ModelLoaderService",
-        "ThreeFactory",
+        "SharedThreeService",
         "SharedMotionService",
         "ImageStoreService"
     ];
@@ -819,15 +841,15 @@ var ModelLoader = (function () {
     }
     ModelLoader.prototype.addRotationAxis = function (object) {
         var _this = this;
-        if (/roll/.test(object.name)) {
+        if (/roll$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/pitch/.test(object.name)) {
+        else if (/pitch$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/yaw/.test(object.name)) {
+        else if (/yaw$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
@@ -860,7 +882,7 @@ var ModelLoader = (function () {
     };
     ModelLoader.prototype.loadJSON = function () {
         var _this = this;
-        this.$http.get("./assets/etc/plen2_3dmodel.min.json").success(function (data) {
+        this.$http.get("./assets/etc/plen2_3dmodel.json").success(function (data) {
             var model_obj = data;
             if (model_obj.metadata.type.toLowerCase() === "object") {
                 var loader = new THREE.ObjectLoader();
@@ -935,6 +957,63 @@ angular.module(app_name).directive("modelEditor", [
     "$window",
     "ModelLoaderService",
     ModelEditorDirective.getDDO
+]);
+var ModelEditorPanelController = (function () {
+    function ModelEditorPanelController($scope, $rootScope, three_model) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        this._three_model = three_model;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    ModelEditorPanelController.prototype.onClick = function (id) {
+        switch (id) {
+            case 0:
+                this._three_model.reverse3DModel();
+                break;
+            case 1:
+                this._three_model.copyRightToLeft();
+                break;
+            case 2:
+                this._three_model.copyLeftToRight();
+                break;
+            case 3:
+                this._three_model.orbit_controls.reset();
+                break;
+            default:
+                return;
+        }
+        this.$rootScope.$broadcast("RefreshThumbnail");
+    };
+    ModelEditorPanelController.$inject = [
+        "$scope",
+        "$rootScope",
+        "SharedThreeService"
+    ];
+    return ModelEditorPanelController;
+})();
+var ModelEditorPanelDirective = (function () {
+    function ModelEditorPanelDirective() {
+    }
+    ModelEditorPanelDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: ModelEditorPanelController,
+            controllerAs: "model_editor_panel",
+            scope: {},
+            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
+            replace: true
+        };
+    };
+    return ModelEditorPanelDirective;
+})();
+angular.module(app_name).directive("modelEditorPanel", [
+    ModelEditorPanelDirective.getDDO
 ]);
 "use strict";
 var NewButtonController = (function () {
