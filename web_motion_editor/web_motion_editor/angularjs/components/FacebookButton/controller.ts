@@ -18,7 +18,7 @@ class FacebookButtonController
         this.$window.open(
             encodeURI(this.href),
             "facebook_window",
-            "width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes"
+            "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=no"
         );
     }
 }   

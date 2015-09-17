@@ -42,7 +42,8 @@ class ModelEditorDirective
                     scope.model_editor.three_model.init($("#canvas_wrapper"), scope.model_editor.layout);
                     scope.model_editor.three_model.animate();
 
-                    $("body").on("click",(event) =>
+                    // モデルエディタ外をクリックした際、フォーカスを解除
+                    $("body").on("click", (event) =>
                     {
                         if (event.target !== scope.model_editor.three_model.renderer.domElement)
                         {
@@ -50,7 +51,8 @@ class ModelEditorDirective
                         }
                     });
 
-                    $("#canvas_wrapper canvas").on("touchend",(event) =>
+                    // touchendイベント誘発時、フォーカスを解除
+                    $("#canvas_wrapper canvas").on("touchend", (event) =>
                     {
                         scope.model_editor.onClick(event);
                         scope.$apply();

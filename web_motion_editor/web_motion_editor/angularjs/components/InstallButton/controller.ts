@@ -30,7 +30,7 @@ class InstallButtonController
     {
         if (this.plen_controll_server_service.getStatus() === SERVER_STATE.DISCONNECTED)
         {
-            this.plen_controll_server_service.connect();
+            this.plen_controll_server_service.connect(() => { this.onClick(); });
         }
 
         if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)

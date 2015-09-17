@@ -18,12 +18,14 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="angularjs\components\EditCodesButton\view.html" />
     <Content Include="angularjs\components\InstallButton\view.html" />
+    <Content Include="angularjs\components\ModelEditorPanel\view.html" />
     <Content Include="angularjs\components\ModelEditor\view.html" />
     <Content Include="angularjs\components\NewButton\view.html" />
     <Content Include="angularjs\components\NextButton\view.html" />
     <Content Include="angularjs\components\OpenButton\view.html" />
-    <Content Include="angularjs\components\PlayButton\view.html" />
+    <Content Include="angularjs\components\PlayPauseButton\view.html" />
     <Content Include="angularjs\components\PreviousButton\view.html" />
     <Content Include="angularjs\components\ResetButton\view.html" />
     <Content Include="angularjs\components\SaveButton\view.html" />
@@ -31,10 +33,8 @@
     <Content Include="angularjs\components\FrameEditor\view.html" />
     <Content Include="angularjs\components\GoogleplusButton\view.html" />
     <Content Include="angularjs\components\ShoppingcartButton\view.html" />
-    <Content Include="angularjs\components\StopButton\view.html" />
     <Content Include="angularjs\components\PLENControlServerModal\view.html" />
     <Content Include="angularjs\components\SyncButton\view.html" />
-    <Content Include="angularjs\views\NewDialogView.html" />
     <Content Include="angularjs\components\TwitterButton\view.html" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css">
@@ -84,21 +84,25 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularjs\AppEntry.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditCodesButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditCodesButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\FacebookButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\FrameEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\GoogleplusButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\InstallButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\ModelEditorPanel\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\ModelEditorPanel\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ModelEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\NewButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\NextButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\OpenButton\controller.ts" />
-    <TypeScriptCompile Include="angularjs\components\PlayButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\PlayPauseButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\PlayPauseButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\PLENControlServerModal\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\PreviousButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\ResetButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\ShoppingcartButton\directive.ts" />
-    <TypeScriptCompile Include="angularjs\components\StopButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\FacebookButton\directive.ts" />
@@ -110,17 +114,15 @@
     <TypeScriptCompile Include="angularjs\components\NextButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\OpenButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\directives\AutoResizeDirective.ts" />
-    <TypeScriptCompile Include="angularjs\components\PlayButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\PreviousButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ResetButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SaveButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\ScrollableContainer\directive.ts" />
-    <TypeScriptCompile Include="angularjs\components\StopButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />
     <TypeScriptCompile Include="angularjs\services\PLENControlServerService.ts" />
-    <TypeScriptCompile Include="angularjs\services\ThreeFactory.ts" />
+    <TypeScriptCompile Include="angularjs\services\SharedThreeService.ts" />
     <TypeScriptCompile Include="business_logic\CodeModel.ts" />
     <TypeScriptCompile Include="business_logic\FrameModel.ts" />
     <TypeScriptCompile Include="business_logic\ModelLoader.ts" />
@@ -166,8 +168,6 @@
     <Content Include="assets\css\fonts\fontawesome-webfont.woff" />
     <Content Include="assets\css\fonts\fontawesome-webfont.woff2" />
     <Content Include="assets\css\fonts\FontAwesome.otf" />
-    <Content Include="assets\etc\plen_model.json" />
-    <Content Include="assets\etc\plen_model.min.json" />
     <Content Include="lib\bundle.min.js.map">
       <DependentUpon>bundle.min.js</DependentUpon>
     </Content>
@@ -180,6 +180,8 @@
     <Content Include="lib\jquery-ui-touch-punch.fixed.min.js.map">
       <DependentUpon>jquery-ui-touch-punch.fixed.min.js</DependentUpon>
     </Content>
+    <Content Include="assets\etc\plen2_3dmodel.json" />
+    <Content Include="assets\etc\plen2_3dmodel.min.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

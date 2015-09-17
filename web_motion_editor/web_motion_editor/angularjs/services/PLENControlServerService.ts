@@ -49,12 +49,12 @@ class PLENControlServerService
                     {
                         if (response.result === true)
                         {
+                            this._state = SERVER_STATE.CONNECTED;
+
                             if (!_.isNull(success_callback))
                             {
                                 success_callback();
                             }
-
-                            this._state = SERVER_STATE.CONNECTED;
                         }
                         else
                         {
@@ -94,7 +94,6 @@ class PLENControlServerService
                 })
                 .finally(() =>
                 {
-                    this._state = SERVER_STATE.CONNECTED;
                     this.$rootScope.$broadcast("InstallFinished");
                 });
         }
@@ -109,6 +108,8 @@ class PLENControlServerService
             this.$http.jsonp("http://" + this._ip_addr + "/play/" + slot.toString() + "/?callback=JSON_CALLBACK")
                 .success((response: any) =>
                 {
+                    this._state = SERVER_STATE.CONNECTED;
+
                     if (response.result === true)
                     {
                         if (!_.isNull(success_callback))
@@ -120,10 +121,6 @@ class PLENControlServerService
                 .error(() =>
                 {
                     this._state = SERVER_STATE.DISCONNECTED;
-                })
-                .finally(() =>
-                {
-                    this._state = SERVER_STATE.CONNECTED;
                 });
         }
     }

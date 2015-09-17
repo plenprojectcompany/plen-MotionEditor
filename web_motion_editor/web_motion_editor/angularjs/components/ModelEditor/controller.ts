@@ -1,19 +1,15 @@
-﻿/// <reference path="../../services/ThreeFactory.ts" />
+﻿/// <reference path="../../services/SharedThreeService.ts" />
 /// <reference path="../../services/SharedMotionService.ts" />
 /// <reference path="../../services/ImageStoreService.ts" />
-
-"use strict";
 
 class ModelEditorController
 {
     disabled: boolean = false;
 
-    three_model: ThreeModel;
-
     static $inject = [
         "$scope",
         "ModelLoaderService",
-        "ThreeFactory",
+        "SharedThreeService",
         "SharedMotionService",
         "ImageStoreService"
     ];
@@ -21,19 +17,18 @@ class ModelEditorController
     constructor(
         $scope: ng.IScope,
         public model_loader: ModelLoader,
-        three_factory: ThreeFactory,
+        public three_model: ThreeModel,
         public motion: MotionModel,
         public image_store_service: ImageStoreService
     )
     {
-        this.three_model = three_factory.getThree();
-
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
 
         $scope.$on("ModelEditorUnfocused", () => { this.onModelEditorUnfocused(); });
         $scope.$on("3DModelLoaded", () => { this.on3DModelLoaded(); });
         $scope.$on("3DModelReset", () => { this.on3DModelReset(); });
+        $scope.$on("RefreshThumbnail", () => { this.onRefreshThumbnail(); });
         $scope.$on("FrameSave", (event, frame_index: number) => { this.onFrameSave(frame_index); });
         $scope.$on("FrameLoad", (event, frame_index: number) => { this.onFrameLoad(frame_index); });
     }
@@ -51,11 +46,23 @@ class ModelEditorController
         this.three_model.home_quaternions = this.model_loader.home_quaternions;
         this.three_model.rotation_axes = this.model_loader.rotation_axes;
         this.three_model.not_axes = this.model_loader.not_axes;
+
+        var json = localStorage.getItem("motion");
+
+        if (!_.isNull(json))
+        {
+            this.motion.loadJSON(json, this.model_loader.getAxisMap());
+        }
     }
 
     on3DModelReset(): void
     {
         this.three_model.reset();
+        this.setImage();
+    }
+
+    onRefreshThumbnail(): void
+    {
         this.setImage();
     }
 

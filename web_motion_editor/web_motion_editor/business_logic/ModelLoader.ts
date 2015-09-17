@@ -13,21 +13,22 @@ class ModelLoader
         public $http: ng.IHttpService
     )
     {
+        // noop.
     }
 
     addRotationAxis(object: THREE.Object3D): void
     {
-        if (/roll/.test(object.name))
+        if (/roll$/.test(object.name))
         {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/pitch/.test(object.name))
+        else if (/pitch$/.test(object.name))
         {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/yaw/.test(object.name))
+        else if (/yaw$/.test(object.name))
         {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
@@ -77,7 +78,7 @@ class ModelLoader
 
     loadJSON(): void
     {
-        this.$http.get("./assets/etc/plen_model.min.json")
+        this.$http.get("./assets/etc/plen2_3dmodel.min.json")
             .success((data) =>
             {
                 var model_obj:any = data;
@@ -101,7 +102,7 @@ class ModelLoader
             })
             .error(() =>
             {
-            alert("Loading a 3D model failed. (Please refresh this page.)");
+                alert("Loading a 3D model failed. (Please refresh this page.)");
             });
     }
 } 

@@ -27,7 +27,6 @@ html, body {
 #right_pain {
     width: 100%;
     height: 100%;
-    /*background-color: rgba(102,187,106,1);*/
     background-size: 20px 20px;
     background-color: #3cb371;
     background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #66BB6A), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, #66BB6A), color-stop(.75, #66BB6A), color-stop(.75, transparent), to(transparent));
@@ -164,10 +163,10 @@ html, body {
     color: #FFFFFF;
     box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 4px;
     background-color: transparent;
-    -moz-transition: 0.2s ease-in-out all;
-    -o-transition: 0.2s ease-in-out all;
-    -webkit-transition: 0.2s ease-in-out all;
-    transition: 0.2s ease-in-out all;
+    -moz-transition: 0.2s ease-in-out background-color;
+    -o-transition: 0.2s ease-in-out background-color;
+    -webkit-transition: 0.2s ease-in-out background-color;
+    transition: 0.2s ease-in-out background-color;
 }
 
     .button-menu:hover {
@@ -186,6 +185,20 @@ html, body {
     .button-menu:focus {
         color: white;
     }
+
+.download-unity {
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+}
+
+.download-unity:hover {
+    color: #fff;
+}
+
+.download-unity:focus {
+    color: #fff;
+}
 
 
 /**
@@ -209,6 +222,31 @@ html, body {
     border: 10px solid white;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.4) 2px 2px 3px;
+}
+
+#model_editor_panel {
+    position: absolute;
+    top: 30px;
+    left: 250px;
+}
+
+#model_editor_panel button {
+    outline: none;
+    border: none;
+    background: none;
+    color: #fff;
+    -moz-transition: 0.2s ease-in-out text-shadow;
+    -o-transition: 0.2s ease-in-out text-shadow;
+    -webkit-transition: 0.2s ease-in-out text-shadow;
+    transition: 0.2s ease-in-out text-shadow;
+}
+
+#model_editor_panel button:hover {
+    text-shadow: 0 0 10px #333;
+}
+
+#model_editor_panel button:disabled {
+    cursor: not-allowed;
 }
 
 /**

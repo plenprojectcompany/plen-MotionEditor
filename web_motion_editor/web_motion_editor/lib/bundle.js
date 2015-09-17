@@ -1,6 +1,40 @@
 "use strict";
 var app_name = "PLEN2MotionEditorForWeb";
 angular.module(app_name, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
+var EditCodesButtonController = (function () {
+    function EditCodesButtonController($scope) {
+        var _this = this;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    EditCodesButtonController.$inject = [
+        "$scope"
+    ];
+    return EditCodesButtonController;
+})();
+var EditCodesButtonDirective = (function () {
+    function EditCodesButtonDirective() {
+    }
+    EditCodesButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: EditCodesButtonController,
+            controllerAs: "edit_codes_button",
+            scope: {},
+            templateUrl: "./angularjs/components/EditCodesButton/view.html",
+            replace: true
+        };
+    };
+    return EditCodesButtonDirective;
+})();
+angular.module(app_name).directive("editCodesButton", [
+    EditCodesButtonDirective.getDDO
+]);
 "use strict";
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
@@ -8,7 +42,7 @@ var FacebookButtonController = (function () {
         this.href = "http://www.facebook.com/share.php?u=http://plen.jp/playground/motion-editor/";
     }
     FacebookButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), "facebook_window", "width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes");
+        this.$window.open(encodeURI(this.href), "facebook_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=no");
     };
     FacebookButtonController.$inject = ["$window"];
     return FacebookButtonController;
@@ -27,9 +61,9 @@ function FacebookButtonDirective() {
 angular.module(app_name).directive("facebookButton", FacebookButtonDirective);
 "use strict";
 var CodeModel = (function () {
-    function CodeModel(func, argments) {
+    function CodeModel(func, args) {
         this.func = func;
-        this.argments = argments;
+        this.args = args;
     }
     return CodeModel;
 })();
@@ -76,9 +110,9 @@ var FrameModel = (function () {
     };
     return FrameModel;
 })();
-"use strict";
 var MotionModel = (function () {
     function MotionModel($rootScope, frame_factory) {
+        var _this = this;
         this.$rootScope = $rootScope;
         this.frame_factory = frame_factory;
         this.slot = 44;
@@ -86,6 +120,9 @@ var MotionModel = (function () {
         this.codes = [];
         this.frames = [];
         this.frames.push(this.frame_factory.getFrame());
+        $(window).on("beforeunload", function () {
+            localStorage.setItem("motion", _this.saveJSON());
+        });
     }
     MotionModel.prototype.getSelectedFrameIndex = function () {
         return _.findIndex(this.frames, function (frame) {
@@ -176,12 +213,12 @@ var MotionModel = (function () {
                 if (_.isUndefined(code.func) || !_.isString(code.func)) {
                     throw "Bad format!.";
                 }
-                if (_.isUndefined(code.argments) || !_.isArray(code.argments)) {
+                if (_.isUndefined(code.args) || !_.isArray(code.args)) {
                     throw "Bad format!.";
                 }
                 else {
-                    _.each(code.argments, function (argment) {
-                        if (!_.isString(argment)) {
+                    _.each(code.args, function (argment) {
+                        if (!_.isNumber(argment)) {
                             throw "Bad format!.";
                         }
                     });
@@ -214,11 +251,11 @@ var MotionModel = (function () {
             this.name = motion_obj.name;
             this.codes = [];
             _.each(motion_obj.codes, function (code) {
-                var argments = [];
-                _.each(code.argments, function (argment) {
-                    argments.push(argment);
+                var args = [];
+                _.each(code.args, function (argment) {
+                    args.push(argment);
                 });
-                _this.codes.push(new CodeModel(code.func, argments));
+                _this.codes.push(new CodeModel(code.func, args));
             });
             this.frames = [];
             _.each(motion_obj.frames, function (frame) {
@@ -299,13 +336,11 @@ var FrameFactory = (function () {
     return FrameFactory;
 })();
 angular.module(app_name).service("FrameFactory", FrameFactory);
-"use strict";
 angular.module(app_name).service("SharedMotionService", [
     "$rootScope",
     "FrameFactory",
     MotionModel
 ]);
-"use strict";
 var FrameEditorController = (function () {
     function FrameEditorController($scope, $rootScope, $interval, motion) {
         var _this = this;
@@ -330,8 +365,6 @@ var FrameEditorController = (function () {
         });
         $scope.$on("AnimationPlay", function () {
             _this.onAnimationPlay();
-        });
-        $scope.$on("AnimationPause", function () {
         });
         $scope.$on("AnimationStop", function () {
             _this.onAnimationStop();
@@ -375,7 +408,6 @@ var FrameEditorController = (function () {
             });
             _this.$rootScope.$broadcast("FrameLoad", now_frame_index);
         }, (1000 / FrameEditorController.FPS), frame_count).catch(function () {
-            console.log("abort");
             _this.load_next = false;
         }).finally(function () {
             _.each(now_frame.outputs, function (output, index) {
@@ -444,7 +476,7 @@ var GoogleplusButtonController = (function () {
         this.href = "https://plus.google.com/share?url=http://plen.jp/playground/motion-editor/";
     }
     GoogleplusButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), "googleplus_window", "width=650, height=450, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes");
+        this.$window.open(encodeURI(this.href), "googleplus_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes");
     };
     GoogleplusButtonController.$inject = ["$window"];
     return GoogleplusButtonController;
@@ -483,7 +515,9 @@ var InstallButtonController = (function () {
     InstallButtonController.prototype.onClick = function () {
         var _this = this;
         if (this.plen_controll_server_service.getStatus() === 0 /* DISCONNECTED */) {
-            this.plen_controll_server_service.connect();
+            this.plen_controll_server_service.connect(function () {
+                _this.onClick();
+            });
         }
         if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
             var success_callback = function () {
@@ -516,7 +550,6 @@ function InstallButtonDirective() {
     };
 }
 angular.module(app_name).directive("installButton", InstallButtonDirective);
-"use strict";
 var ThreeModel = (function () {
     function ThreeModel() {
         this.home_quaternions = [];
@@ -535,8 +568,7 @@ var ThreeModel = (function () {
         this.grid.position.set(0, 0, 0);
         this.grid.setColors(0xB2DB11, 0xFFFFFF);
         this.scene.add(this.grid);
-        this.light = new THREE.SpotLight(0xCCCCCC);
-        this.light.position.set(1000, 1000, 1000);
+        this.light = new THREE.SpotLight(0xBBBBBB);
         this.scene.add(this.light);
         this.renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
         this.renderer.setSize(width, height);
@@ -575,6 +607,12 @@ var ThreeModel = (function () {
     ThreeModel.prototype.refresh = function () {
         this.orbit_controls.update();
         this.transform_controls.update();
+        var theta = Math.atan2(this.camera.position.x, this.camera.position.z);
+        var phi = Math.atan2(Math.sqrt(this.camera.position.x * this.camera.position.x + this.camera.position.z * this.camera.position.z), this.camera.position.y);
+        var radius = Math.sqrt(3) * 1000;
+        this.light.position.x = radius * Math.sin(phi) * Math.sin(theta);
+        this.light.position.y = radius * Math.cos(phi);
+        this.light.position.z = radius * Math.sin(phi) * Math.cos(theta);
         this.renderer.render(this.scene, this.camera);
     };
     ThreeModel.prototype.intersect = function (screen_x, screen_y) {
@@ -604,15 +642,34 @@ var ThreeModel = (function () {
             this.orbit_controls.enabled = true;
         }
     };
-    ThreeModel.prototype.getDiffAngle = function () {
-        var _this = this;
-        var angle = {
-            axis_name: null,
-            diff_angle: null
-        };
-        if (!_.isUndefined(this.transform_controls.object)) {
+    ThreeModel.prototype.reverse3DModel = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+        }
+    };
+    ThreeModel.prototype.copyRightToLeft = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+        }
+    };
+    ThreeModel.prototype.copyLeftToRight = function () {
+        var length_half = this.rotation_axes.length / 2;
+        for (var index = 0; index < length_half; index++) {
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
+        }
+    };
+    ThreeModel.prototype.getDiffAngle = function (axis_object) {
+        var angle_diff = null;
+        if (!_.isUndefined(axis_object)) {
             var selected_axis_index = _.findIndex(this.rotation_axes, function (axis) {
-                return axis === _this.transform_controls.object;
+                return axis === axis_object;
             });
             var home_quaternion = this.home_quaternions[selected_axis_index].clone();
             var axis_quaternion = this.rotation_axes[selected_axis_index].quaternion.clone();
@@ -627,32 +684,34 @@ var ThreeModel = (function () {
             else {
                 var theta_diff = theta_half_diff * 2;
             }
-            angle.axis_name = this.rotation_axes[selected_axis_index].name;
-            angle.diff_angle = Math.round(theta_diff * 1800 / Math.PI);
+            angle_diff = Math.round(theta_diff * 1800 / Math.PI);
         }
-        return angle;
+        return angle_diff;
+    };
+    ThreeModel.prototype.setDiffAngle = function (axis_object, angle_diff) {
+        var theta_diff = angle_diff * Math.PI / 1800;
+        var index = _.findIndex(this.rotation_axes, function (axis) {
+            return axis === axis_object;
+        });
+        var home_quaternion = this.home_quaternions[index].clone();
+        var target_quaternion = new THREE.Quaternion();
+        target_quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), theta_diff);
+        home_quaternion.multiply(target_quaternion);
+        this.rotation_axes[index].quaternion.copy(home_quaternion);
     };
     return ThreeModel;
 })();
-"use strict";
-var ThreeFactory = (function () {
-    function ThreeFactory() {
-    }
-    ThreeFactory.prototype.getThree = function () {
-        return new ThreeModel();
-    };
-    return ThreeFactory;
-})();
-angular.module(app_name).service("ThreeFactory", ThreeFactory);
-"use strict";
+angular.module(app_name).service("SharedThreeService", [
+    ThreeModel
+]);
 var ModelEditorController = (function () {
-    function ModelEditorController($scope, model_loader, three_factory, motion, image_store_service) {
+    function ModelEditorController($scope, model_loader, three_model, motion, image_store_service) {
         var _this = this;
         this.model_loader = model_loader;
+        this.three_model = three_model;
         this.motion = motion;
         this.image_store_service = image_store_service;
         this.disabled = false;
-        this.three_model = three_factory.getThree();
         $scope.$on("ComponentDisabled", function () {
             _this.disabled = true;
         });
@@ -667,6 +726,9 @@ var ModelEditorController = (function () {
         });
         $scope.$on("3DModelReset", function () {
             _this.on3DModelReset();
+        });
+        $scope.$on("RefreshThumbnail", function () {
+            _this.onRefreshThumbnail();
         });
         $scope.$on("FrameSave", function (event, frame_index) {
             _this.onFrameSave(frame_index);
@@ -684,9 +746,16 @@ var ModelEditorController = (function () {
         this.three_model.home_quaternions = this.model_loader.home_quaternions;
         this.three_model.rotation_axes = this.model_loader.rotation_axes;
         this.three_model.not_axes = this.model_loader.not_axes;
+        var json = localStorage.getItem("motion");
+        if (!_.isNull(json)) {
+            this.motion.loadJSON(json, this.model_loader.getAxisMap());
+        }
     };
     ModelEditorController.prototype.on3DModelReset = function () {
         this.three_model.reset();
+        this.setImage();
+    };
+    ModelEditorController.prototype.onRefreshThumbnail = function () {
         this.setImage();
     };
     ModelEditorController.prototype.onFrameSave = function (frame_index) {
@@ -755,7 +824,7 @@ var ModelEditorController = (function () {
     ModelEditorController.$inject = [
         "$scope",
         "ModelLoaderService",
-        "ThreeFactory",
+        "SharedThreeService",
         "SharedMotionService",
         "ImageStoreService"
     ];
@@ -772,15 +841,15 @@ var ModelLoader = (function () {
     }
     ModelLoader.prototype.addRotationAxis = function (object) {
         var _this = this;
-        if (/roll/.test(object.name)) {
+        if (/roll$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/pitch/.test(object.name)) {
+        else if (/pitch$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
-        else if (/yaw/.test(object.name)) {
+        else if (/yaw$/.test(object.name)) {
             this.rotation_axes.push(object);
             this.home_quaternions.push(object.quaternion.clone());
         }
@@ -813,7 +882,7 @@ var ModelLoader = (function () {
     };
     ModelLoader.prototype.loadJSON = function () {
         var _this = this;
-        this.$http.get("./assets/etc/plen_model.min.json").success(function (data) {
+        this.$http.get("./assets/etc/plen2_3dmodel.min.json").success(function (data) {
             var model_obj = data;
             if (model_obj.metadata.type.toLowerCase() === "object") {
                 var loader = new THREE.ObjectLoader();
@@ -888,6 +957,63 @@ angular.module(app_name).directive("modelEditor", [
     "$window",
     "ModelLoaderService",
     ModelEditorDirective.getDDO
+]);
+var ModelEditorPanelController = (function () {
+    function ModelEditorPanelController($scope, $rootScope, three_model) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        this._three_model = three_model;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    ModelEditorPanelController.prototype.onClick = function (id) {
+        switch (id) {
+            case 0:
+                this._three_model.reverse3DModel();
+                break;
+            case 1:
+                this._three_model.copyRightToLeft();
+                break;
+            case 2:
+                this._three_model.copyLeftToRight();
+                break;
+            case 3:
+                this._three_model.orbit_controls.reset();
+                break;
+            default:
+                return;
+        }
+        this.$rootScope.$broadcast("RefreshThumbnail");
+    };
+    ModelEditorPanelController.$inject = [
+        "$scope",
+        "$rootScope",
+        "SharedThreeService"
+    ];
+    return ModelEditorPanelController;
+})();
+var ModelEditorPanelDirective = (function () {
+    function ModelEditorPanelDirective() {
+    }
+    ModelEditorPanelDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: ModelEditorPanelController,
+            controllerAs: "model_editor_panel",
+            scope: {},
+            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
+            replace: true
+        };
+    };
+    return ModelEditorPanelDirective;
+})();
+angular.module(app_name).directive("modelEditorPanel", [
+    ModelEditorPanelDirective.getDDO
 ]);
 "use strict";
 var NewButtonController = (function () {
@@ -1013,50 +1139,63 @@ angular.module(app_name).directive("openButton", [
     "ModelLoaderService",
     OpenButtonDirective
 ]);
-"use strict";
-var PlayButtonController = (function () {
-    function PlayButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
+var PlayPauseButtonController = (function () {
+    function PlayPauseButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
         var _this = this;
         this.$rootScope = $rootScope;
         this.motion_model = motion_model;
         this.plen_controll_server_service = plen_controll_server_service;
-        this.disabled = false;
+        this.playing = false;
+        this.title = "Play a motion.";
         $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
+            _this.playing = true;
+            _this.title = "Pause a motion.";
         });
         $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
+            _this.playing = false;
+            _this.title = "Play a motion.";
         });
     }
-    PlayButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("ComponentDisabled");
-        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-        this.motion_model.selectFrame(0);
-        this.$rootScope.$broadcast("AnimationPlay");
-        if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-            this.plen_controll_server_service.play(this.motion_model.slot);
+    PlayPauseButtonController.prototype.onClick = function () {
+        if (this.playing === false) {
+            this.$rootScope.$broadcast("ComponentDisabled");
+            this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
+            this.motion_model.selectFrame(0);
+            this.$rootScope.$broadcast("AnimationPlay");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.play(this.motion_model.slot);
+            }
+        }
+        else {
+            this.$rootScope.$broadcast("AnimationStop");
         }
     };
-    PlayButtonController.$inject = [
+    PlayPauseButtonController.$inject = [
         "$scope",
         "$rootScope",
         "SharedMotionService",
         "PLENControlServerService"
     ];
-    return PlayButtonController;
+    return PlayPauseButtonController;
 })();
-function PlayButtonDirective() {
-    "use strict";
-    return {
-        restrict: "E",
-        controller: PlayButtonController,
-        controllerAs: 'play_button',
-        scope: {},
-        templateUrl: "./angularjs/components/PlayButton/view.html",
-        replace: true
+var PlayPauseButtonDirective = (function () {
+    function PlayPauseButtonDirective() {
+    }
+    PlayPauseButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: PlayPauseButtonController,
+            controllerAs: "play_pause_button",
+            scope: {},
+            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
+            replace: true
+        };
     };
-}
-angular.module(app_name).directive("playButton", PlayButtonDirective);
+    return PlayPauseButtonDirective;
+})();
+angular.module(app_name).directive("playPauseButton", [
+    PlayPauseButtonDirective.getDDO
+]);
 "use strict";
 var PLENControlServerModalController = (function () {
     function PLENControlServerModalController($modalInstance) {
@@ -1260,31 +1399,6 @@ angular.module(app_name).directive("shoppingcartButton", [
     ShoppingcartButtonDirective.getDDO
 ]);
 "use strict";
-var StopButtonController = (function () {
-    function StopButtonController($rootScope) {
-        this.$rootScope = $rootScope;
-    }
-    StopButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("AnimationStop");
-    };
-    StopButtonController.$inject = [
-        "$rootScope"
-    ];
-    return StopButtonController;
-})();
-function StopButtonDirective() {
-    "use strict";
-    return {
-        restrict: 'E',
-        controller: StopButtonController,
-        controllerAs: 'stop_button',
-        scope: {},
-        templateUrl: "./angularjs/components/StopButton/view.html",
-        replace: true
-    };
-}
-angular.module(app_name).directive("stopButton", StopButtonDirective);
-"use strict";
 var SyncButtonController = (function () {
     function SyncButtonController($scope, $rootScope, plen_controll_server_service) {
         var _this = this;
@@ -1344,7 +1458,7 @@ var TwitterButtonController = (function () {
         this.href = "http://twitter.com/share?text=あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。&url=http://plen.jp/playground/motion-editor/&hashtags=PLEN";
     }
     TwitterButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650, height=470, menubar=no, toolbar=no, location=no, scrollbars=yes, sizable=yes');
+        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes');
     };
     TwitterButtonController.$inject = ['$window'];
     return TwitterButtonController;
@@ -1436,10 +1550,10 @@ var PLENControlServerService = (function () {
                 _this._ip_addr = ip_addr;
                 _this.$http.jsonp("http://" + _this._ip_addr + "/connect/?callback=JSON_CALLBACK").success(function (response) {
                     if (response.result === true) {
+                        _this._state = 1 /* CONNECTED */;
                         if (!_.isNull(success_callback)) {
                             success_callback();
                         }
-                        _this._state = 1 /* CONNECTED */;
                     }
                     else {
                         _this._state = 0 /* DISCONNECTED */;
@@ -1465,7 +1579,6 @@ var PLENControlServerService = (function () {
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
             }).finally(function () {
-                _this._state = 1 /* CONNECTED */;
                 _this.$rootScope.$broadcast("InstallFinished");
             });
         }
@@ -1476,6 +1589,7 @@ var PLENControlServerService = (function () {
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
             this.$http.jsonp("http://" + this._ip_addr + "/play/" + slot.toString() + "/?callback=JSON_CALLBACK").success(function (response) {
+                _this._state = 1 /* CONNECTED */;
                 if (response.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
@@ -1483,8 +1597,6 @@ var PLENControlServerService = (function () {
                 }
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
-            }).finally(function () {
-                _this._state = 1 /* CONNECTED */;
             });
         }
     };

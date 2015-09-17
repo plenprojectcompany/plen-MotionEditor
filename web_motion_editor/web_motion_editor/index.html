@@ -4,14 +4,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="description" content="あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。" />
+    <meta name="description" content="Let moving PLEN as you like! &quot;Motion Editor for Web.&quot; is a web application to create easily a PLEN's motion." />
     <meta name="author" content="Kazuyuki TAKASE" />
-    <title>PLEN - Motion Editor for Web.</title>
-    <link rel="shortcut icon" href="./favicon.ico" />
+    <title>PLEN Playground - Motion Editor for Web.</title>
+    <link rel="icon" href="/favicon.ico" />
 
     <!-- Open Graph Protocolの定義 -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="PLEN - Motion Editor for Web." />
+    <meta property="og:title" content="PLEN Playground - Motion Editor for Web." />
     <meta property="og:url" content="http://plen.jp/playground/motion-editor/" />
     <meta property="og:image" content="http://plen.jp/playground/motion-editor/assets/img/og-image.gif" />
 
@@ -38,7 +38,7 @@
     <script src="./lib/bundle.min.js"></script>
 
     <!-- Google Analyticsツールのロード -->
-    <script src="/common/js/ga.js"></script>
+    <script async src="/playground/common_assets/js/ga.js"></script>
 </head>
 
 <!-- @attention Batarangを使用する際は、"ng-strict-di"を外す必要がある -->
@@ -57,6 +57,9 @@
                 <googleplus-button></googleplus-button>
                 <shoppingcart-button></shoppingcart-button>
             </div>
+            <a class="download-unity" href="https://drive.google.com/open?id=0B5Wd2RxpBbWQeHNRTjctQWpoTW8" target="_blank">
+                <p><i class="fa fa-download"></i> Download Unity edition!</p>
+            </a>
 
             <div class="button-group">
                 <open-button></open-button>
@@ -71,8 +74,8 @@
                 <install-button></install-button>
             </div>
             <div class="button-group">
-                <play-button></play-button>
-                <stop-button></stop-button>
+                <play-pause-button></play-pause-button>
+                <edit-codes-button></edit-codes-button>
             </div>
             <div class="button-group">
                 <previous-button></previous-button>
@@ -84,10 +87,11 @@
     <div id="right_pain">
         <div id="indent_container">
             <model-editor></model-editor>
+            <model-editor-panel></model-editor-panel>
 
             <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="scrollable_container.layout" auto-resize-onload="true">
                 <frame-editor></frame-editor>
-            </div>
+            <div/>
         </div>
     </div>
 </body>
