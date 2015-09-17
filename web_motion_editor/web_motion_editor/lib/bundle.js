@@ -882,7 +882,7 @@ var ModelLoader = (function () {
     };
     ModelLoader.prototype.loadJSON = function () {
         var _this = this;
-        this.$http.get("./assets/etc/plen2_3dmodel.json").success(function (data) {
+        this.$http.get("./assets/etc/plen2_3dmodel.min.json").success(function (data) {
             var model_obj = data;
             if (model_obj.metadata.type.toLowerCase() === "object") {
                 var loader = new THREE.ObjectLoader();

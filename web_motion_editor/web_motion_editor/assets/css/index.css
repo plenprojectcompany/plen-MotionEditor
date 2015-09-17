@@ -163,10 +163,10 @@ html, body {
     color: #FFFFFF;
     box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 4px;
     background-color: transparent;
-    -moz-transition: 0.2s ease-in-out all;
-    -o-transition: 0.2s ease-in-out all;
-    -webkit-transition: 0.2s ease-in-out all;
-    transition: 0.2s ease-in-out all;
+    -moz-transition: 0.2s ease-in-out background-color;
+    -o-transition: 0.2s ease-in-out background-color;
+    -webkit-transition: 0.2s ease-in-out background-color;
+    transition: 0.2s ease-in-out background-color;
 }
 
     .button-menu:hover {
@@ -185,6 +185,20 @@ html, body {
     .button-menu:focus {
         color: white;
     }
+
+.download-unity {
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+}
+
+.download-unity:hover {
+    color: #fff;
+}
+
+.download-unity:focus {
+    color: #fff;
+}
 
 
 /**
@@ -221,6 +235,10 @@ html, body {
     border: none;
     background: none;
     color: #fff;
+    -moz-transition: 0.2s ease-in-out text-shadow;
+    -o-transition: 0.2s ease-in-out text-shadow;
+    -webkit-transition: 0.2s ease-in-out text-shadow;
+    transition: 0.2s ease-in-out text-shadow;
 }
 
 #model_editor_panel button:hover {

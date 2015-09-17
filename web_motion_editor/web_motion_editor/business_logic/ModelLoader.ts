@@ -78,7 +78,7 @@ class ModelLoader
 
     loadJSON(): void
     {
-        this.$http.get("./assets/etc/plen2_3dmodel.json")
+        this.$http.get("./assets/etc/plen2_3dmodel.min.json")
             .success((data) =>
             {
                 var model_obj:any = data;
