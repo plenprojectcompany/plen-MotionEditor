@@ -29,7 +29,6 @@
         {
             this.$rootScope.$broadcast("ComponentDisabled");
             this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-            this.motion_model.selectFrame(0);
             this.$rootScope.$broadcast("AnimationPlay");
 
             if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)

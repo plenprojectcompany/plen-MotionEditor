@@ -3,8 +3,6 @@
 
 class MotionModel
 {
-    "use strict";
-
     slot: number = 44;
     name: string = "Empty";
     codes: Array<CodeModel>   = [];

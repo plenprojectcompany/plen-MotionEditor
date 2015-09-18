@@ -1,7 +1,5 @@
 ﻿class EditPropertiesButtonDirective
 {
-    "use strict";
-
     static getDDO()
     {
         return {

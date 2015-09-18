@@ -1,17 +1,20 @@
-﻿/// <reference path="./controller.ts" />
-
-function FacebookButtonDirective()
+﻿class FacebookButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: 'E',
-        controller: FacebookButtonController,
-        controllerAs: 'facebook_button',
-        scope: {},
-        templateUrl: "./angularjs/components/FacebookButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: 'E',
+            controller: FacebookButtonController,
+            controllerAs: 'facebook_button',
+            scope: {},
+            templateUrl: "./angularjs/components/FacebookButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("facebookButton", FacebookButtonDirective);    
+angular.module(app_name).directive("facebookButton",
+    [
+        FacebookButtonDirective.getDDO
+    ]
+);

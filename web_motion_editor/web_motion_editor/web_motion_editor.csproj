@@ -122,9 +122,11 @@
     <TypeScriptCompile Include="angularjs\components\ScrollableContainer\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
+    <TypeScriptCompile Include="angularjs\services\AnimationHelperService.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />
     <TypeScriptCompile Include="angularjs\services\PLENControlServerService.ts" />
     <TypeScriptCompile Include="angularjs\services\SharedThreeService.ts" />
+    <TypeScriptCompile Include="business_logic\AnimationHelper.ts" />
     <TypeScriptCompile Include="business_logic\CodeModel.ts" />
     <TypeScriptCompile Include="business_logic\FrameModel.ts" />
     <TypeScriptCompile Include="business_logic\ModelLoader.ts" />
