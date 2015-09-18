@@ -6,7 +6,7 @@ class MotionModel
     "use strict";
 
     slot: number = 44;
-    name: string = "Test Motion";
+    name: string = "Empty";
     codes: Array<CodeModel>   = [];
     frames: Array<FrameModel> = [];
 
@@ -113,7 +113,11 @@ class MotionModel
 
     reset(): void
     {
+        this.name   = "Empty";
+        this.slot   = 44;
+        this.codes  = [];
         this.frames = [this.frame_factory.getFrame()];
+
         this.$rootScope.$broadcast("FrameLoad", 0);
     }
 
@@ -124,29 +128,29 @@ class MotionModel
 
             if (_.isUndefined(motion_obj.slot) || !_.isNumber(motion_obj.slot))
             {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
 
             if (_.isUndefined(motion_obj.name) || !_.isString(motion_obj.name))
             {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
 
             if (_.isUndefined(motion_obj.codes) || !_.isArray(motion_obj.codes))
             {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
 
             _.each(motion_obj.codes, (code: CodeModel) =>
             {
                 if (_.isUndefined(code.func) || !_.isString(code.func))
                 {
-                    throw "Bad format!.";
+                    throw "Bad format!";
                 }
 
                 if (_.isUndefined(code.args) || !_.isArray(code.args))
                 {
-                    throw "Bad format!.";
+                    throw "Bad format!";
                 }
                 else
                 {
@@ -154,7 +158,7 @@ class MotionModel
                     {
                         if (!_.isNumber(argment))
                         {
-                            throw "Bad format!.";
+                            throw "Bad format!";
                         }
                     });
                 }
@@ -162,7 +166,7 @@ class MotionModel
 
             if (_.isUndefined(motion_obj.frames) || !_.isArray(motion_obj.frames))
             {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
             else
             {
@@ -170,12 +174,12 @@ class MotionModel
                 {
                     if (_.isUndefined(frame.transition_time_ms) || !_.isNumber(frame.transition_time_ms))
                     {
-                        throw "Bad format!.";
+                        throw "Bad format!";
                     }
 
                     if (_.isUndefined(frame.outputs) || !_.isArray(frame.outputs))
                     {
-                        throw "Bad format!.";
+                        throw "Bad format!";
                     }
                     else
                     {
@@ -183,12 +187,12 @@ class MotionModel
                         {
                             if (_.isUndefined(output.device) || !_.isString(output.device))
                             {
-                                throw "Bad format!.";
+                                throw "Bad format!";
                             }
 
                             if (_.isUndefined(output.value) || !_.isNumber(output.value))
                             {
-                                throw "Bad format!.";
+                                throw "Bad format!";
                             }
                         });
                     }

@@ -1,9 +1,10 @@
 "use strict";
 var app_name = "PLEN2MotionEditorForWeb";
 angular.module(app_name, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
-var EditCodesButtonController = (function () {
-    function EditCodesButtonController($scope) {
+var EditPropertiesButtonController = (function () {
+    function EditPropertiesButtonController($scope, $modal) {
         var _this = this;
+        this.$modal = $modal;
         this.disabled = false;
         $scope.$on("ComponentDisabled", function () {
             _this.disabled = true;
@@ -12,30 +13,110 @@ var EditCodesButtonController = (function () {
             _this.disabled = false;
         });
     }
-    EditCodesButtonController.$inject = [
-        "$scope"
+    EditPropertiesButtonController.prototype.onClick = function () {
+        var modal = this.$modal.open({
+            controller: EditPropertiesModalController,
+            controllerAs: "modal",
+            templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
+            backdrop: 'static',
+            keyboard: false
+        });
+    };
+    EditPropertiesButtonController.$inject = [
+        "$scope",
+        "$modal"
     ];
-    return EditCodesButtonController;
+    return EditPropertiesButtonController;
 })();
-var EditCodesButtonDirective = (function () {
-    function EditCodesButtonDirective() {
+var EditPropertiesButtonDirective = (function () {
+    function EditPropertiesButtonDirective() {
     }
-    EditCodesButtonDirective.getDDO = function () {
+    EditPropertiesButtonDirective.getDDO = function () {
         return {
             restrict: "E",
-            controller: EditCodesButtonController,
-            controllerAs: "edit_codes_button",
+            controller: EditPropertiesButtonController,
+            controllerAs: "edit_properties_button",
             scope: {},
-            templateUrl: "./angularjs/components/EditCodesButton/view.html",
+            templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
             replace: true
         };
     };
-    return EditCodesButtonDirective;
+    return EditPropertiesButtonDirective;
 })();
-angular.module(app_name).directive("editCodesButton", [
-    EditCodesButtonDirective.getDDO
+angular.module(app_name).directive("editPropertiesButton", [
+    EditPropertiesButtonDirective.getDDO
 ]);
-"use strict";
+var EditPropertiesModalController = (function () {
+    function EditPropertiesModalController($modalInstance, motion) {
+        var _this = this;
+        this.$modalInstance = $modalInstance;
+        this.motion = motion;
+        this.loop_options = {
+            use: false,
+            args: [0, 0, 1]
+        };
+        this.jump_options = {
+            use: false,
+            args: [0]
+        };
+        _.each(this.motion.codes, function (code) {
+            if (code.func == "loop") {
+                _this.loop_options.use = true;
+                _this.loop_options.args = code.args;
+            }
+            if (code.func == "jump") {
+                _this.jump_options.use = true;
+                _this.jump_options.args = code.args;
+            }
+        });
+    }
+    EditPropertiesModalController.prototype.ok = function () {
+        try {
+            if (_.isUndefined(this.motion.slot)) {
+                throw "Slot: Please fill the property. (Required value is between 0 to 89.)";
+            }
+            if ((this.motion.name.length > 20) || (!/^[\w\s]+$/.test(this.motion.name))) {
+                throw "Name: Required format is half-width alphanumerics and length is 20 bytes or less.";
+            }
+            if (this.loop_options.use) {
+                if ((_.isUndefined(this.loop_options.args[0])) || (this.loop_options.args[0] > this.loop_options.args[1])) {
+                    var max = this.loop_options.args[1];
+                    throw "Loop function - Begin: Please fill the propertie. (Required value is between 0 to " + max.toString() + ".)";
+                }
+                if ((_.isUndefined(this.loop_options.args[1])) || (this.loop_options.args[1] < this.loop_options.args[0]) || (this.loop_options.args[1] >= this.motion.frames.length)) {
+                    var min = this.loop_options.args[0];
+                    var max = this.motion.frames.length - 1;
+                    throw "Loop function - End: Please fill the propertie. (Required value is between " + min.toString() + " to " + max.toString() + ".)";
+                }
+                if (_.isUndefined(this.loop_options.args[2])) {
+                    throw "Loop function - Count: Please fill the propertie. (Required value is between 1 to 255.)";
+                }
+            }
+            if (this.jump_options.use) {
+                if (_.isUndefined(this.jump_options.args[0])) {
+                    throw "Jump function - Slot: Please fill the propertie. (Required value is between 0 to 89.)";
+                }
+            }
+        }
+        catch (exception) {
+            alert(exception);
+            return;
+        }
+        this.motion.codes = [];
+        if (this.loop_options.use) {
+            this.motion.codes.push(new CodeModel("loop", this.loop_options.args));
+        }
+        if (this.jump_options.use) {
+            this.motion.codes.push(new CodeModel("jump", this.jump_options.args));
+        }
+        this.$modalInstance.close();
+    };
+    EditPropertiesModalController.$inject = [
+        "$modalInstance",
+        "SharedMotionService"
+    ];
+    return EditPropertiesModalController;
+})();
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
         this.$window = $window;
@@ -44,7 +125,9 @@ var FacebookButtonController = (function () {
     FacebookButtonController.prototype.click = function () {
         this.$window.open(encodeURI(this.href), "facebook_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=no");
     };
-    FacebookButtonController.$inject = ["$window"];
+    FacebookButtonController.$inject = [
+        "$window"
+    ];
     return FacebookButtonController;
 })();
 function FacebookButtonDirective() {
@@ -116,7 +199,7 @@ var MotionModel = (function () {
         this.$rootScope = $rootScope;
         this.frame_factory = frame_factory;
         this.slot = 44;
-        this.name = "Test Motion";
+        this.name = "Empty";
         this.codes = [];
         this.frames = [];
         this.frames.push(this.frame_factory.getFrame());
@@ -193,6 +276,9 @@ var MotionModel = (function () {
         }
     };
     MotionModel.prototype.reset = function () {
+        this.name = "Empty";
+        this.slot = 44;
+        this.codes = [];
         this.frames = [this.frame_factory.getFrame()];
         this.$rootScope.$broadcast("FrameLoad", 0);
     };
@@ -201,47 +287,47 @@ var MotionModel = (function () {
         try {
             var motion_obj = JSON.parse(motion_json);
             if (_.isUndefined(motion_obj.slot) || !_.isNumber(motion_obj.slot)) {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
             if (_.isUndefined(motion_obj.name) || !_.isString(motion_obj.name)) {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
             if (_.isUndefined(motion_obj.codes) || !_.isArray(motion_obj.codes)) {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
             _.each(motion_obj.codes, function (code) {
                 if (_.isUndefined(code.func) || !_.isString(code.func)) {
-                    throw "Bad format!.";
+                    throw "Bad format!";
                 }
                 if (_.isUndefined(code.args) || !_.isArray(code.args)) {
-                    throw "Bad format!.";
+                    throw "Bad format!";
                 }
                 else {
                     _.each(code.args, function (argment) {
                         if (!_.isNumber(argment)) {
-                            throw "Bad format!.";
+                            throw "Bad format!";
                         }
                     });
                 }
             });
             if (_.isUndefined(motion_obj.frames) || !_.isArray(motion_obj.frames)) {
-                throw "Bad format!.";
+                throw "Bad format!";
             }
             else {
                 _.each(motion_obj.frames, function (frame) {
                     if (_.isUndefined(frame.transition_time_ms) || !_.isNumber(frame.transition_time_ms)) {
-                        throw "Bad format!.";
+                        throw "Bad format!";
                     }
                     if (_.isUndefined(frame.outputs) || !_.isArray(frame.outputs)) {
-                        throw "Bad format!.";
+                        throw "Bad format!";
                     }
                     else {
                         _.each(frame.outputs, function (output) {
                             if (_.isUndefined(output.device) || !_.isString(output.device)) {
-                                throw "Bad format!.";
+                                throw "Bad format!";
                             }
                             if (_.isUndefined(output.value) || !_.isNumber(output.value)) {
-                                throw "Bad format!.";
+                                throw "Bad format!";
                             }
                         });
                     }
@@ -1196,7 +1282,6 @@ var PlayPauseButtonDirective = (function () {
 angular.module(app_name).directive("playPauseButton", [
     PlayPauseButtonDirective.getDDO
 ]);
-"use strict";
 var PLENControlServerModalController = (function () {
     function PLENControlServerModalController($modalInstance) {
         this.$modalInstance = $modalInstance;

@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../../Scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
-"use strict";
-
 class PLENControlServerModalController
 {
     ip_addr: string = "127.0.0.1:17264";

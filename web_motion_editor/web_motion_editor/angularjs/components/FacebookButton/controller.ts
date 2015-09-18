@@ -1,10 +1,10 @@
-﻿"use strict";
-
-class FacebookButtonController
+﻿class FacebookButtonController
 {
     href: string;
 
-    static $inject = ["$window"];
+    static $inject = [
+        "$window"
+    ];
 
     constructor(
         public $window: ng.IWindowService
