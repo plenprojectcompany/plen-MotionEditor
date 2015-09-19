@@ -1,4 +1,6 @@
-﻿class ModelEditorPanelDirective
+﻿/// <reference path="./controller.ts" />
+
+class ModelEditorPanelDirective
 {
     static getDDO()
     {
@@ -13,7 +15,7 @@
     }
 }
 
-angular.module(app_name).directive("modelEditorPanel",
+angular.module(APP_NAME).directive("modelEditorPanel",
     [
         ModelEditorPanelDirective.getDDO
     ]

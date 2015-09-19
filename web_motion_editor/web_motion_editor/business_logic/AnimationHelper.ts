@@ -5,6 +5,12 @@
 
 class AnimationHelper
 {
+    static $inject = [
+        "$rootScope",
+        "$interval",
+        "SharedMotionService"
+    ];
+
     static FPS: number = 30;
 
     private _outputs_backup: Array<number> = [];
@@ -136,14 +142,10 @@ class AnimationHelper
             {
                 if ((loop_count > 0) || loop_infinity)
                 {
-                    if (now_frame_index === loop_end)
-                    {
-                        loop_count--;
+                    loop_count--;
+                    this.onAnimationPlayOnce(loop_begin, callback);
 
-                        this.onAnimationPlayOnce(loop_begin, callback);
-
-                        return;
-                    }
+                    return;
                 }
             }
 

@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class ModelLoader
+﻿class ModelLoader
 {
     home_quaternions: Array<THREE.Quaternion> = [];
     rotation_axes: Array<THREE.Object3D> = [];

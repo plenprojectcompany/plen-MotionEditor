@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../business_logic/MotionModel.ts" />
 /// <reference path="./FrameFactory.ts" />
 
-angular.module(app_name).service("SharedMotionService",
+angular.module(APP_NAME).service("SharedMotionService",
     [
         "$rootScope",
         "FrameFactory",

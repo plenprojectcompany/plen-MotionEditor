@@ -1,7 +1,7 @@
-﻿class PlayPauseButtonDirective
-{
-    "use strict";
+﻿/// <reference path="./controller.ts" />
 
+class PlayPauseButtonDirective
+{
     static getDDO()
     {
         return {
@@ -15,7 +15,7 @@
     }
 }
 
-angular.module(app_name).directive("playPauseButton",
+angular.module(APP_NAME).directive("playPauseButton",
     [
         PlayPauseButtonDirective.getDDO
     ]

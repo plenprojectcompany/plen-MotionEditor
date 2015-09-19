@@ -1,5 +1,5 @@
 ﻿"use strict";
 
 // アプリケーションモジュール空間の定義
-var app_name = "PLEN2MotionEditorForWeb";
-angular.module(app_name, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
+var APP_NAME = "PLEN2MotionEditorForWeb";
+angular.module(APP_NAME, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);

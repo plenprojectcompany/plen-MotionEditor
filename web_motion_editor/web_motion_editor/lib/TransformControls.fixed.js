@@ -217,8 +217,8 @@
 
 			if ( axis == "Z" ) this.activePlane = this.planes[ "XY" ];
 
-			this.hide();
-			this.show();
+			// this.hide();
+			// this.show();
 
 		};
 
@@ -293,7 +293,7 @@
 		this.gizmo["rotate"].hide();
 
 		this.object = undefined;
-		this.snap = null;
+		// this.snap = null;
 		this.space = "world";
 		this.size = 1;
 		this.axis = null;
@@ -347,11 +347,11 @@
 		var camPosition = new THREE.Vector3();
 		var camRotation = new THREE.Euler();
 
-		domElement.addEventListener( "mousedown", onPointerDown, false );
-		domElement.addEventListener( "touchstart", onPointerDown, false );
+		// domElement.addEventListener( "mousedown", onPointerDown, false );
+		// domElement.addEventListener( "touchstart", onPointerDown, false );
 
-		domElement.addEventListener( "mousemove", onPointerHover, false );
-		domElement.addEventListener( "touchmove", onPointerHover, false );
+		// domElement.addEventListener( "mousemove", onPointerHover, false );
+		// domElement.addEventListener( "touchmove", onPointerHover, false );
 
 		domElement.addEventListener( "mousemove", onPointerMove, false );
 		domElement.addEventListener( "touchmove", onPointerMove, false );
@@ -366,8 +366,8 @@
 
 			scope.object = object;
 
-			this.gizmo["rotate"].hide();
-			this.gizmo[_mode].show();
+			// this.gizmo["rotate"].hide();
+			// this.gizmo[_mode].show();
 
 			scope.update();
 
@@ -378,7 +378,7 @@
 			scope.object = undefined;
 			this.axis = null;
 
-			this.gizmo["rotate"].hide();
+			// this.gizmo["rotate"].hide();
 
 		};
 
@@ -388,19 +388,19 @@
 
 			if ( _mode == "scale" ) scope.space = "local";
 
-			this.gizmo["rotate"].hide();
-			this.gizmo[_mode].show();
+			// this.gizmo["rotate"].hide();
+			// this.gizmo[_mode].show();
 
 			this.update();
 			scope.dispatchEvent( changeEvent );
 
 		};
 
-		this.setSnap = function ( snap ) {
+		//this.setSnap = function ( snap ) {
 
-			scope.snap = snap;
+		//	scope.snap = snap;
 
-		};
+		//};
 
 		this.setSize = function ( size ) {
 
@@ -439,43 +439,41 @@
 			if ( scope.space == "local" )
 				this.gizmo[_mode].update( worldRotation, eye );
 
-			else if ( scope.space == "world" )
-				this.gizmo[_mode].update( new THREE.Euler(), eye );
+			//else if ( scope.space == "world" )
+			//	this.gizmo[_mode].update( new THREE.Euler(), eye );
 
-			this.gizmo[_mode].highlight( scope.axis );
+			//this.gizmo[_mode].highlight( scope.axis );
 
 		};
 
-		function onPointerHover( event ) {
+		//function onPointerHover(event) {
+		//	if ( scope.object === undefined || _dragging === true ) return;
 
-			if ( scope.object === undefined || _dragging === true ) return;
+		//	event.preventDefault();
 
-			event.preventDefault();
+		//	var pointer = event.changedTouches ? event.changedTouches[ 0 ] : event;
 
-			var pointer = event.changedTouches ? event.changedTouches[ 0 ] : event;
+		//	var intersect = intersectObjects( pointer, scope.gizmo[_mode].pickers.children );
 
-			var intersect = intersectObjects( pointer, scope.gizmo[_mode].pickers.children );
+		//	var axis = null;
 
-			var axis = null;
+		//	if ( intersect ) {
 
-			if ( intersect ) {
+		//		axis = intersect.object.name;
 
-				axis = intersect.object.name;
+		//	}
 
-			}
+		//	if ( scope.axis !== axis ) {
 
-			if ( scope.axis !== axis ) {
+		//		scope.axis = axis;
+		//		scope.update();
+		//		scope.dispatchEvent( changeEvent );
 
-				scope.axis = axis;
-				scope.update();
-				scope.dispatchEvent( changeEvent );
+		//	}
 
-			}
+		//}
 
-		}
-
-		function onPointerDown( event ) {
-
+		function onPointerDown(event) {
 			if ( scope.object === undefined || _dragging === true ) return;
 
 			event.preventDefault();
@@ -485,13 +483,12 @@
 
 			if ( pointer.button === 0 || pointer.button === undefined ) {
 
-				var intersect = intersectObjects( pointer, scope.gizmo[_mode].pickers.children );
+				// var intersect = intersectObjects( pointer, scope.gizmo[_mode].pickers.children );
 
-				if ( intersect ) {
+				// if ( intersect ) {
+					// scope.dispatchEvent( mouseDownEvent );
 
-					scope.dispatchEvent( mouseDownEvent );
-
-					scope.axis = intersect.object.name;
+					scope.axis = "Y"; // intersect.object.name;
 
 					scope.update();
 
@@ -501,7 +498,7 @@
 
 					var planeIntersect = intersectObjects( pointer, [ scope.gizmo[_mode].activePlane ] );
 
-					oldPosition.copy( scope.object.position );
+					oldPosition.copy(scope.object.position);;
 					oldScale.copy( scope.object.scale );
 
 					oldRotationMatrix.extractRotation( scope.object.matrix );
@@ -511,16 +508,18 @@
 					parentScale.setFromMatrixScale( tempMatrix.getInverse( scope.object.parent.matrixWorld ) );
 
 					offset.copy(planeIntersect.point);
-				}
+				// }
 
 			}
 
 			_dragging = true;
-
 		}
 
-		function onPointerMove( event ) {
+		this.$onPointerDown = function (event) {
+		    onPointerDown(event);
+		};
 
+		function onPointerMove(event) {
 			if ( scope.object === undefined || scope.axis === null || _dragging === false ) return;
 
 			event.preventDefault();
@@ -551,17 +550,16 @@
 					quaternionXYZ.setFromRotationMatrix( oldRotationMatrix );
 					quaternionX.setFromAxisAngle( unitX, rotation.x - offsetRotation.x );
                     quaternionY.setFromAxisAngle( unitY, rotation.y - offsetRotation.y );
-					// quaternionY.setFromAxisAngle(unitY, rotation.y); // Å© ñ{éø
 					quaternionZ.setFromAxisAngle( unitZ, rotation.z - offsetRotation.z );
 
 					if (scope.axis == "X") {
-					    quaternionXYZ.multiplyQuaternions(quaternionXYZ, quaternionX);
+					    quaternionXYZ.multiply(quaternionX);
 					}
 					if (scope.axis == "Y") {
 					    quaternionXYZ.multiply(quaternionY);
 					}
 					if (scope.axis == "Z") {
-					    quaternionXYZ.multiplyQuaternions(quaternionXYZ, quaternionZ);
+					    quaternionXYZ.multiply(quaternionZ);
 					}
 
 					scope.object.quaternion.copy( quaternionXYZ );
@@ -576,15 +574,15 @@
 
 		}
 
-		function onPointerUp( event ) {
-
+		function onPointerUp(event) {
 			if ( _dragging && ( scope.axis !== null ) ) {
 				mouseUpEvent.mode = _mode;
 				scope.dispatchEvent(mouseUpEvent);
 			}
-			_dragging = false;
-			onPointerHover( event );
+		    _dragging = false;
+		    // scope.detach();
 
+			// onPointerHover( event );
 		}
 
 		function intersectObjects( pointer, objects ) {

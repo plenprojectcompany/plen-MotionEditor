@@ -14,7 +14,7 @@ class FrameEditorDirective
     }
 }
 
-angular.module(app_name).directive("frameEditor",
+angular.module(APP_NAME).directive("frameEditor",
     [
         FrameEditorDirective.getDDO
     ]

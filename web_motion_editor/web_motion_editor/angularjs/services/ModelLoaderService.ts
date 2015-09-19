@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../business_logic/ModelLoader.ts" />
 
-angular.module(app_name).service("ModelLoaderService",
+angular.module(APP_NAME).service("ModelLoaderService",
     [
         "$rootScope",
         "$http",

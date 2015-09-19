@@ -43,7 +43,7 @@ class AutoResizeDirective
     }
 }
 
-angular.module(app_name).directive("autoResize",
+angular.module(APP_NAME).directive("autoResize",
     [
         "$window",
         "$timeout",

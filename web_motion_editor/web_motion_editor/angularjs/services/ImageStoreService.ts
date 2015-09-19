@@ -1,13 +1,11 @@
-﻿"use strict";
-
-class ImageStoreService
+﻿class ImageStoreService
 {
     private _image_canvas;
     private _context;
 
     constructor()
     {
-        this._image_canvas = angular.element("<canvas/>")[0];
+        this._image_canvas = document.createElement("canvas");
         this._image_canvas.width  = 150;
         this._image_canvas.height = 150;
 
@@ -44,4 +42,4 @@ class ImageStoreService
     }
 }
 
-angular.module(app_name).service("ImageStoreService", ImageStoreService);
+angular.module(APP_NAME).service("ImageStoreService", ImageStoreService);

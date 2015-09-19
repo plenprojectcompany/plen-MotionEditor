@@ -25,18 +25,11 @@ class ModelEditorController
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
 
-        $scope.$on("ModelEditorUnfocused", () => { this.onModelEditorUnfocused(); });
         $scope.$on("3DModelLoaded", () => { this.on3DModelLoaded(); });
         $scope.$on("3DModelReset", () => { this.on3DModelReset(); });
         $scope.$on("RefreshThumbnail", () => { this.onRefreshThumbnail(); });
         $scope.$on("FrameSave", (event, frame_index: number) => { this.onFrameSave(frame_index); });
         $scope.$on("FrameLoad", (event, frame_index: number) => { this.onFrameLoad(frame_index); });
-    }
-
-    onModelEditorUnfocused(): void
-    {
-        this.three_model.transform_controls.detach();
-        this.three_model.orbit_controls.enabled = true;
     }
 
     on3DModelLoaded(): void
@@ -72,29 +65,9 @@ class ModelEditorController
 
         _.each(this.three_model.rotation_axes, (axis: THREE.Object3D, index: number) =>
         {
-            var home_quaternion = this.three_model.home_quaternions[index].clone();
-            var axis_quaternion = axis.quaternion.clone();
-            var target_quaternion = home_quaternion.inverse().multiply(axis_quaternion);
-
-            var theta_half_diff = Math.atan2(target_quaternion.y, target_quaternion.w);
-
-            if (Math.abs(theta_half_diff * 2) > Math.PI)
-            {
-                var theta_diff = 2 * Math.PI - Math.abs(theta_half_diff * 2);
-
-                if (theta_half_diff > 0)
-                {
-                    theta_diff *= -1;
-                }
-            }
-            else
-            {
-                var theta_diff = theta_half_diff * 2;
-            }
-
             this.motion.frames[frame_index].outputs.push(new OutputDeviceModel(
                 axis.name,
-                theta_diff * 1800 / Math.PI
+                this.three_model.getDiffAngle(axis, index)
             ));
         });
     }
@@ -108,17 +81,9 @@ class ModelEditorController
         }
         else
         {
-            _.each(this.motion.frames[frame_index].outputs,(output: OutputDeviceModel, index: number) =>
+            _.each(this.motion.frames[frame_index].outputs, (output: OutputDeviceModel, index: number) =>
             {
-                var theta_diff = output.value * Math.PI / 1800;
-
-                var home_quaternion = this.three_model.home_quaternions[index].clone();
-
-                var target_quaternion = new THREE.Quaternion();
-                target_quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), theta_diff);
-
-                home_quaternion.multiply(target_quaternion);
-                this.three_model.rotation_axes[index].quaternion.copy(home_quaternion);
+                this.three_model.setDiffAngle(null, output.value, index);
             });
         }
 
@@ -128,12 +93,40 @@ class ModelEditorController
         }
     }
 
-    onClick($event): void
+    onFocus($event): void
     {
-        if (!this.disabled)
+        if (this.disabled)
         {
-            this.intersect($event);
+            return;
         }
+
+        if (!_.isUndefined($event.touches))
+        {
+            if ($event.touches.length === 1)
+            {
+                var intersected: boolean = this.three_model.intersect($event.clientX, $event.clientY);
+
+                if (intersected)
+                {
+                    this.three_model.transform_controls.$onPointerDown(event);
+                }
+            }
+        }
+        else
+        {
+            var intersected: boolean = this.three_model.intersect($event.clientX, $event.clientY);
+
+            if (intersected)
+            {
+                this.three_model.transform_controls.$onPointerDown(event);
+            }
+        }
+    }
+
+    onUnfocus(): void
+    {
+        this.three_model.transform_controls.detach();
+        this.three_model.orbit_controls.enabled = true;
 
         this.setImage();
     }
@@ -150,18 +143,5 @@ class ModelEditorController
             return frame.selected;
         });
         selected_frame.image_uri = this.image_store_service.get();
-    }
-
-    intersect($event): void
-    {
-        if ($event.type !== "click")
-        {
-            this.three_model.transform_controls.detach();
-            this.three_model.orbit_controls.enabled = true;
-
-            return;
-        }
-
-        this.three_model.intersect($event.clientX, $event.clientY);
     }
 }

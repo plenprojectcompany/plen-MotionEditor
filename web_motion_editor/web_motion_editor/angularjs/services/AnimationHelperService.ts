@@ -1,10 +1,3 @@
 ﻿/// <reference path="../../business_logic/AnimationHelper.ts" />
 
-angular.module(app_name).service("AnimationHelperService",
-    [
-        "$rootScope",
-        "$interval",
-        "SharedMotionService",
-        AnimationHelper
-    ]
-);
+angular.module(APP_NAME).service("AnimationHelperService", AnimationHelper);

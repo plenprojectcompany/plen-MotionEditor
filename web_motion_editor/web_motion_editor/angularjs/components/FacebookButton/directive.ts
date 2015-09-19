@@ -1,4 +1,6 @@
-﻿class FacebookButtonDirective
+﻿/// <reference path="./controller.ts" />
+
+class FacebookButtonDirective
 {
     static getDDO()
     {
@@ -13,7 +15,7 @@
     }
 }
 
-angular.module(app_name).directive("facebookButton",
+angular.module(APP_NAME).directive("facebookButton",
     [
         FacebookButtonDirective.getDDO
     ]

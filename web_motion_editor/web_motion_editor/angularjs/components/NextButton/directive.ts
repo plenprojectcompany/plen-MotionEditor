@@ -1,17 +1,22 @@
 ﻿/// <reference path="./controller.ts" />
 
-function NextButtonDirective()
+class NextButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: NextButtonController,
-        controllerAs: "next_button",
-        scope: {},
-        templateUrl: "./angularjs/components/NextButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: NextButtonController,
+            controllerAs: "next_button",
+            scope: {},
+            templateUrl: "./angularjs/components/NextButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("nextButton", NextButtonDirective); 
+angular.module(APP_NAME).directive("nextButton",
+    [
+        NextButtonDirective.getDDO
+    ]
+);

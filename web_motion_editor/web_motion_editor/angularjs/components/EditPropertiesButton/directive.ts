@@ -1,4 +1,6 @@
-﻿class EditPropertiesButtonDirective
+﻿/// <reference path="./controller.ts" />
+
+class EditPropertiesButtonDirective
 {
     static getDDO()
     {
@@ -13,7 +15,7 @@
     }
 }
 
-angular.module(app_name).directive("editPropertiesButton",
+angular.module(APP_NAME).directive("editPropertiesButton",
     [
         EditPropertiesButtonDirective.getDDO
     ]

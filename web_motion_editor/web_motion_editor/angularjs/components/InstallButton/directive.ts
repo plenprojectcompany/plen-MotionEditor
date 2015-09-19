@@ -1,15 +1,22 @@
-﻿function InstallButtonDirective()
-{
-    "use strict";
+﻿/// <reference path="./controller.ts" />
 
-    return {
-        restrict: "E",
-        controller: InstallButtonController,
-        controllerAs: "install_button",
-        scope: {},
-        templateUrl: "./angularjs/components/InstallButton/view.html",
-        replace: true
-    };
+class InstallButtonDirective
+{
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: InstallButtonController,
+            controllerAs: "install_button",
+            scope: {},
+            templateUrl: "./angularjs/components/InstallButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("installButton", InstallButtonDirective);
+angular.module(APP_NAME).directive("installButton",
+    [
+        InstallButtonDirective.getDDO
+    ]
+);

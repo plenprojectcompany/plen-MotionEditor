@@ -1,11 +1,11 @@
 ﻿/// <reference path="./ImageStoreService.ts" />
 /// <reference path="../../business_logic/FrameModel.ts" />
 
-"use strict";
-
 class FrameFactory
 {
-    static $inject = ["ImageStoreService"];
+    static $inject = [
+        "ImageStoreService"
+    ];
 
     constructor(
         public image_store_service: ImageStoreService
@@ -25,4 +25,4 @@ class FrameFactory
     }
 }
 
-angular.module(app_name).service("FrameFactory", FrameFactory); 
+angular.module(APP_NAME).service("FrameFactory", FrameFactory); 

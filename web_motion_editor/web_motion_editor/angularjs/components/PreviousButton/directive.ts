@@ -1,17 +1,22 @@
 ﻿/// <reference path="./controller.ts" />
 
-function PreviousButtonDirective()
+class PreviousButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: PreviousButtonController,
-        controllerAs: "previous_button",
-        scope: {},
-        templateUrl: "./angularjs/components/PreviousButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: PreviousButtonController,
+            controllerAs: "previous_button",
+            scope: {},
+            templateUrl: "./angularjs/components/PreviousButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("previousButton", PreviousButtonDirective);
+angular.module(APP_NAME).directive("previousButton",
+    [
+        PreviousButtonDirective.getDDO
+    ]
+);

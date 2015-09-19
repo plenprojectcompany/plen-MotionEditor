@@ -18,6 +18,7 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="angularjs\components\DiffAngleViewer\view.html" />
     <Content Include="angularjs\components\EditPropertiesModal\view.html" />
     <Content Include="angularjs\components\EditPropertiesButton\view.html" />
     <Content Include="angularjs\components\InstallButton\view.html" />
@@ -85,6 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularjs\AppEntry.ts" />
+    <TypeScriptCompile Include="angularjs\components\DiffAngleViewer\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\DiffAngleViewer\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\EditPropertiesModal\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\EditPropertiesButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\EditPropertiesButton\directive.ts" />

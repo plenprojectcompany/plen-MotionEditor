@@ -141,4 +141,4 @@ class PLENControlServerService
     }
 }
 
-angular.module(app_name).service("PLENControlServerService", PLENControlServerService);
+angular.module(APP_NAME).service("PLENControlServerService", PLENControlServerService);

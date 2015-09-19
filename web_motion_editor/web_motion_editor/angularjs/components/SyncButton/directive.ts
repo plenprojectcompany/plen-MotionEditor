@@ -1,17 +1,22 @@
 ﻿/// <reference path="./controller.ts" />
 
-function SyncButtonDirective()
+class SyncButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: SyncButtonController,
-        controllerAs: "sync_button",
-        scope: {},
-        templateUrl: "./angularjs/components/SyncButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: SyncButtonController,
+            controllerAs: "sync_button",
+            scope: {},
+            templateUrl: "./angularjs/components/SyncButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("syncButton", SyncButtonDirective);
+angular.module(APP_NAME).directive("syncButton",
+    [
+        SyncButtonDirective.getDDO
+    ]
+);
