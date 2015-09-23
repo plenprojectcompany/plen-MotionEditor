@@ -19,10 +19,10 @@ class ModelEditorDirective
             replace: true,
             templateUrl: "./angularjs/components/ModelEditor/view.html",
             link: {
-                pre: (scope) =>
+                pre: ($scope) =>
                 {
                     // layoutオブジェクトの設定
-                    scope.model_editor.layout = {
+                    $scope.model_editor.layout = {
                         width: () =>
                         {
                             return $window.innerWidth - ModelEditorDirective.width_offset;
@@ -31,29 +31,29 @@ class ModelEditorDirective
                         {
                             return $window.innerHeight - ModelEditorDirective.height_offset;
                         },
-                        resizeFook: (element) =>
+                        resizeFook: () =>
                         {
-                            scope.model_editor.three_model.resize();
+                            $scope.model_editor.three_model.resize();
                         }
                     };
 
-                    scope.model_editor.three_model.init($("#canvas_wrapper"), scope.model_editor.layout);
-                    scope.model_editor.three_model.animate();
+                    $scope.model_editor.three_model.init($("#canvas_wrapper"), $scope.model_editor.layout);
+                    $scope.model_editor.three_model.animate();
 
                     // フォーカスに関するフック
                     $("#canvas_wrapper canvas").on("mousedown touchstart", (event: Event) =>
                     {
-                        scope.model_editor.onFocus(event);
+                        $scope.model_editor.onFocus(event);
                     });
 
                     // アンフォーカスに関するフック
                     $("#canvas_wrapper canvas").on("mouseup mouseout touchend touchcancel touchleave", (event: Event) =>
                     {
-                        scope.model_editor.onUnfocus();
-                        scope.$apply();
+                        $scope.model_editor.onUnfocus();
+                        $scope.$apply();
                     });
 
-                    model_loader.scene = scope.model_editor.three_model.scene;
+                    model_loader.scene = $scope.model_editor.three_model.scene;
                     model_loader.loadJSON();
                 }
             }

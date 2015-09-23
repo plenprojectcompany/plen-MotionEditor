@@ -13,15 +13,15 @@ class OpenButtonDirective
             scope: {},
             templateUrl: "./angularjs/components/OpenButton/view.html",
             replace: true,
-            link: (scope, element, attrs) =>
+            link: ($scope, $element) =>
             {
-                $(element[0].children[1]).on("change", (event: any) =>
+                $($element[0].children[1]).on("change", (event: any) =>
                 {
                     var reader = new FileReader();
                     reader.onload = (event: any) =>
                     {
-                        scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
-                        scope.$apply();
+                        $scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$apply();
                     };
 
                     reader.readAsText(event.target.files[0]);

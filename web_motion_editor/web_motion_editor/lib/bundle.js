@@ -1,6 +1,45 @@
 "use strict";
 var APP_NAME = "PLEN2MotionEditorForWeb";
 angular.module(APP_NAME, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
+var DiffAngleViewerController = (function () {
+    function DiffAngleViewerController(three_model) {
+        this.three_model = three_model;
+        this.name = "none";
+        this.diff_angle = 0;
+    }
+    DiffAngleViewerController.prototype.onAngleChange = function () {
+        this.name = this.three_model.transform_controls.object.name;
+        this.diff_angle = this.three_model.getDiffAngle(this.three_model.transform_controls.object) / 10;
+    };
+    DiffAngleViewerController.$inject = [
+        "SharedThreeService"
+    ];
+    return DiffAngleViewerController;
+})();
+var DiffAngleViewerDirective = (function () {
+    function DiffAngleViewerDirective() {
+    }
+    DiffAngleViewerDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: DiffAngleViewerController,
+            controllerAs: "diff_angle_viewer",
+            scope: {},
+            templateUrl: "./angularjs/components/DiffAngleViewer/view.html",
+            replace: true,
+            link: function ($scope) {
+                $("body").on("angleChange", function () {
+                    $scope.diff_angle_viewer.onAngleChange();
+                    $scope.$apply();
+                });
+            }
+        };
+    };
+    return DiffAngleViewerDirective;
+})();
+angular.module(APP_NAME).directive("diffAngleViewer", [
+    DiffAngleViewerDirective.getDDO
+]);
 var EditPropertiesButtonController = (function () {
     function EditPropertiesButtonController($scope, $modal) {
         var _this = this;
@@ -1067,28 +1106,28 @@ var ModelEditorDirective = (function () {
             replace: true,
             templateUrl: "./angularjs/components/ModelEditor/view.html",
             link: {
-                pre: function (scope) {
-                    scope.model_editor.layout = {
+                pre: function ($scope) {
+                    $scope.model_editor.layout = {
                         width: function () {
                             return $window.innerWidth - ModelEditorDirective.width_offset;
                         },
                         height: function () {
                             return $window.innerHeight - ModelEditorDirective.height_offset;
                         },
-                        resizeFook: function (element) {
-                            scope.model_editor.three_model.resize();
+                        resizeFook: function () {
+                            $scope.model_editor.three_model.resize();
                         }
                     };
-                    scope.model_editor.three_model.init($("#canvas_wrapper"), scope.model_editor.layout);
-                    scope.model_editor.three_model.animate();
+                    $scope.model_editor.three_model.init($("#canvas_wrapper"), $scope.model_editor.layout);
+                    $scope.model_editor.three_model.animate();
                     $("#canvas_wrapper canvas").on("mousedown touchstart", function (event) {
-                        scope.model_editor.onFocus(event);
+                        $scope.model_editor.onFocus(event);
                     });
                     $("#canvas_wrapper canvas").on("mouseup mouseout touchend touchcancel touchleave", function (event) {
-                        scope.model_editor.onUnfocus();
-                        scope.$apply();
+                        $scope.model_editor.onUnfocus();
+                        $scope.$apply();
                     });
-                    model_loader.scene = scope.model_editor.three_model.scene;
+                    model_loader.scene = $scope.model_editor.three_model.scene;
                     model_loader.loadJSON();
                 }
             }
@@ -1283,12 +1322,12 @@ var OpenButtonDirective = (function () {
             scope: {},
             templateUrl: "./angularjs/components/OpenButton/view.html",
             replace: true,
-            link: function (scope, element, attrs) {
-                $(element[0].children[1]).on("change", function (event) {
+            link: function ($scope, $element) {
+                $($element[0].children[1]).on("change", function (event) {
                     var reader = new FileReader();
                     reader.onload = function (event) {
-                        scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
-                        scope.$apply();
+                        $scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$apply();
                     };
                     reader.readAsText(event.target.files[0]);
                 });
