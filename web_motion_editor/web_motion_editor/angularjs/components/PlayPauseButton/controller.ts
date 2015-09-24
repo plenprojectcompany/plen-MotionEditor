@@ -39,6 +39,11 @@
         else
         {
             this.$rootScope.$broadcast("AnimationStop");
+
+            if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)
+            {
+                this.plen_controll_server_service.stop();
+            }
         }
     }
 }   

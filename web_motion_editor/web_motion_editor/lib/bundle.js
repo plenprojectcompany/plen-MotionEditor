@@ -92,7 +92,7 @@ var EditPropertiesModalController = (function () {
         this.motion = motion;
         this.loop_options = {
             use: false,
-            args: [0, 0, 1]
+            args: [0, 0, 255]
         };
         this.jump_options = {
             use: false,
@@ -249,6 +249,7 @@ var MotionModel = (function () {
         this.frames = [];
         this.frames.push(this.frame_factory.getFrame());
         $(window).on("beforeunload", function () {
+            _this.$rootScope.$broadcast("FrameSave", _this.getSelectedFrameIndex());
             localStorage.setItem("motion", _this.saveJSON());
         });
     }
@@ -875,6 +876,7 @@ var InstallButtonController = (function () {
         if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
             var success_callback = function () {
                 _this.plen_controll_server_service.play(_this.motion.slot, function () {
+                    _this.$rootScope.$broadcast("ComponentDisabled");
                     _this.$rootScope.$broadcast("AnimationPlay");
                 });
             };
@@ -1368,6 +1370,9 @@ var PlayPauseButtonController = (function () {
         }
         else {
             this.$rootScope.$broadcast("AnimationStop");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.stop();
+            }
         }
     };
     PlayPauseButtonController.$inject = [
@@ -1776,7 +1781,7 @@ var PLENControlServerService = (function () {
             modal.result.then(function (ip_addr) {
                 _this._state = 2 /* WAITING */;
                 _this._ip_addr = ip_addr;
-                _this.$http.jsonp("http://" + _this._ip_addr + "/connect/?callback=JSON_CALLBACK").success(function (response) {
+                _this.$http.get("//" + _this._ip_addr + "/connect").success(function (response) {
                     if (response.result === true) {
                         _this._state = 1 /* CONNECTED */;
                         if (!_.isNull(success_callback)) {
@@ -1792,12 +1797,29 @@ var PLENControlServerService = (function () {
             });
         }
     };
+    PLENControlServerService.prototype.disconnect = function (success_callback) {
+        var _this = this;
+        if (success_callback === void 0) { success_callback = null; }
+        if (this._state === 1 /* CONNECTED */) {
+            this._state === 2 /* WAITING */;
+            this.$http.get("//" + this._ip_addr + "/disconnect").success(function (response) {
+                if (response.result === true) {
+                    if (!_.isNull(success_callback)) {
+                        success_callback();
+                    }
+                }
+                _this._state = 0 /* DISCONNECTED */;
+            }).error(function () {
+                _this._state = 1 /* CONNECTED */;
+            });
+        }
+    };
     PLENControlServerService.prototype.install = function (json, success_callback) {
         var _this = this;
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
-            this.$http.post("http://" + this._ip_addr + "/install/", json).success(function (response) {
+            this.$http.post("//" + this._ip_addr + "/install", json).success(function (response) {
                 _this._state = 1 /* CONNECTED */;
                 if (response.result === true) {
                     if (!_.isNull(success_callback)) {
@@ -1816,7 +1838,24 @@ var PLENControlServerService = (function () {
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
-            this.$http.jsonp("http://" + this._ip_addr + "/play/" + slot.toString() + "/?callback=JSON_CALLBACK").success(function (response) {
+            this.$http.get("//" + this._ip_addr + "/play/" + slot.toString()).success(function (response) {
+                _this._state = 1 /* CONNECTED */;
+                if (response.result === true) {
+                    if (!_.isNull(success_callback)) {
+                        success_callback();
+                    }
+                }
+            }).error(function () {
+                _this._state = 0 /* DISCONNECTED */;
+            });
+        }
+    };
+    PLENControlServerService.prototype.stop = function (success_callback) {
+        var _this = this;
+        if (success_callback === void 0) { success_callback = null; }
+        if (this._state === 1 /* CONNECTED */) {
+            this._state === 2 /* WAITING */;
+            this.$http.get("//" + this._ip_addr + "/stop").success(function (response) {
                 _this._state = 1 /* CONNECTED */;
                 if (response.result === true) {
                     if (!_.isNull(success_callback)) {

@@ -4,7 +4,7 @@ class EditPropertiesModalController
 {
     loop_options = {
         use: false,
-        args: [0, 0, 1]
+        args: [0, 0, 255]
     };
 
     jump_options = {

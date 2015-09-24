@@ -27,6 +27,15 @@ class PLENControlServerService
     {
         this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
         this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
+
+        //$(window).on("beforeunload", () =>
+        //{
+        //    if (this._state === SERVER_STATE.CONNECTED)
+        //    {
+        //        this.disconnect();
+        //        return 'If you want to disconnect "PLEN - Control Server", please click to "Cancel" button.';
+        //    }
+        //});
     }
 
     connect(success_callback = null): void
@@ -44,7 +53,7 @@ class PLENControlServerService
                 this._state = SERVER_STATE.WAITING;
                 this._ip_addr = ip_addr;
 
-                this.$http.jsonp("http://" + this._ip_addr + "/connect/?callback=JSON_CALLBACK")
+                this.$http.get("//" + this._ip_addr + "/connect")
                     .success((response: any) =>
                     {
                         if (response.result === true)
@@ -69,13 +78,39 @@ class PLENControlServerService
         }
     }
 
+    disconnect(success_callback = null): void
+    {
+        if (this._state === SERVER_STATE.CONNECTED)
+        {
+            this._state === SERVER_STATE.WAITING;
+
+            this.$http.get("//" + this._ip_addr + "/disconnect")
+                .success((response: any) =>
+                {
+                    if (response.result === true)
+                    {
+                        if (!_.isNull(success_callback))
+                        {
+                            success_callback();
+                        }
+                    }
+
+                    this._state = SERVER_STATE.DISCONNECTED;
+                })
+                .error(() =>
+                {
+                    this._state = SERVER_STATE.CONNECTED;
+                });
+        }
+    }
+
     install(json, success_callback = null): void
     {
         if (this._state === SERVER_STATE.CONNECTED)
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.post("http://" + this._ip_addr + "/install/", json)
+            this.$http.post("//" + this._ip_addr + "/install", json)
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
@@ -105,7 +140,33 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.jsonp("http://" + this._ip_addr + "/play/" + slot.toString() + "/?callback=JSON_CALLBACK")
+            this.$http.get("//" + this._ip_addr + "/play/" + slot.toString())
+                .success((response: any) =>
+                {
+                    this._state = SERVER_STATE.CONNECTED;
+
+                    if (response.result === true)
+                    {
+                        if (!_.isNull(success_callback))
+                        {
+                            success_callback();
+                        }
+                    }
+                })
+                .error(() =>
+                {
+                    this._state = SERVER_STATE.DISCONNECTED;
+                });
+        }
+    }
+
+    stop(success_callback = null): void
+    {
+        if (this._state === SERVER_STATE.CONNECTED)
+        {
+            this._state === SERVER_STATE.WAITING;
+
+            this.$http.get("//" + this._ip_addr + "/stop")
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;

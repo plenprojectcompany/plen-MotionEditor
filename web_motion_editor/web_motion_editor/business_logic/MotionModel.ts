@@ -20,6 +20,7 @@ class MotionModel
 
         $(window).on("beforeunload", () =>
         {
+            this.$rootScope.$broadcast("FrameSave", this.getSelectedFrameIndex());
             localStorage.setItem("motion", this.saveJSON());
         });
     }
