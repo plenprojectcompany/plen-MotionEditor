@@ -108,7 +108,7 @@ class ModelEditorController
 
                 if (intersected)
                 {
-                    this.three_model.transform_controls.$onPointerDown(event);
+                    this.three_model.transform_controls.$onPointerDown($event);
                 }
             }
         }
@@ -118,7 +118,7 @@ class ModelEditorController
 
             if (intersected)
             {
-                this.three_model.transform_controls.$onPointerDown(event);
+                this.three_model.transform_controls.$onPointerDown($event);
             }
         }
     }

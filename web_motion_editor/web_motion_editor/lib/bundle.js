@@ -988,14 +988,14 @@ var ModelEditorController = (function () {
             if ($event.touches.length === 1) {
                 var intersected = this.three_model.intersect($event.clientX, $event.clientY);
                 if (intersected) {
-                    this.three_model.transform_controls.$onPointerDown(event);
+                    this.three_model.transform_controls.$onPointerDown($event);
                 }
             }
         }
         else {
             var intersected = this.three_model.intersect($event.clientX, $event.clientY);
             if (intersected) {
-                this.three_model.transform_controls.$onPointerDown(event);
+                this.three_model.transform_controls.$onPointerDown($event);
             }
         }
     };
