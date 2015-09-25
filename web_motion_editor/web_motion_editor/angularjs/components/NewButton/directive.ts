@@ -1,17 +1,22 @@
 ﻿/// <reference path="./controller.ts" />
 
-function NewButtonDirective()
+class NewButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: NewButtonController,
-        controllerAs: "new_button",
-        scope: {},
-        templateUrl: "./angularjs/components/NewButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: NewButtonController,
+            controllerAs: "new_button",
+            scope: {},
+            templateUrl: "./angularjs/components/NewButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("newButton", NewButtonDirective);  
+angular.module(APP_NAME).directive("newButton",
+    [
+        NewButtonDirective.getDDO
+    ]
+);

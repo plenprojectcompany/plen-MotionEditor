@@ -1,17 +1,22 @@
 ﻿/// <reference path="./controller.ts" />
 
-function SaveButtonDirective()
+class SaveButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: SaveButtonController,
-        controllerAs: "save_button",
-        scope: {},
-        templateUrl: "./angularjs/components/SaveButton/view.html",
-        replace: true
-    };
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: SaveButtonController,
+            controllerAs: "save_button",
+            scope: {},
+            templateUrl: "./angularjs/components/SaveButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("saveButton", SaveButtonDirective); 
+angular.module(APP_NAME).directive("saveButton",
+    [
+        SaveButtonDirective.getDDO
+    ]
+);

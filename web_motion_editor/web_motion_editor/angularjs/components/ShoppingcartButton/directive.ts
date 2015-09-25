@@ -1,7 +1,5 @@
 ﻿class ShoppingcartButtonDirective
 {
-    "use strict";
-
     static getDDO()
     {
         return {
@@ -13,7 +11,7 @@
     }
 }
 
-angular.module(app_name).directive("shoppingcartButton",
+angular.module(APP_NAME).directive("shoppingcartButton",
     [
         ShoppingcartButtonDirective.getDDO
     ]

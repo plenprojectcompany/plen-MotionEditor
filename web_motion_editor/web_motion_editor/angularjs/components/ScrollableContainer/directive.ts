@@ -1,8 +1,6 @@
-﻿"use strict";
-
-class ScrollableContainerDirective
+﻿class ScrollableContainerDirective
 {
-    static width_offset: number = 220;
+    static WIDTH_OFFSET: number = 220;
 
     static getDDO(
         $window: ng.IWindowService
@@ -19,7 +17,7 @@ class ScrollableContainerDirective
                 scope.scrollable_container.layout = {
                     width: () =>
                     {
-                        return $window.innerWidth - ScrollableContainerDirective.width_offset;
+                        return $window.innerWidth - ScrollableContainerDirective.WIDTH_OFFSET;
                     },
                     height: () =>
                     {
@@ -32,7 +30,7 @@ class ScrollableContainerDirective
     }
 }
 
-angular.module(app_name).directive("scrollableContainer",
+angular.module(APP_NAME).directive("scrollableContainer",
     [
         "$window",
         ScrollableContainerDirective.getDDO

@@ -6,7 +6,7 @@
         ng-style="{ background: 'url(' + frame.image_uri + ')' }"
     >
         <div class="frame-property">
-            <span class="frame-id">Frame : {{ $index + 1 }}</span>
+            <span class="frame-id">Frame : {{ $index }}</span>
             <button class="button-close" type="button"
                 ng-mousedown="$event.stopPropagation(); frame_editor.motion.removeFrame($index);"
                 title="Delete this frame."

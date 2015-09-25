@@ -1,15 +1,22 @@
-﻿function ResetButtonDirective()
-{
-    "use strict";
+﻿/// <reference path="./controller.ts" />
 
-    return {
-        restrict: "E",
-        controller: ResetButtonController,
-        controllerAs: "reset_button",
-        scope: {},
-        templateUrl: "./angularjs/components/ResetButton/view.html",
-        replace: true
-    };
+class ResetButtonDirective
+{
+    static getDDO()
+    {
+        return {
+            restrict: "E",
+            controller: ResetButtonController,
+            controllerAs: "reset_button",
+            scope: {},
+            templateUrl: "./angularjs/components/ResetButton/view.html",
+            replace: true
+        };
+    }
 }
 
-angular.module(app_name).directive("resetButton", ResetButtonDirective);  
+angular.module(APP_NAME).directive("resetButton",
+    [
+        ResetButtonDirective.getDDO
+    ]
+);

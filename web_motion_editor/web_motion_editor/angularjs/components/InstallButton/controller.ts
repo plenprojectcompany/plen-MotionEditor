@@ -39,6 +39,7 @@ class InstallButtonController
             {
                 this.plen_controll_server_service.play(this.motion.slot, () =>
                 {
+                    this.$rootScope.$broadcast("ComponentDisabled");
                     this.$rootScope.$broadcast("AnimationPlay");
                 });
             };

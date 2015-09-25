@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../services/SharedMotionService.ts" />
+/// <reference path="../../services/AnimationHelperService.ts" />
 
 class FrameEditorController
 {
@@ -11,112 +12,20 @@ class FrameEditorController
         revert: true
     };
 
-    outputs_backup: Array<number> = [];
-    animation_diffs: Array<number> = [];
-
-    load_next: boolean = true;
-    animation_promise: any;
-
     static $inject = [
         "$scope",
-        "$rootScope",
-        // "$q",
-        "$interval",
-        "SharedMotionService"
+        "SharedMotionService",
+        "AnimationHelperService"
     ];
-
-    static FPS: number = 30;
 
     constructor(
         $scope: ng.IScope,
-        public $rootScope: ng.IRootScopeService,
-        // public $q: ng.IQService,
-        public $interval: ng.IIntervalService,
-        public motion: MotionModel
+        public motion: MotionModel,
+        public animation_helper: AnimationHelper
     )
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
-
-        $scope.$on("AnimationPlay", () => { this.onAnimationPlay(); });
-        // $scope.$on("AnimationPause", () => { this.onAnimationPause(); });
-        $scope.$on("AnimationStop", () => { this.onAnimationStop(); });
-        $scope.$on("AnimationNext", () => { this.onAnimationPlay(false, true); });
-        $scope.$on("AnimationPrevious", () => { this.onAnimationPlay(true, true); });
-    }
-
-    onAnimationPlay(reverse: boolean = false, once: boolean = false): void
-    {
-        var now_frame_index = this.motion.getSelectedFrameIndex();
-        var now_frame = this.motion.frames[now_frame_index];
-
-        if (reverse)
-        {
-            var next_frame_index = now_frame_index - 1;
-            var next_frame = (now_frame_index === 0) ? null : this.motion.frames[next_frame_index];
-        }
-        else
-        {
-            var next_frame_index = now_frame_index + 1;
-            var next_frame = (now_frame_index + 1 === this.motion.frames.length) ? null : this.motion.frames[next_frame_index];
-        }
-
-        if (_.isNull(next_frame))
-        {
-            this.$rootScope.$broadcast("ComponentEnabled");
-
-            return;
-        }
-
-        this.load_next = !once;
-        var frame_count = Math.ceil(next_frame.transition_time_ms / (1000 / FrameEditorController.FPS));
-
-        this.outputs_backup = [];
-        this.animation_diffs = [];
-        _.each(now_frame.outputs, (output: OutputDeviceModel, index: number) =>
-        {
-            this.outputs_backup.push(output.value);
-
-            this.animation_diffs.push(
-                (next_frame.outputs[index].value - output.value) / frame_count
-            );
-        });
-
-        this.animation_promise = this.$interval(() =>
-        {
-            _.each(this.animation_diffs, (animation_diff: number, index: number) =>
-            {
-                now_frame.outputs[index].value += animation_diff;
-            });
-            this.$rootScope.$broadcast("FrameLoad", now_frame_index);
-        }, (1000 / FrameEditorController.FPS), frame_count)
-        .catch(() =>
-        {
-            this.load_next = false;
-        })
-        .finally(() =>
-        {
-            _.each(now_frame.outputs, (output: OutputDeviceModel, index: number) =>
-            {
-                output.value = this.outputs_backup[index];
-            });
-
-            this.motion.selectFrame(next_frame_index, false);
-
-            if (this.load_next)
-            {
-                this.onAnimationPlay(reverse);
-            }
-            else
-            {
-                this.$rootScope.$broadcast("ComponentEnabled");
-            }
-        });
-    }
-
-    onAnimationStop(): void
-    {
-        this.load_next = false;
     }
 
     onClick($event: any): void
@@ -125,7 +34,7 @@ class FrameEditorController
         {
             var offset_x;
 
-            // firefox対策
+            // fix for firefox.
             if (_.isUndefined($event.offsetX))
             {
                 offset_x = $event.pageX - $($event.target).offset().left;

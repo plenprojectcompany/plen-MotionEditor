@@ -2,11 +2,7 @@
 
 class FrameEditorDirective
 {
-    "use strict";
-
-    static getDDO(
-        // $rootScope: ng.IRootScopeService
-    )
+    static getDDO()
     {
         return {
             restrict: "E",
@@ -18,9 +14,8 @@ class FrameEditorDirective
     }
 }
 
-angular.module(app_name).directive("frameEditor",
+angular.module(APP_NAME).directive("frameEditor",
     [
-        // "$rootScope",
         FrameEditorDirective.getDDO
     ]
 );

@@ -7,6 +7,8 @@ declare module THREE
 
         setSpace(__: string): void;
         setMode(__: string): void;
+        $onPointerDown(__: any): void;
+
         object: Object3D;
     }
 }
@@ -114,7 +116,7 @@ class ThreeModel
         this.renderer.render(this.scene, this.camera);
     }
 
-    intersect(screen_x: number, screen_y: number): void
+    intersect(screen_x: number, screen_y: number): boolean
     {
         var rect = this.renderer.domElement.getBoundingClientRect();
         var x = (screen_x - rect.left) / rect.width;
@@ -129,17 +131,17 @@ class ThreeModel
         );
 
         var intersections = ray.intersectObjects(this.not_axes, true);
+        var result: boolean = false;
 
         if (intersections[0])
         {
-            this.transform_controls.detach();
-
             _.each(this.rotation_axes, (axis: THREE.Object3D) =>
             {
                 if (axis === intersections[0].object.parent)
                 {
                     this.transform_controls.attach(axis);
                     this.orbit_controls.enabled = false;
+                    result = true;
 
                     return false;
                 }
@@ -149,11 +151,8 @@ class ThreeModel
                 }
             });
         }
-        else
-        {
-            this.transform_controls.detach();
-            this.orbit_controls.enabled = true;
-        }
+
+        return result;
     }
 
     reverse3DModel(): void
@@ -162,11 +161,11 @@ class ThreeModel
 
         for (var index = 0; index < length_half; index++)
         {
-            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
-            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index], index);
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index], length_half + index);
 
-            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
-            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs, index);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs, length_half + index);
         }
     }
 
@@ -176,8 +175,8 @@ class ThreeModel
 
         for (var index = 0; index < length_half; index++)
         {
-            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index]);
-            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs);
+            var angle_diff_rhs = this.getDiffAngle(this.rotation_axes[index], index);
+            this.setDiffAngle(this.rotation_axes[length_half + index], -angle_diff_rhs, length_half + index);
         }
     }
 
@@ -187,24 +186,27 @@ class ThreeModel
 
         for (var index = 0; index < length_half; index++)
         {
-            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index]);
-            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs);
+            var angle_diff_lhs = this.getDiffAngle(this.rotation_axes[length_half + index], length_half + index);
+            this.setDiffAngle(this.rotation_axes[index], -angle_diff_lhs, index);
         }
     }
 
-    getDiffAngle(axis_object: THREE.Object3D): any
+    getDiffAngle(axis_object: THREE.Object3D, index: number = null): any
     {
         var angle_diff = null;
 
         if (!_.isUndefined(axis_object))
         {
-            var selected_axis_index = _.findIndex(this.rotation_axes, (axis: THREE.Object3D) =>
+            if (_.isNull(index))
             {
-                return axis === axis_object;
-            });
+                index = _.findIndex(this.rotation_axes, (axis: THREE.Object3D) =>
+                {
+                    return axis === axis_object;
+                });
+            }
 
-            var home_quaternion = this.home_quaternions[selected_axis_index].clone();
-            var axis_quaternion = this.rotation_axes[selected_axis_index].quaternion.clone();
+            var home_quaternion = this.home_quaternions[index].clone();
+            var axis_quaternion = this.rotation_axes[index].quaternion.clone();
             var target_quaternion = home_quaternion.inverse().multiply(axis_quaternion);
 
             var theta_half_diff = Math.atan2(target_quaternion.y, target_quaternion.w);
@@ -229,14 +231,17 @@ class ThreeModel
         return angle_diff;
     }
 
-    setDiffAngle(axis_object: THREE.Object3D, angle_diff: number): void
+    setDiffAngle(axis_object: THREE.Object3D, angle_diff: number, index: number = null): void
     {
         var theta_diff = angle_diff * Math.PI / 1800;
 
-        var index = _.findIndex(this.rotation_axes, (axis: THREE.Object3D) =>
+        if (_.isNull(index))
         {
-            return axis === axis_object;
-        });
+            index = _.findIndex(this.rotation_axes, (axis: THREE.Object3D) =>
+            {
+                return axis === axis_object;
+            });
+        }
 
         var home_quaternion = this.home_quaternions[index].clone();
 

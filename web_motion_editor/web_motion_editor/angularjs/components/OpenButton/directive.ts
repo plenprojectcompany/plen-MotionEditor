@@ -1,38 +1,39 @@
 ﻿/// <reference path="./controller.ts" />
 
-function OpenButtonDirective(
-    model_loader: ModelLoader
-)
+class OpenButtonDirective
 {
-    "use strict";
-
-    return {
-        restrict: "E",
-        controller: OpenButtonController,
-        controllerAs: "open_button",
-        scope: {},
-        templateUrl: "./angularjs/components/OpenButton/view.html",
-        replace: true,
-        link: (scope, element, attrs) =>
-        {
-            $(element[0].children[1]).on("change", (event: any) =>
+    static getDDO(
+        model_loader: ModelLoader
+    )
+    {
+        return {
+            restrict: "E",
+            controller: OpenButtonController,
+            controllerAs: "open_button",
+            scope: {},
+            templateUrl: "./angularjs/components/OpenButton/view.html",
+            replace: true,
+            link: ($scope, $element) =>
             {
-                var reader = new FileReader();
-                reader.onload = (event: any) =>
+                $($element[0].children[1]).on("change", (event: any) =>
                 {
-                    scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
-                    scope.$apply();
-                };
+                    var reader = new FileReader();
+                    reader.onload = (event: any) =>
+                    {
+                        $scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$apply();
+                    };
 
-                reader.readAsText(event.target.files[0]);
-            });
-        }
-    };
+                    reader.readAsText(event.target.files[0]);
+                });
+            }
+        };
+    }
 }
 
-angular.module(app_name).directive("openButton",
+angular.module(APP_NAME).directive("openButton",
     [
         "ModelLoaderService",
-        OpenButtonDirective
+        OpenButtonDirective.getDDO
     ]
-); 
+);

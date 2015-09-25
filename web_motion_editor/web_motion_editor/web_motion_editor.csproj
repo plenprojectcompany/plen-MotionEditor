@@ -18,7 +18,9 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="angularjs\components\EditCodesButton\view.html" />
+    <Content Include="angularjs\components\DiffAngleViewer\view.html" />
+    <Content Include="angularjs\components\EditPropertiesModal\view.html" />
+    <Content Include="angularjs\components\EditPropertiesButton\view.html" />
     <Content Include="angularjs\components\InstallButton\view.html" />
     <Content Include="angularjs\components\ModelEditorPanel\view.html" />
     <Content Include="angularjs\components\ModelEditor\view.html" />
@@ -84,8 +86,11 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularjs\AppEntry.ts" />
-    <TypeScriptCompile Include="angularjs\components\EditCodesButton\controller.ts" />
-    <TypeScriptCompile Include="angularjs\components\EditCodesButton\directive.ts" />
+    <TypeScriptCompile Include="angularjs\components\DiffAngleViewer\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\DiffAngleViewer\directive.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditPropertiesModal\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditPropertiesButton\controller.ts" />
+    <TypeScriptCompile Include="angularjs\components\EditPropertiesButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\FacebookButton\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\FrameEditor\controller.ts" />
     <TypeScriptCompile Include="angularjs\components\GoogleplusButton\controller.ts" />
@@ -120,9 +125,11 @@
     <TypeScriptCompile Include="angularjs\components\ScrollableContainer\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\SyncButton\directive.ts" />
     <TypeScriptCompile Include="angularjs\components\TwitterButton\directive.ts" />
+    <TypeScriptCompile Include="angularjs\services\AnimationHelperService.ts" />
     <TypeScriptCompile Include="angularjs\services\ModelLoaderService.ts" />
     <TypeScriptCompile Include="angularjs\services\PLENControlServerService.ts" />
     <TypeScriptCompile Include="angularjs\services\SharedThreeService.ts" />
+    <TypeScriptCompile Include="business_logic\AnimationHelper.ts" />
     <TypeScriptCompile Include="business_logic\CodeModel.ts" />
     <TypeScriptCompile Include="business_logic\FrameModel.ts" />
     <TypeScriptCompile Include="business_logic\ModelLoader.ts" />

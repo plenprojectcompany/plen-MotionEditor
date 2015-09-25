@@ -1,0 +1,49 @@
+﻿<div class="modal-header">
+    <h4 class="modal-title">Edit properties of a motion.</h4>
+</div>
+<div class="modal-body">
+    <article>
+        <h2>Basic properties</h2>
+        <div class="row">
+            <div class="form-group col-xs-6">
+                <label for="motion-slot-input">Slot:</label>
+                <input type="number" min="0" max="89" class="form-control" id="motion-slot-input" ng-model="modal.motion.slot" />
+            </div>
+            <div class="form-group col-xs-6">
+                <label for="motion-name-input">Name:</label>
+                <input type="text" maxlength="20" class="form-control" id="motion-name-input" ng-model="modal.motion.name" />
+            </div>
+        </div>
+
+        <h2>Code properties</h2>
+        <div class="row">
+            <div class="col-xs-6">
+                <h3><input type="checkbox" ng-model="modal.loop_options.use"> Loop function</h3>
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="code-loop-begin-input">Begin:</label>
+                        <input type="number" ng-disabled="!modal.loop_options.use" min="0" max="19" class="form-control" id="code-loop-begin-input" ng-model="modal.loop_options.args[0]" />
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="code-loop-end-input">End (Max = {{modal.motion.frames.length - 1}}):</label>
+                        <input type="number" ng-disabled="!modal.loop_options.use" min="0" max="20" class="form-control" id="code-loop-end-input" ng-model="modal.loop_options.args[1]" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="code-loop-count-input">Count (Using 255 as infinity.):</label>
+                    <input type="number" ng-disabled="!modal.loop_options.use" min="1" max="255" class="form-control" id="code-loop-count-input" ng-model="modal.loop_options.args[2]" />
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <h3><input type="checkbox" ng-model="modal.jump_options.use"> Jump function</h3>
+                <div class="form-group">
+                    <label for="code-jump-slot-input">Slot:</label>
+                    <input type="number" ng-disabled="!modal.jump_options.use" min="0" max="89" class="form-control" id="code-jump-slot-input" ng-model="modal.jump_options.args[0]" />
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="modal.ok()">OK</button>
+</div>
