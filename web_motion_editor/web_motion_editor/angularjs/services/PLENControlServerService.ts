@@ -27,15 +27,6 @@ class PLENControlServerService
     {
         this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
         this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
-
-        //$(window).on("beforeunload", () =>
-        //{
-        //    if (this._state === SERVER_STATE.CONNECTED)
-        //    {
-        //        this.disconnect();
-        //        return 'If you want to disconnect "PLEN - Control Server", please click to "Cancel" button.';
-        //    }
-        //});
     }
 
     connect(success_callback = null): void
@@ -53,10 +44,10 @@ class PLENControlServerService
                 this._state = SERVER_STATE.WAITING;
                 this._ip_addr = ip_addr;
 
-                this.$http.get("//" + this._ip_addr + "/connect")
+                this.$http.get("//" + this._ip_addr + "/v2/connect")
                     .success((response: any) =>
                     {
-                        if (response.result === true)
+                        if (response.data.result === true)
                         {
                             this._state = SERVER_STATE.CONNECTED;
 
@@ -68,11 +59,15 @@ class PLENControlServerService
                         else
                         {
                             this._state = SERVER_STATE.DISCONNECTED;
+
+                            alert("USB connection was disconnected!");
                         }
                     })
                     .error(() =>
                     {
                         this._state = SERVER_STATE.DISCONNECTED;
+
+                        // alert("Your control-server's version is old. Please use latest version.");
                     });
             });
         }
@@ -82,12 +77,12 @@ class PLENControlServerService
     {
         if (this._state === SERVER_STATE.CONNECTED)
         {
-            this._state === SERVER_STATE.WAITING;
+            this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/disconnect")
+            this.$http.get("//" + this._ip_addr + "/v2/disconnect")
                 .success((response: any) =>
                 {
-                    if (response.result === true)
+                    if (response.data.result === true)
                     {
                         if (!_.isNull(success_callback))
                         {
@@ -96,6 +91,8 @@ class PLENControlServerService
                     }
 
                     this._state = SERVER_STATE.DISCONNECTED;
+
+                    alert("USB connection was disconnected!");
                 })
                 .error(() =>
                 {
@@ -110,17 +107,23 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.post("//" + this._ip_addr + "/install", json)
+            this.$http.put("//" + this._ip_addr + "/v2/motions/" + json.slot.toString(), json)
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
 
-                    if (response.result === true)
+                    if (response.data.result === true)
                     {
                         if (!_.isNull(success_callback))
                         {
                             success_callback();
                         }
+                    }
+                    else
+                    {
+                        this._state = SERVER_STATE.DISCONNECTED;
+
+                        alert("USB connection was disconnected!");
                     }
                 })
                 .error(() =>
@@ -140,17 +143,23 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/play/" + slot.toString())
+            this.$http.get("//" + this._ip_addr + "/v2/motions/" + slot.toString() + "/play")
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
 
-                    if (response.result === true)
+                    if (response.data.result === true)
                     {
                         if (!_.isNull(success_callback))
                         {
                             success_callback();
                         }
+                    }
+                    else
+                    {
+                        this._state = SERVER_STATE.DISCONNECTED;
+
+                        alert("USB connection was disconnected!");
                     }
                 })
                 .error(() =>
@@ -164,19 +173,25 @@ class PLENControlServerService
     {
         if (this._state === SERVER_STATE.CONNECTED)
         {
-            this._state === SERVER_STATE.WAITING;
+            this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/stop")
+            this.$http.get("//" + this._ip_addr + "/v2/motions/stop")
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
 
-                    if (response.result === true)
+                    if (response.data.result === true)
                     {
                         if (!_.isNull(success_callback))
                         {
                             success_callback();
                         }
+                    }
+                    else
+                    {
+                        this._state = SERVER_STATE.DISCONNECTED;
+
+                        alert("USB connection was disconnected!");
                     }
                 })
                 .error(() =>
