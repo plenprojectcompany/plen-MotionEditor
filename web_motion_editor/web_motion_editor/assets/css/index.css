@@ -298,6 +298,7 @@ html, body {
 #frame_editor {
     width: 3600px;
     height: 158px;
+    background: url('../img/frame-editor-bg.png');
 }
 
 .frame_editor-disabled {
