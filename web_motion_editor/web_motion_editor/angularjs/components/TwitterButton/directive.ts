@@ -7,7 +7,7 @@ class TwitterButtonDirective
         return {
             restrict: 'E',
             controller: TwitterButtonController,
-            controllerAs: 'twitter_button',
+            controllerAs: '$ctrl',
             scope: {},
             templateUrl: "./angularjs/components/TwitterButton/view.html",
             replace: true

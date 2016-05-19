@@ -7,7 +7,7 @@ class NextButtonDirective
         return {
             restrict: "E",
             controller: NextButtonController,
-            controllerAs: "next_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/NextButton/view.html",
             replace: true

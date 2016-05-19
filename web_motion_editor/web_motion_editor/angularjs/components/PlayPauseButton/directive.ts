@@ -7,7 +7,7 @@ class PlayPauseButtonDirective
         return {
             restrict: "E",
             controller: PlayPauseButtonController,
-            controllerAs: "play_pause_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/PlayPauseButton/view.html",
             replace: true

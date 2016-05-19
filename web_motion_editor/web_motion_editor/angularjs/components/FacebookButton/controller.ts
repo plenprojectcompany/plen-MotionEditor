@@ -13,7 +13,7 @@
         this.href = "http://www.facebook.com/share.php?u=http://plen.jp/playground/motion-editor/";
     }
 
-    click(): void
+    onClick(): void
     {
         this.$window.open(
             encodeURI(this.href),

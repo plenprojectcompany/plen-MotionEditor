@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class TwitterButtonController
+﻿class TwitterButtonController
 {
     href: string;
 
@@ -13,7 +11,7 @@ class TwitterButtonController
         this.href = "http://twitter.com/share?text=あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。&url=http://plen.jp/playground/motion-editor/&hashtags=PLEN";
     }
 
-    click(): void
+    onClick(): void
     {
         this.$window.open(
             encodeURI(this.href),

@@ -1,7 +1,5 @@
 ﻿class PlayPauseButtonController
 {
-    "use strict";
-
     playing: boolean = false;
     title: string = "Play a motion.";
 
@@ -17,7 +15,7 @@
         public $rootScope: ng.IRootScopeService,
         public motion_model: MotionModel,
         public plen_controll_server_service: PLENControlServerService
-        )
+    )
     {
         $scope.$on("ComponentDisabled", () => { this.playing = true; this.title = "Pause a motion."; });
         $scope.$on("ComponentEnabled", () => { this.playing = false; this.title = "Play a motion."; });

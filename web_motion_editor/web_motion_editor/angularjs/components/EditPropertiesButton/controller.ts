@@ -20,7 +20,7 @@
     {
         var modal = this.$modal.open({
             controller: EditPropertiesModalController,
-            controllerAs: "modal",
+            controllerAs: "$ctrl",
             templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
             backdrop: 'static',
             keyboard: false

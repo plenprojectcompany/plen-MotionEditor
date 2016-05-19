@@ -7,15 +7,15 @@ class DiffAngleViewerDirective
         return {
             restrict: "E",
             controller: DiffAngleViewerController,
-            controllerAs: "diff_angle_viewer",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/DiffAngleViewer/view.html",
             replace: true,
             link: ($scope) => 
             {
-                $("body").on("angleChange", () =>
+                $("html").on("angleChange.toDiffAngleViewer", () =>
                 {
-                    $scope.diff_angle_viewer.onAngleChange();
+                    $scope.$ctrl.onAngleChange();
                     $scope.$apply();
                 });
             }

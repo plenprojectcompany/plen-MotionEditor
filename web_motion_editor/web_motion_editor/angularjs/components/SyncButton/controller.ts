@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../../Scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
-"use strict";
-
 class SyncButtonController
 {
     disabled: boolean = false;

@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class GoogleplusButtonController
+﻿class GoogleplusButtonController
 {
     href: string;
 
@@ -13,7 +11,7 @@ class GoogleplusButtonController
         this.href = "https://plus.google.com/share?url=http://plen.jp/playground/motion-editor/";
     }
 
-    click(): void
+    onClick(): void
     {
         this.$window.open(
             encodeURI(this.href),

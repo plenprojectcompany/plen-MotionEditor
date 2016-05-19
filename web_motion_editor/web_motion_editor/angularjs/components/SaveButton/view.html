@@ -1,8 +1,9 @@
 ﻿<a class="button-menu"
    href="" target="_blank"
-   download="{{ save_button.motion.name + '.json' }}"
-   ng-class="{ 'disabled': save_button.disabled }"
-   ng-mousedown="save_button.onClick()"
-   title="Save a motion.">
+   download="{{ $ctrl.motion.name + '.json' }}"
+   ng-class="{ 'disabled': $ctrl.disabled }"
+   ng-mousedown="$ctrl.onClick()"
+   title="Save a motion."
+>
     <i class="fa fa-fw fa-floppy-o fa-4x"></i>
 </a>

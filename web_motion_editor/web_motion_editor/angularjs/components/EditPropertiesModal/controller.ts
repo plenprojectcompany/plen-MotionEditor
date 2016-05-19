@@ -3,7 +3,7 @@
 class EditPropertiesModalController
 {
     loop_options = {
-        use: false,
+        use:  false,
         args: [0, 0, 255]
     };
 
@@ -38,7 +38,7 @@ class EditPropertiesModalController
         });
     }
 
-    ok(): void
+    onClickOK(): void
     {
         try {
             if (_.isUndefined(this.motion.slot))
@@ -46,7 +46,7 @@ class EditPropertiesModalController
                 throw "Slot: Please fill the property. (Required value is between 0 to 89.)";
             }
 
-            if ((this.motion.name.length > 20)
+            if (   (this.motion.name.length > 20)
                 || (!/^[\w\s]+$/.test(this.motion.name)))
             {
                 throw "Name: Required format is half-width alphanumerics and length is 20 bytes or less.";

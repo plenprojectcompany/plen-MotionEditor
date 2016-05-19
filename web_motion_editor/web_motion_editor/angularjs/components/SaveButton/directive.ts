@@ -7,7 +7,7 @@ class SaveButtonDirective
         return {
             restrict: "E",
             controller: SaveButtonController,
-            controllerAs: "save_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/SaveButton/view.html",
             replace: true

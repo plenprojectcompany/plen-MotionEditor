@@ -1,14 +1,14 @@
-﻿<div id="frame_editor" ui-sortable="frame_editor.sortable_options" ng-click="frame_editor.onClick($event)" ng-model="frame_editor.motion.frames">
+﻿<div id="frame_editor" ui-sortable="$ctrl.sortable_options" ng-click="$ctrl.onClick($event)" ng-model="$ctrl.motion.frames">
     <div class="frame"
-        ng-repeat="frame in frame_editor.motion.frames"
+        ng-repeat="frame in $ctrl.motion.frames"
         ng-class="{ 'frame-selected': frame.selected }"
-        ng-mousedown="frame_editor.motion.selectFrame($index)"
+        ng-mousedown="$ctrl.motion.selectFrame($index)"
         ng-style="{ background: 'url(' + frame.image_uri + ')' }"
     >
         <div class="frame-property">
             <span class="frame-id">Frame : {{ $index }}</span>
             <button class="button-close" type="button"
-                ng-mousedown="$event.stopPropagation(); frame_editor.motion.removeFrame($index);"
+                ng-mousedown="$event.stopPropagation(); $ctrl.motion.removeFrame($index);"
                 title="Delete this frame."
             >
                 <i class="fa fa-inverse fa-times-circle-o"></i>
@@ -16,9 +16,9 @@
         </div>
         <div class="input-transition_time" title="Set time of transition to this frame.">
             <div>Transition time :</div>
-            <input type="number" min="1" max="5000" ng-disabled="frame_editor.touch_disabled" ng-model="frame.transition_time_ms"> [ms]
+            <input type="number" min="1" max="5000" ng-disabled="$ctrl.touch_disabled" ng-model="frame.transition_time_ms"> [ms]
             <input type="range" min="1" max="5000" step="1" ng-model="frame.transition_time_ms">
         </div>
     </div>
 </div>
-<div ng-class="{ 'frame_editor-disabled': frame_editor.disabled, 'frame_editor-enabled': !frame_editor.disabled }"></div>
+<div ng-class="{ 'frame_editor-disabled': $ctrl.disabled, 'frame_editor-enabled': !$ctrl.disabled }"></div>

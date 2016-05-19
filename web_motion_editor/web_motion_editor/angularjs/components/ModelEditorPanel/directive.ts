@@ -7,7 +7,7 @@ class ModelEditorPanelDirective
         return {
             restrict: "E",
             controller: ModelEditorPanelController,
-            controllerAs: "model_editor_panel",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
             replace: true
