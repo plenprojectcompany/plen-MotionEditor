@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class AutoResizeDirective
+﻿class AutoResizeDirective
 {
     static getDDO(
         $window: ng.IWindowService,
@@ -13,13 +11,13 @@ class AutoResizeDirective
                 layout: "&autoResizeLayout",
                 onload: "&autoResizeOnload"
             },
-            link: (scope, element) =>
+            link: ($scope, $element) =>
             {
-                if (scope.onload() === true)
+                if ($scope.onload() === true)
                 {
-                    element.width(scope.layout().width());
-                    element.height(scope.layout().height());
-                    scope.layout().resizeFook(element);
+                    $element.width($scope.layout().width());
+                    $element.height($scope.layout().height());
+                    $scope.layout().resizeFook($element);
                 }
 
                 var resize_promise: any = false;
@@ -33,9 +31,9 @@ class AutoResizeDirective
 
                     resize_promise = $timeout(() =>
                     {
-                        element.width(scope.layout().width());
-                        element.height(scope.layout().height());
-                        scope.layout().resizeFook(element);
+                        $element.width($scope.layout().width());
+                        $element.height($scope.layout().height());
+                        $scope.layout().resizeFook($element);
                     }, 100, false);
                 });
             }

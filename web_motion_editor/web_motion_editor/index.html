@@ -43,7 +43,7 @@
 </head>
 
 <!-- @attention If you use Batarang, you should remove "ng-strict-di" directive. -->
-<body ng-app="PLEN2MotionEditorForWeb" ng-strict-di>
+<body ng-app="PLEN2MotionEditor" ng-strict-di>
     <div id="left_pain">
         <div id="logo">
             <a href="/playground/">
@@ -88,7 +88,7 @@
             <model-editor-panel></model-editor-panel>
             <diff-angle-viewer></diff-angle-viewer>
 
-            <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="scrollable_container.layout" auto-resize-onload="true">
+            <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="$scrollable_container.layout" auto-resize-onload="true">
                 <frame-editor></frame-editor>
             </div>
         </div>

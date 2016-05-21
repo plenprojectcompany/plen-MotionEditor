@@ -1,4 +1,4 @@
-﻿// @todo *.d.tsに分離
+﻿// @todo Divide into isolated *.d.ts.
 declare module THREE
 {
     class TransformControls
