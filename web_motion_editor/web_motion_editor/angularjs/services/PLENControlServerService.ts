@@ -9,24 +9,37 @@ class PLENControlServerService
 {
     private _state: SERVER_STATE = SERVER_STATE.DISCONNECTED;
     private _ip_addr: string;
-    private _syncing: boolean = false;
+    private _socket: WebSocket;
 
     static $inject = [
         "$http",
         "$modal",
         "$rootScope",
-        "SharedMotionService"
+        "SharedThreeService"
     ];
 
     constructor(
         public $http: ng.IHttpService,
         public $modal: angular.ui.bootstrap.IModalService,
         public $rootScope: ng.IRootScopeService,
-        public motion: MotionModel
+        public three_model: ThreeModel
     )
     {
         this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
         this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
+    }
+
+    checkServerVersion(): void
+    {
+        this.$http.get("//" + this._ip_addr + "/connect")
+            .success(() =>
+            {
+                alert("Your control-server's version is old. Please use latest version.");
+            })
+            .error(() =>
+            {
+                alert("The control-server hasn't run.");
+            });
     }
 
     connect(success_callback = null): void
@@ -35,7 +48,7 @@ class PLENControlServerService
         {
             var modal = this.$modal.open({
                 controller: PLENControlServerModalController,
-                controllerAs: "modal",
+                controllerAs: "$ctrl",
                 templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
             });
 
@@ -67,7 +80,7 @@ class PLENControlServerService
                     {
                         this._state = SERVER_STATE.DISCONNECTED;
 
-                        // alert("Your control-server's version is old. Please use latest version.");
+                        this.checkServerVersion();
                     });
             });
         }
@@ -208,12 +221,60 @@ class PLENControlServerService
 
     onSyncBegin(): void
     {
-        this._syncing = true;
+        this._socket = new WebSocket('ws://' + this._ip_addr + '/v2/cmdstream');
+
+        this._socket.onopen = () =>
+        {
+            if (this._socket.readyState === WebSocket.OPEN)
+            {
+                this._state = SERVER_STATE.CONNECTED;
+
+                $("html").on("angleChange.toPLENControlServerService", () =>
+                {
+                    if (this._state === SERVER_STATE.CONNECTED)
+                    {
+                        var device: string = this.three_model.transform_controls.object.name;
+                        var value: number = this.three_model.getDiffAngle(this.three_model.transform_controls.object);
+
+                        this._socket.send('applyDiff/' + device + '/' + value.toString());
+                        this._state = SERVER_STATE.WAITING;
+                    }
+                });
+            }
+        };
+
+        this._socket.onmessage = (event) =>
+        {
+            if (event.data == 'False')
+            {
+                if (this._state === SERVER_STATE.WAITING)
+                {
+                    this._state = SERVER_STATE.DISCONNECTED;
+
+                    alert("USB connection was disconnected!");
+
+                    this.$rootScope.$broadcast("SyncEnd");
+                }
+            }
+            else
+            {
+                this._state = SERVER_STATE.CONNECTED;
+            }
+        };
+
+        this._socket.onerror = () =>
+        {
+            this._state = SERVER_STATE.DISCONNECTED;
+
+            alert("USB connection was disconnected!");
+
+            this.$rootScope.$broadcast("SyncEnd");
+        };
     }
 
     onSyncEnd(): void
     {
-        this._syncing = false;
+        $("html").off("angleChange.toPLENControlServerService");
     }
 }
 
