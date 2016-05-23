@@ -10,6 +10,7 @@ class PLENControlServerService
     private _state: SERVER_STATE = SERVER_STATE.DISCONNECTED;
     private _ip_addr: string;
     private _socket: WebSocket;
+    private _syncing: boolean = false;
 
     static $inject = [
         "$http",
@@ -27,6 +28,28 @@ class PLENControlServerService
     {
         this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
         this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
+
+        this.$rootScope.$on("3DModelReset", () =>
+        {
+            if (this._syncing === true)
+            {
+                _.each(this.three_model.rotation_axes, (axis: THREE.Object3D, index: number) =>
+                {
+                    this._socket.send('applyDiff/' + axis.name + '/0');
+                });
+            }
+        });
+
+        this.$rootScope.$on("FrameLoadFinished", () =>
+        {
+            if (this._syncing === true)
+            {
+                _.each(this.three_model.rotation_axes, (axis: THREE.Object3D, index: number) =>
+                {
+                    this._socket.send('applyDiff/' + axis.name + '/' + this.three_model.getDiffAngle(axis, index).toString());
+                });
+            }
+        });
     }
 
     checkServerVersion(): void
@@ -74,6 +97,8 @@ class PLENControlServerService
                             this._state = SERVER_STATE.DISCONNECTED;
 
                             alert("USB connection was disconnected!");
+
+                            this.$rootScope.$broadcast("SyncEnd");
                         }
                     })
                     .error(() =>
@@ -106,6 +131,8 @@ class PLENControlServerService
                     this._state = SERVER_STATE.DISCONNECTED;
 
                     alert("USB connection was disconnected!");
+
+                    this.$rootScope.$broadcast("SyncEnd");
                 })
                 .error(() =>
                 {
@@ -137,6 +164,8 @@ class PLENControlServerService
                         this._state = SERVER_STATE.DISCONNECTED;
 
                         alert("USB connection was disconnected!");
+
+                        this.$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -173,6 +202,8 @@ class PLENControlServerService
                         this._state = SERVER_STATE.DISCONNECTED;
 
                         alert("USB connection was disconnected!");
+
+                        this.$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -205,6 +236,8 @@ class PLENControlServerService
                         this._state = SERVER_STATE.DISCONNECTED;
 
                         alert("USB connection was disconnected!");
+
+                        this.$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -270,10 +303,14 @@ class PLENControlServerService
 
             this.$rootScope.$broadcast("SyncEnd");
         };
+
+        this._syncing = true;
     }
 
     onSyncEnd(): void
     {
+        this._syncing = false;
+
         $("html").off("angleChange.toPLENControlServerService");
     }
 }

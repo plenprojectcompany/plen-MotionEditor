@@ -27,7 +27,7 @@ class MotionModel
 
     getSelectedFrameIndex(): number
     {
-        return _.findIndex(this.frames,(frame: FrameModel) => { return frame.selected; });
+        return _.findIndex(this.frames, (frame: FrameModel) => { return frame.selected; });
     }
 
     removeFrame(index: number): void
@@ -77,7 +77,7 @@ class MotionModel
         this.selectFrame(index, false);
     }
 
-    selectFrame(index: number, old_save: boolean = true): void
+    selectFrame(index: number, old_save: boolean = true, broadcast_finished: boolean = true): void
     {
         if (old_save)
         {
@@ -88,6 +88,11 @@ class MotionModel
         _.each(this.frames, (frame: FrameModel) => { frame.selected = false; });
         this.frames[index].selected = true;
         this.$rootScope.$broadcast("FrameLoad", index);
+
+        if (broadcast_finished)
+        {
+            this.$rootScope.$broadcast("FrameLoadFinished");
+        }
     }
 
     selectNextFrame(): void

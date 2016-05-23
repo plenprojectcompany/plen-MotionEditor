@@ -94,7 +94,7 @@ class AnimationHelper
                 output.value = this._outputs_backup[index];
             });
 
-            this.motion.selectFrame(next_frame_index, false);
+            this.motion.selectFrame(next_frame_index, false, false);
 
             if (continuous_callback === null)
             {

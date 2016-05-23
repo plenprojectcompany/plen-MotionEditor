@@ -19,6 +19,8 @@ class SyncButtonController
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
+
+        $scope.$on("SyncEnd", () => { this.syncing = false; });
     }
 
     onClick(): void
@@ -43,7 +45,6 @@ class SyncButtonController
         }
         else
         {
-            this.syncing = false;
             this.$rootScope.$broadcast("SyncEnd");
         }
     }
