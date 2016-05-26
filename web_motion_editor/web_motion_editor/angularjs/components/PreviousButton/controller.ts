@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../services/SharedMotionService.ts" />
 
-"use strict";
-
 class PreviousButtonController
 {
     disabled: boolean = false;

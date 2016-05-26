@@ -7,7 +7,7 @@ class FacebookButtonDirective
         return {
             restrict: 'E',
             controller: FacebookButtonController,
-            controllerAs: 'facebook_button',
+            controllerAs: '$ctrl',
             scope: {},
             templateUrl: "./angularjs/components/FacebookButton/view.html",
             replace: true

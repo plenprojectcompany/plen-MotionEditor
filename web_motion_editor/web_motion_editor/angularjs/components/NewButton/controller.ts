@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../services/SharedMotionService.ts" />
 
-"use strict";
-
 class NewButtonController
 {
     disabled: boolean = false;
@@ -24,13 +22,13 @@ class NewButtonController
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
     }
 
-    click(): void
+    onClick(): void
     {
         var result = this.$window.confirm(
-            "Are you sure you want to create a new motion?\n\n" +
+`Are you sure you want to create a new motion?
 
-            "Working contents will have destroyed.\n" +
-            'If your motion has not been saved yet, please click to the "Cancel" button.'
+Working contents will have destroyed.
+If your motion has not been saved yet, please click to the "Cancel" button.`
         );
 
         if (result === true)

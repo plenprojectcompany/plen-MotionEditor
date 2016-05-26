@@ -7,7 +7,7 @@ class FrameEditorDirective
         return {
             restrict: "E",
             controller: FrameEditorController,
-            controllerAs: "frame_editor",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/FrameEditor/view.html"
         };

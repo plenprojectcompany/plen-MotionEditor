@@ -1,7 +1,5 @@
 ﻿/// <reference path="../../../Scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
 
-"use strict";
-
 class SyncButtonController
 {
     disabled: boolean = false;
@@ -21,6 +19,8 @@ class SyncButtonController
     {
         $scope.$on("ComponentDisabled", () => { this.disabled = true; });
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
+
+        $scope.$on("SyncEnd", () => { this.syncing = false; });
     }
 
     onClick(): void
@@ -45,7 +45,6 @@ class SyncButtonController
         }
         else
         {
-            this.syncing = false;
             this.$rootScope.$broadcast("SyncEnd");
         }
     }

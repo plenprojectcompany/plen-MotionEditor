@@ -7,7 +7,7 @@ class EditPropertiesButtonDirective
         return {
             restrict: "E",
             controller: EditPropertiesButtonController,
-            controllerAs: "edit_properties_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
             replace: true

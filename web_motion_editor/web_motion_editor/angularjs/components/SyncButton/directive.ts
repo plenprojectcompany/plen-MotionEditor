@@ -7,7 +7,7 @@ class SyncButtonDirective
         return {
             restrict: "E",
             controller: SyncButtonController,
-            controllerAs: "sync_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/SyncButton/view.html",
             replace: true

@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class ResetButtonController
+﻿class ResetButtonController
 {
     disabled: boolean = false;
 
@@ -18,7 +16,7 @@ class ResetButtonController
         $scope.$on("ComponentEnabled", () => { this.disabled = false; });
     }
 
-    click(): void
+    onClick(): void
     {
         this.$rootScope.$broadcast("3DModelReset");
     }

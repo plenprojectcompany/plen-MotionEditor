@@ -1,26 +1,27 @@
 ﻿<!DOCTYPE html>
-<html lang="ja">
+
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Let moving PLEN as you like! &quot;Motion Editor for Web.&quot; is a web application to create easily a PLEN's motion." />
+    <meta name="description" content="Let PLEN move as you like! &quot;Motion Editor&quot; is a web application to create easily a PLEN's motion." />
     <meta name="author" content="Kazuyuki TAKASE" />
-    <title>PLEN Playground - Motion Editor for Web.</title>
+    <title>PLEN Playground - Motion Editor</title>
     <link rel="icon" href="/favicon.ico" />
 
-    <!-- Open Graph Protocolの定義 -->
+    <!-- Define open graph protocol. -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="PLEN Playground - Motion Editor for Web." />
+    <meta property="og:title" content="PLEN Playground - Motion Editor" />
     <meta property="og:url" content="http://plen.jp/playground/motion-editor/" />
     <meta property="og:image" content="http://plen.jp/playground/motion-editor/assets/img/og-image.gif" />
 
-    <!-- スタイルファイルのロード -->
+    <!-- Load style file(s). -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="./assets/css/font-awesome.min.css" type="text/css" />
     <link rel="stylesheet" href="./assets/css/index.min.css" type="text/css" />
 
-    <!-- 外部ライブラリのロード -->
+    <!-- Load javascript lib(s). -->
     <script src="./lib/jquery.min.js"></script>
     <script src="./lib/jquery-ui-sortable.min.js"></script>
     <script src="./lib/jquery-ui-touch-punch.fixed.min.js"></script>
@@ -34,15 +35,15 @@
     <script src="./lib/angular-ui-sortable.min.js"></script>
     <script src="./lib/angular-ui-bootstrap-custom-tpls.min.js"></script>
 
-    <!-- アプリケーションのロード -->
+    <!-- Load the application. -->
     <script src="./lib/bundle.min.js"></script>
 
-    <!-- Google Analyticsツールのロード -->
+    <!-- Load Google Analytics script. -->
     <script async src="/playground/common_assets/js/ga.js"></script>
 </head>
 
-<!-- @attention Batarangを使用する際は、"ng-strict-di"を外す必要がある -->
-<body ng-app="PLEN2MotionEditorForWeb" ng-strict-di>
+<!-- @attention If you use Batarang, you should remove "ng-strict-di" directive. -->
+<body ng-app="PLEN2MotionEditor" ng-strict-di>
     <div id="left_pain">
         <div id="logo">
             <a href="/playground/">
@@ -57,9 +58,6 @@
                 <googleplus-button></googleplus-button>
                 <shoppingcart-button></shoppingcart-button>
             </div>
-            <a class="download-unity" href="https://drive.google.com/open?id=0B5Wd2RxpBbWQeHNRTjctQWpoTW8" target="_blank">
-                <p><i class="fa fa-download"></i> Download Unity edition!</p>
-            </a>
 
             <div class="button-group">
                 <open-button></open-button>
@@ -90,7 +88,7 @@
             <model-editor-panel></model-editor-panel>
             <diff-angle-viewer></diff-angle-viewer>
 
-            <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="scrollable_container.layout" auto-resize-onload="true">
+            <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="$scrollable_container.layout" auto-resize-onload="true">
                 <frame-editor></frame-editor>
             </div>
         </div>

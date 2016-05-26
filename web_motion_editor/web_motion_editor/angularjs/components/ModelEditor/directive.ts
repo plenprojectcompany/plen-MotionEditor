@@ -3,8 +3,8 @@
 
 class ModelEditorDirective
 {
-    static width_offset: number  = 220 + 45;
-    static height_offset: number = 186 + 40;
+    static WIDTH_OFFSET: number  = 220 + 45;
+    static HEIGHT_OFFSET: number = 186 + 40;
 
     static getDDO(
         $rootScope: ng.IRootScopeService,
@@ -15,45 +15,45 @@ class ModelEditorDirective
         return {
             restrict: "E",
             controller: ModelEditorController,
-            controllerAs: "model_editor",
+            controllerAs: "$model_editor",
             replace: true,
             templateUrl: "./angularjs/components/ModelEditor/view.html",
             link: {
                 pre: ($scope) =>
                 {
-                    // layoutオブジェクトの設定
-                    $scope.model_editor.layout = {
+                    // Layout object's definition.
+                    $scope.$model_editor.layout = {
                         width: () =>
                         {
-                            return $window.innerWidth - ModelEditorDirective.width_offset;
+                            return $window.innerWidth - ModelEditorDirective.WIDTH_OFFSET;
                         },
                         height: () =>
                         {
-                            return $window.innerHeight - ModelEditorDirective.height_offset;
+                            return $window.innerHeight - ModelEditorDirective.HEIGHT_OFFSET;
                         },
                         resizeFook: () =>
                         {
-                            $scope.model_editor.three_model.resize();
+                            $scope.$model_editor.three_model.resize();
                         }
                     };
 
-                    $scope.model_editor.three_model.init($("#canvas_wrapper"), $scope.model_editor.layout);
-                    $scope.model_editor.three_model.animate();
+                    $scope.$model_editor.three_model.init($("#canvas_wrapper"), $scope.$model_editor.layout);
+                    $scope.$model_editor.three_model.animate();
 
-                    // フォーカスに関するフック
+                    // The hook ehn pointer is focused.
                     $("#canvas_wrapper canvas").on("mousedown touchstart", (event: Event) =>
                     {
-                        $scope.model_editor.onFocus(event);
+                        $scope.$model_editor.onFocus(event);
                     });
 
-                    // アンフォーカスに関するフック
+                    // The hook when pointer is unfocused.
                     $("#canvas_wrapper canvas").on("mouseup mouseout touchend touchcancel touchleave", (event: Event) =>
                     {
-                        $scope.model_editor.onUnfocus();
+                        $scope.$model_editor.onUnfocus();
                         $scope.$apply();
                     });
 
-                    model_loader.scene = $scope.model_editor.three_model.scene;
+                    model_loader.scene = $scope.$model_editor.three_model.scene;
                     model_loader.loadJSON();
                 }
             }
@@ -61,11 +61,9 @@ class ModelEditorDirective
     }
 }
 
-angular.module(APP_NAME).directive("modelEditor",
-    [
-        "$rootScope",
-        "$window",
-        "ModelLoaderService",
-        ModelEditorDirective.getDDO
-    ]
-);
+angular.module(APP_NAME).directive("modelEditor", [
+    "$rootScope",
+    "$window",
+    "ModelLoaderService",
+    ModelEditorDirective.getDDO
+]);

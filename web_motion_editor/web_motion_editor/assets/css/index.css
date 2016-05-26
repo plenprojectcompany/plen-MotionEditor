@@ -1,5 +1,5 @@
 ﻿/**
- * スケルトンのデザイン
+ * Skeleton's Design
  * ============================================================================
  */
 html, body {
@@ -39,7 +39,7 @@ html, body {
 
 
 /**
- * メニューのデザイン
+ * Menu's Design
  * ============================================================================
  */
 #social_icons {
@@ -202,7 +202,7 @@ html, body {
 
 
 /**
- * モデルエディタのデザイン
+ * Model Editor's Design
  * ============================================================================
  */
 #indent_container {
@@ -267,7 +267,7 @@ html, body {
 }
 
 /**
- * フレームエディタのデザイン
+ * Frame Editor's Design
  * ============================================================================
  */
 #scrollable_container {
@@ -298,6 +298,7 @@ html, body {
 #frame_editor {
     width: 3600px;
     height: 158px;
+    background: url('../img/frame-editor-bg.png');
 }
 
 .frame_editor-disabled {

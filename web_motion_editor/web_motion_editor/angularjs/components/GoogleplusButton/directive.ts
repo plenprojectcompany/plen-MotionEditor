@@ -7,7 +7,7 @@ class GoogleplusButtonDirective
         return {
             restrict: "E",
             controller: GoogleplusButtonController,
-            controllerAs: "googleplus_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/GoogleplusButton/view.html",
             replace: true

@@ -7,7 +7,7 @@ class PreviousButtonDirective
         return {
             restrict: "E",
             controller: PreviousButtonController,
-            controllerAs: "previous_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/PreviousButton/view.html",
             replace: true

@@ -7,7 +7,7 @@ class NewButtonDirective
         return {
             restrict: "E",
             controller: NewButtonController,
-            controllerAs: "new_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/NewButton/view.html",
             replace: true

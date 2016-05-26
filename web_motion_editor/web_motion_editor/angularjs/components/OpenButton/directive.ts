@@ -9,7 +9,7 @@ class OpenButtonDirective
         return {
             restrict: "E",
             controller: OpenButtonController,
-            controllerAs: "open_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/OpenButton/view.html",
             replace: true,
@@ -20,7 +20,7 @@ class OpenButtonDirective
                     var reader = new FileReader();
                     reader.onload = (event: any) =>
                     {
-                        $scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$ctrl.motion.loadJSON(event.target.result, model_loader.getAxisMap());
                         $scope.$apply();
                     };
 

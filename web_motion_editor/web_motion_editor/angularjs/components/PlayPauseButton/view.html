@@ -1,3 +1,3 @@
-﻿<button ng-click="play_pause_button.onClick()" class="button-menu" type="button" title="{{play_pause_button.title}}">
-    <i class="fa fa-fw fa-4x" ng-class="{ 'fa-play ': !play_pause_button.playing, 'fa-pause': play_pause_button.playing }"></i>
+﻿<button ng-click="$ctrl.onClick()" class="button-menu" type="button" title="{{$ctrl.title}}">
+    <i class="fa fa-fw fa-4x" ng-class="{ 'fa-play': !$ctrl.playing, 'fa-pause': $ctrl.playing }"></i>
 </button>

@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class CodeModel
+﻿class CodeModel
 {
     func: string;
     args: Array<number>;

@@ -7,7 +7,7 @@ class ResetButtonDirective
         return {
             restrict: "E",
             controller: ResetButtonController,
-            controllerAs: "reset_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/ResetButton/view.html",
             replace: true

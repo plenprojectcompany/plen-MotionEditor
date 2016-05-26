@@ -23,12 +23,12 @@
 			var planes = {
 				"XY": new THREE.Mesh( planeGeometry, planeMaterial ),
 				"YZ": new THREE.Mesh( planeGeometry, planeMaterial ),
-				"XZ": new THREE.Mesh( planeGeometry, planeMaterial )
+				"ZX": new THREE.Mesh( planeGeometry, planeMaterial )
 			};
 
 			this.activePlane = planes["XY"];
 			planes["YZ"].rotation.set( 0, Math.PI / 2, 0 );
-			planes["XZ"].rotation.set( -Math.PI / 2, 0, 0 );
+			planes["ZX"].rotation.set( -Math.PI / 2, 0, 0 );
 
 			for (var i in planes) {
 				planes[i].name = i;
@@ -73,7 +73,7 @@
 
 		this.setActivePlane = function ( axis ) {
 			if ( axis == "X" ) this.activePlane = this.planes[ "YZ" ];
-			if ( axis == "Y" ) this.activePlane = this.planes[ "XZ" ];
+			if ( axis == "Y" ) this.activePlane = this.planes[ "ZX" ];
 			if ( axis == "Z" ) this.activePlane = this.planes[ "XY" ];
 		};
 
@@ -179,7 +179,7 @@
 		var oldScale = new THREE.Vector3();
 		var oldRotationMatrix = new THREE.Matrix4();
 
-		var parentRotationMatrix  = new THREE.Matrix4();
+		var parentRotationMatrix = new THREE.Matrix4();
 		var parentScale = new THREE.Vector3();
 
 		var worldPosition = new THREE.Vector3();

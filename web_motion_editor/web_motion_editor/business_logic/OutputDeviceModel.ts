@@ -1,6 +1,4 @@
-﻿"use strict";
-
-class OutputDeviceModel
+﻿class OutputDeviceModel
 {
     device: string;
     value: number;

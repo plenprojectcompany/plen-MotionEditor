@@ -1,7 +1,5 @@
 ﻿/// <reference path="./OutputDeviceModel.ts" />
 
-"use strict";
-
 class FrameModel
 {
     _transition_time_ms: number;
