@@ -1,6 +1,10 @@
 "use strict";
-var APP_NAME = "PLEN2MotionEditorForWeb";
-angular.module(APP_NAME, ["ngAnimate", "ui.sortable", "ui.bootstrap"]);
+var APP_NAME = "PLEN2MotionEditor";
+angular.module(APP_NAME, [
+    "ngAnimate",
+    "ui.sortable",
+    "ui.bootstrap"
+]);
 var DiffAngleViewerController = (function () {
     function DiffAngleViewerController(three_model) {
         this.three_model = three_model;
@@ -23,13 +27,13 @@ var DiffAngleViewerDirective = (function () {
         return {
             restrict: "E",
             controller: DiffAngleViewerController,
-            controllerAs: "diff_angle_viewer",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/DiffAngleViewer/view.html",
             replace: true,
             link: function ($scope) {
-                $("body").on("angleChange", function () {
-                    $scope.diff_angle_viewer.onAngleChange();
+                $("html").on("angleChange.toDiffAngleViewer", function () {
+                    $scope.$ctrl.onAngleChange();
                     $scope.$apply();
                 });
             }
@@ -39,51 +43,6 @@ var DiffAngleViewerDirective = (function () {
 })();
 angular.module(APP_NAME).directive("diffAngleViewer", [
     DiffAngleViewerDirective.getDDO
-]);
-var EditPropertiesButtonController = (function () {
-    function EditPropertiesButtonController($scope, $modal) {
-        var _this = this;
-        this.$modal = $modal;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    EditPropertiesButtonController.prototype.onClick = function () {
-        var modal = this.$modal.open({
-            controller: EditPropertiesModalController,
-            controllerAs: "modal",
-            templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
-            backdrop: 'static',
-            keyboard: false
-        });
-    };
-    EditPropertiesButtonController.$inject = [
-        "$scope",
-        "$modal"
-    ];
-    return EditPropertiesButtonController;
-})();
-var EditPropertiesButtonDirective = (function () {
-    function EditPropertiesButtonDirective() {
-    }
-    EditPropertiesButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: EditPropertiesButtonController,
-            controllerAs: "edit_properties_button",
-            scope: {},
-            templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
-            replace: true
-        };
-    };
-    return EditPropertiesButtonDirective;
-})();
-angular.module(APP_NAME).directive("editPropertiesButton", [
-    EditPropertiesButtonDirective.getDDO
 ]);
 var EditPropertiesModalController = (function () {
     function EditPropertiesModalController($modalInstance, motion) {
@@ -109,7 +68,7 @@ var EditPropertiesModalController = (function () {
             }
         });
     }
-    EditPropertiesModalController.prototype.ok = function () {
+    EditPropertiesModalController.prototype.onClickOK = function () {
         try {
             if (_.isUndefined(this.motion.slot)) {
                 throw "Slot: Please fill the property. (Required value is between 0 to 89.)";
@@ -156,12 +115,57 @@ var EditPropertiesModalController = (function () {
     ];
     return EditPropertiesModalController;
 })();
+var EditPropertiesButtonController = (function () {
+    function EditPropertiesButtonController($scope, $modal) {
+        var _this = this;
+        this.$modal = $modal;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    EditPropertiesButtonController.prototype.onClick = function () {
+        var modal = this.$modal.open({
+            controller: EditPropertiesModalController,
+            controllerAs: "$ctrl",
+            templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
+            backdrop: 'static',
+            keyboard: false
+        });
+    };
+    EditPropertiesButtonController.$inject = [
+        "$scope",
+        "$modal"
+    ];
+    return EditPropertiesButtonController;
+})();
+var EditPropertiesButtonDirective = (function () {
+    function EditPropertiesButtonDirective() {
+    }
+    EditPropertiesButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: EditPropertiesButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
+            replace: true
+        };
+    };
+    return EditPropertiesButtonDirective;
+})();
+angular.module(APP_NAME).directive("editPropertiesButton", [
+    EditPropertiesButtonDirective.getDDO
+]);
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
         this.$window = $window;
         this.href = "http://www.facebook.com/share.php?u=http://plen.jp/playground/motion-editor/";
     }
-    FacebookButtonController.prototype.click = function () {
+    FacebookButtonController.prototype.onClick = function () {
         this.$window.open(encodeURI(this.href), "facebook_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=no");
     };
     FacebookButtonController.$inject = [
@@ -169,25 +173,6 @@ var FacebookButtonController = (function () {
     ];
     return FacebookButtonController;
 })();
-var FacebookButtonDirective = (function () {
-    function FacebookButtonDirective() {
-    }
-    FacebookButtonDirective.getDDO = function () {
-        return {
-            restrict: 'E',
-            controller: FacebookButtonController,
-            controllerAs: 'facebook_button',
-            scope: {},
-            templateUrl: "./angularjs/components/FacebookButton/view.html",
-            replace: true
-        };
-    };
-    return FacebookButtonDirective;
-})();
-angular.module(APP_NAME).directive("facebookButton", [
-    FacebookButtonDirective.getDDO
-]);
-"use strict";
 var CodeModel = (function () {
     function CodeModel(func, args) {
         this.func = func;
@@ -195,7 +180,6 @@ var CodeModel = (function () {
     }
     return CodeModel;
 })();
-"use strict";
 var OutputDeviceModel = (function () {
     function OutputDeviceModel(device, value) {
         this.device = device;
@@ -203,7 +187,6 @@ var OutputDeviceModel = (function () {
     }
     return OutputDeviceModel;
 })();
-"use strict";
 var FrameModel = (function () {
     function FrameModel(transition_time_ms, outputs, selected, image_uri) {
         this.transition_time_ms = transition_time_ms;
@@ -291,8 +274,9 @@ var MotionModel = (function () {
         this.frames.splice(index, 0, insertion_frame);
         this.selectFrame(index, false);
     };
-    MotionModel.prototype.selectFrame = function (index, old_save) {
+    MotionModel.prototype.selectFrame = function (index, old_save, broadcast_finished) {
         if (old_save === void 0) { old_save = true; }
+        if (broadcast_finished === void 0) { broadcast_finished = true; }
         if (old_save) {
             var old_index = _.findIndex(this.frames, function (frame) {
                 return frame.selected;
@@ -304,6 +288,9 @@ var MotionModel = (function () {
         });
         this.frames[index].selected = true;
         this.$rootScope.$broadcast("FrameLoad", index);
+        if (broadcast_finished) {
+            this.$rootScope.$broadcast("FrameLoadFinished");
+        }
     };
     MotionModel.prototype.selectNextFrame = function () {
         var index = _.findIndex(this.frames, function (frame) {
@@ -690,7 +677,7 @@ var AnimationHelper = (function () {
             _.each(now_frame.outputs, function (output, index) {
                 output.value = _this._outputs_backup[index];
             });
-            _this.motion.selectFrame(next_frame_index, false);
+            _this.motion.selectFrame(next_frame_index, false, false);
             if (continuous_callback === null) {
                 _this.$rootScope.$broadcast("ComponentEnabled");
             }
@@ -800,54 +787,17 @@ var FrameEditorController = (function () {
     ];
     return FrameEditorController;
 })();
-var FrameEditorDirective = (function () {
-    function FrameEditorDirective() {
-    }
-    FrameEditorDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: FrameEditorController,
-            controllerAs: "frame_editor",
-            scope: {},
-            templateUrl: "./angularjs/components/FrameEditor/view.html"
-        };
-    };
-    return FrameEditorDirective;
-})();
-angular.module(APP_NAME).directive("frameEditor", [
-    FrameEditorDirective.getDDO
-]);
-"use strict";
 var GoogleplusButtonController = (function () {
     function GoogleplusButtonController($window) {
         this.$window = $window;
         this.href = "https://plus.google.com/share?url=http://plen.jp/playground/motion-editor/";
     }
-    GoogleplusButtonController.prototype.click = function () {
+    GoogleplusButtonController.prototype.onClick = function () {
         this.$window.open(encodeURI(this.href), "googleplus_window", "width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes");
     };
     GoogleplusButtonController.$inject = ["$window"];
     return GoogleplusButtonController;
 })();
-var GoogleplusButtonDirective = (function () {
-    function GoogleplusButtonDirective() {
-    }
-    GoogleplusButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: GoogleplusButtonController,
-            controllerAs: "googleplus_button",
-            scope: {},
-            templateUrl: "./angularjs/components/GoogleplusButton/view.html",
-            replace: true
-        };
-    };
-    return GoogleplusButtonDirective;
-})();
-angular.module(APP_NAME).directive("googleplusButton", [
-    GoogleplusButtonDirective.getDDO
-]);
-"use strict";
 var InstallButtonController = (function () {
     function InstallButtonController(plen_controll_server_service, $scope, $rootScope, motion) {
         var _this = this;
@@ -893,23 +843,62 @@ var InstallButtonController = (function () {
     ];
     return InstallButtonController;
 })();
-var InstallButtonDirective = (function () {
-    function InstallButtonDirective() {
+var ModelEditorPanelController = (function () {
+    function ModelEditorPanelController($scope, $rootScope, three_model) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        this._three_model = three_model;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
     }
-    InstallButtonDirective.getDDO = function () {
+    ModelEditorPanelController.prototype.onClick = function (id) {
+        switch (id) {
+            case 0:
+                this._three_model.reverse3DModel();
+                break;
+            case 1:
+                this._three_model.copyRightToLeft();
+                break;
+            case 2:
+                this._three_model.copyLeftToRight();
+                break;
+            case 3:
+                this._three_model.orbit_controls.reset();
+                break;
+            default:
+                return;
+        }
+        this.$rootScope.$broadcast("RefreshThumbnail");
+    };
+    ModelEditorPanelController.$inject = [
+        "$scope",
+        "$rootScope",
+        "SharedThreeService"
+    ];
+    return ModelEditorPanelController;
+})();
+var ModelEditorPanelDirective = (function () {
+    function ModelEditorPanelDirective() {
+    }
+    ModelEditorPanelDirective.getDDO = function () {
         return {
             restrict: "E",
-            controller: InstallButtonController,
-            controllerAs: "install_button",
+            controller: ModelEditorPanelController,
+            controllerAs: "$ctrl",
             scope: {},
-            templateUrl: "./angularjs/components/InstallButton/view.html",
+            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
             replace: true
         };
     };
-    return InstallButtonDirective;
+    return ModelEditorPanelDirective;
 })();
-angular.module(APP_NAME).directive("installButton", [
-    InstallButtonDirective.getDDO
+angular.module(APP_NAME).directive("modelEditorPanel", [
+    ModelEditorPanelDirective.getDDO
 ]);
 var ModelEditorController = (function () {
     function ModelEditorController($scope, model_loader, three_model, motion, image_store_service) {
@@ -1022,6 +1011,390 @@ var ModelEditorController = (function () {
     ];
     return ModelEditorController;
 })();
+var NewButtonController = (function () {
+    function NewButtonController($rootScope, $scope, $window, motion) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.$window = $window;
+        this.motion = motion;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    NewButtonController.prototype.onClick = function () {
+        var result = this.$window.confirm("Are you sure you want to create a new motion?\n\nWorking contents will have destroyed.\nIf your motion has not been saved yet, please click to the \"Cancel\" button.");
+        if (result === true) {
+            this.motion.reset();
+            this.$rootScope.$broadcast("3DModelReset");
+        }
+    };
+    NewButtonController.$inject = [
+        "$rootScope",
+        "$scope",
+        "$window",
+        "SharedMotionService"
+    ];
+    return NewButtonController;
+})();
+var NextButtonController = (function () {
+    function NextButtonController($rootScope, motion_model, $scope) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.motion_model = motion_model;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    NextButtonController.prototype.onClick = function () {
+        this.$rootScope.$broadcast("ComponentDisabled");
+        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
+        this.$rootScope.$broadcast("AnimationNext");
+    };
+    NextButtonController.$inject = [
+        "$rootScope",
+        "SharedMotionService",
+        "$scope"
+    ];
+    return NextButtonController;
+})();
+var OpenButtonController = (function () {
+    function OpenButtonController($scope, motion) {
+        var _this = this;
+        this.motion = motion;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    OpenButtonController.$inject = [
+        "$scope",
+        "SharedMotionService"
+    ];
+    return OpenButtonController;
+})();
+var PlayPauseButtonController = (function () {
+    function PlayPauseButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.motion_model = motion_model;
+        this.plen_controll_server_service = plen_controll_server_service;
+        this.playing = false;
+        this.title = "Play a motion.";
+        $scope.$on("ComponentDisabled", function () {
+            _this.playing = true;
+            _this.title = "Pause a motion.";
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.playing = false;
+            _this.title = "Play a motion.";
+        });
+    }
+    PlayPauseButtonController.prototype.onClick = function () {
+        if (this.playing === false) {
+            this.$rootScope.$broadcast("ComponentDisabled");
+            this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
+            this.$rootScope.$broadcast("AnimationPlay");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.play(this.motion_model.slot);
+            }
+        }
+        else {
+            this.$rootScope.$broadcast("AnimationStop");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.stop();
+            }
+        }
+    };
+    PlayPauseButtonController.$inject = [
+        "$scope",
+        "$rootScope",
+        "SharedMotionService",
+        "PLENControlServerService"
+    ];
+    return PlayPauseButtonController;
+})();
+var PlayPauseButtonDirective = (function () {
+    function PlayPauseButtonDirective() {
+    }
+    PlayPauseButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: PlayPauseButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
+            replace: true
+        };
+    };
+    return PlayPauseButtonDirective;
+})();
+angular.module(APP_NAME).directive("playPauseButton", [
+    PlayPauseButtonDirective.getDDO
+]);
+var PLENControlServerModalController = (function () {
+    function PLENControlServerModalController($modalInstance) {
+        this.$modalInstance = $modalInstance;
+        this.ip_addr = "127.0.0.1:17264";
+    }
+    PLENControlServerModalController.prototype.connect = function () {
+        var regexp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}$/;
+        if (regexp.test(this.ip_addr)) {
+            this.$modalInstance.close(this.ip_addr);
+        }
+        else {
+            alert("IP address has invalid format.");
+        }
+    };
+    PLENControlServerModalController.prototype.cancel = function () {
+        this.$modalInstance.dismiss();
+    };
+    PLENControlServerModalController.$inject = [
+        "$modalInstance"
+    ];
+    return PLENControlServerModalController;
+})();
+var PreviousButtonController = (function () {
+    function PreviousButtonController($scope, motion_model, $rootScope) {
+        var _this = this;
+        this.motion_model = motion_model;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    PreviousButtonController.prototype.onClick = function () {
+        this.$rootScope.$broadcast("ComponentDisabled");
+        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
+        this.$rootScope.$broadcast("AnimationPrevious");
+    };
+    PreviousButtonController.$inject = [
+        "$scope",
+        "SharedMotionService",
+        "$rootScope"
+    ];
+    return PreviousButtonController;
+})();
+var ResetButtonController = (function () {
+    function ResetButtonController($scope, $rootScope) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    ResetButtonController.prototype.onClick = function () {
+        this.$rootScope.$broadcast("3DModelReset");
+    };
+    ResetButtonController.$inject = [
+        "$scope",
+        "$rootScope"
+    ];
+    return ResetButtonController;
+})();
+var SaveButtonController = (function () {
+    function SaveButtonController($rootScope, $scope, $element, motion) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.$element = $element;
+        this.motion = motion;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+        $element.on("touchstart", function () {
+            _this.onClick();
+        });
+    }
+    SaveButtonController.prototype.onClick = function () {
+        if (!this.disabled) {
+            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
+            this.setDownloadLink();
+        }
+    };
+    SaveButtonController.prototype.setDownloadLink = function () {
+        var _this = this;
+        var json_blob = new Blob([this.motion.saveJSON()], { type: "text/plain" });
+        if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(json_blob, this.motion.name + ".json");
+        }
+        else {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                _this.$element[0].href = reader.result;
+            };
+            reader.readAsDataURL(json_blob);
+        }
+    };
+    SaveButtonController.$inject = [
+        "$rootScope",
+        "$scope",
+        "$element",
+        "SharedMotionService"
+    ];
+    return SaveButtonController;
+})();
+var ShoppingcartButtonDirective = (function () {
+    function ShoppingcartButtonDirective() {
+    }
+    ShoppingcartButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            scope: {},
+            templateUrl: "./angularjs/components/ShoppingcartButton/view.html",
+            replace: true
+        };
+    };
+    return ShoppingcartButtonDirective;
+})();
+angular.module(APP_NAME).directive("shoppingcartButton", [
+    ShoppingcartButtonDirective.getDDO
+]);
+var SyncButtonController = (function () {
+    function SyncButtonController($scope, $rootScope, plen_controll_server_service) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.plen_controll_server_service = plen_controll_server_service;
+        this.disabled = false;
+        this.syncing = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+        $scope.$on("SyncEnd", function () {
+            _this.syncing = false;
+        });
+    }
+    SyncButtonController.prototype.onClick = function () {
+        var _this = this;
+        var success_callback = function () {
+            _this.syncing = true;
+            _this.$rootScope.$broadcast("SyncBegin");
+        };
+        if (!this.syncing) {
+            if (this.plen_controll_server_service.getStatus() === 0 /* DISCONNECTED */) {
+                this.plen_controll_server_service.connect(success_callback);
+            }
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                success_callback();
+            }
+        }
+        else {
+            this.$rootScope.$broadcast("SyncEnd");
+        }
+    };
+    SyncButtonController.$inject = [
+        "$scope",
+        "$rootScope",
+        "PLENControlServerService"
+    ];
+    return SyncButtonController;
+})();
+var TwitterButtonController = (function () {
+    function TwitterButtonController($window) {
+        this.$window = $window;
+        this.href = "http://twitter.com/share?text=あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。&url=http://plen.jp/playground/motion-editor/&hashtags=PLEN";
+    }
+    TwitterButtonController.prototype.onClick = function () {
+        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes');
+    };
+    TwitterButtonController.$inject = ['$window'];
+    return TwitterButtonController;
+})();
+var FacebookButtonDirective = (function () {
+    function FacebookButtonDirective() {
+    }
+    FacebookButtonDirective.getDDO = function () {
+        return {
+            restrict: 'E',
+            controller: FacebookButtonController,
+            controllerAs: '$ctrl',
+            scope: {},
+            templateUrl: "./angularjs/components/FacebookButton/view.html",
+            replace: true
+        };
+    };
+    return FacebookButtonDirective;
+})();
+angular.module(APP_NAME).directive("facebookButton", [
+    FacebookButtonDirective.getDDO
+]);
+var FrameEditorDirective = (function () {
+    function FrameEditorDirective() {
+    }
+    FrameEditorDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: FrameEditorController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/FrameEditor/view.html"
+        };
+    };
+    return FrameEditorDirective;
+})();
+angular.module(APP_NAME).directive("frameEditor", [
+    FrameEditorDirective.getDDO
+]);
+var GoogleplusButtonDirective = (function () {
+    function GoogleplusButtonDirective() {
+    }
+    GoogleplusButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: GoogleplusButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/GoogleplusButton/view.html",
+            replace: true
+        };
+    };
+    return GoogleplusButtonDirective;
+})();
+angular.module(APP_NAME).directive("googleplusButton", [
+    GoogleplusButtonDirective.getDDO
+]);
+var InstallButtonDirective = (function () {
+    function InstallButtonDirective() {
+    }
+    InstallButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: InstallButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/InstallButton/view.html",
+            replace: true
+        };
+    };
+    return InstallButtonDirective;
+})();
+angular.module(APP_NAME).directive("installButton", [
+    InstallButtonDirective.getDDO
+]);
 var ModelLoader = (function () {
     function ModelLoader($rootScope, $http) {
         this.$rootScope = $rootScope;
@@ -1104,39 +1477,39 @@ var ModelEditorDirective = (function () {
         return {
             restrict: "E",
             controller: ModelEditorController,
-            controllerAs: "model_editor",
+            controllerAs: "$model_editor",
             replace: true,
             templateUrl: "./angularjs/components/ModelEditor/view.html",
             link: {
                 pre: function ($scope) {
-                    $scope.model_editor.layout = {
+                    $scope.$model_editor.layout = {
                         width: function () {
-                            return $window.innerWidth - ModelEditorDirective.width_offset;
+                            return $window.innerWidth - ModelEditorDirective.WIDTH_OFFSET;
                         },
                         height: function () {
-                            return $window.innerHeight - ModelEditorDirective.height_offset;
+                            return $window.innerHeight - ModelEditorDirective.HEIGHT_OFFSET;
                         },
                         resizeFook: function () {
-                            $scope.model_editor.three_model.resize();
+                            $scope.$model_editor.three_model.resize();
                         }
                     };
-                    $scope.model_editor.three_model.init($("#canvas_wrapper"), $scope.model_editor.layout);
-                    $scope.model_editor.three_model.animate();
+                    $scope.$model_editor.three_model.init($("#canvas_wrapper"), $scope.$model_editor.layout);
+                    $scope.$model_editor.three_model.animate();
                     $("#canvas_wrapper canvas").on("mousedown touchstart", function (event) {
-                        $scope.model_editor.onFocus(event);
+                        $scope.$model_editor.onFocus(event);
                     });
                     $("#canvas_wrapper canvas").on("mouseup mouseout touchend touchcancel touchleave", function (event) {
-                        $scope.model_editor.onUnfocus();
+                        $scope.$model_editor.onUnfocus();
                         $scope.$apply();
                     });
-                    model_loader.scene = $scope.model_editor.three_model.scene;
+                    model_loader.scene = $scope.$model_editor.three_model.scene;
                     model_loader.loadJSON();
                 }
             }
         };
     };
-    ModelEditorDirective.width_offset = 220 + 45;
-    ModelEditorDirective.height_offset = 186 + 40;
+    ModelEditorDirective.WIDTH_OFFSET = 220 + 45;
+    ModelEditorDirective.HEIGHT_OFFSET = 186 + 40;
     return ModelEditorDirective;
 })();
 angular.module(APP_NAME).directive("modelEditor", [
@@ -1145,93 +1518,6 @@ angular.module(APP_NAME).directive("modelEditor", [
     "ModelLoaderService",
     ModelEditorDirective.getDDO
 ]);
-var ModelEditorPanelController = (function () {
-    function ModelEditorPanelController($scope, $rootScope, three_model) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.disabled = false;
-        this._three_model = three_model;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    ModelEditorPanelController.prototype.onClick = function (id) {
-        switch (id) {
-            case 0:
-                this._three_model.reverse3DModel();
-                break;
-            case 1:
-                this._three_model.copyRightToLeft();
-                break;
-            case 2:
-                this._three_model.copyLeftToRight();
-                break;
-            case 3:
-                this._three_model.orbit_controls.reset();
-                break;
-            default:
-                return;
-        }
-        this.$rootScope.$broadcast("RefreshThumbnail");
-    };
-    ModelEditorPanelController.$inject = [
-        "$scope",
-        "$rootScope",
-        "SharedThreeService"
-    ];
-    return ModelEditorPanelController;
-})();
-var ModelEditorPanelDirective = (function () {
-    function ModelEditorPanelDirective() {
-    }
-    ModelEditorPanelDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: ModelEditorPanelController,
-            controllerAs: "model_editor_panel",
-            scope: {},
-            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
-            replace: true
-        };
-    };
-    return ModelEditorPanelDirective;
-})();
-angular.module(APP_NAME).directive("modelEditorPanel", [
-    ModelEditorPanelDirective.getDDO
-]);
-"use strict";
-var NewButtonController = (function () {
-    function NewButtonController($rootScope, $scope, $window, motion) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.$window = $window;
-        this.motion = motion;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    NewButtonController.prototype.click = function () {
-        var result = this.$window.confirm("Are you sure you want to create a new motion?\n\n" + "Working contents will have destroyed.\n" + 'If your motion has not been saved yet, please click to the "Cancel" button.');
-        if (result === true) {
-            this.motion.reset();
-            this.$rootScope.$broadcast("3DModelReset");
-        }
-    };
-    NewButtonController.$inject = [
-        "$rootScope",
-        "$scope",
-        "$window",
-        "SharedMotionService"
-    ];
-    return NewButtonController;
-})();
 var NewButtonDirective = (function () {
     function NewButtonDirective() {
     }
@@ -1239,7 +1525,7 @@ var NewButtonDirective = (function () {
         return {
             restrict: "E",
             controller: NewButtonController,
-            controllerAs: "new_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/NewButton/view.html",
             replace: true
@@ -1250,32 +1536,6 @@ var NewButtonDirective = (function () {
 angular.module(APP_NAME).directive("newButton", [
     NewButtonDirective.getDDO
 ]);
-"use strict";
-var NextButtonController = (function () {
-    function NextButtonController($rootScope, motion_model, $scope) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.motion_model = motion_model;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    NextButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("ComponentDisabled");
-        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-        this.$rootScope.$broadcast("AnimationNext");
-    };
-    NextButtonController.$inject = [
-        "$rootScope",
-        "SharedMotionService",
-        "$scope"
-    ];
-    return NextButtonController;
-})();
 var NextButtonDirective = (function () {
     function NextButtonDirective() {
     }
@@ -1283,7 +1543,7 @@ var NextButtonDirective = (function () {
         return {
             restrict: "E",
             controller: NextButtonController,
-            controllerAs: "next_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/NextButton/view.html",
             replace: true
@@ -1294,25 +1554,6 @@ var NextButtonDirective = (function () {
 angular.module(APP_NAME).directive("nextButton", [
     NextButtonDirective.getDDO
 ]);
-"use strict";
-var OpenButtonController = (function () {
-    function OpenButtonController($scope, motion) {
-        var _this = this;
-        this.motion = motion;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    OpenButtonController.$inject = [
-        "$scope",
-        "SharedMotionService"
-    ];
-    return OpenButtonController;
-})();
 var OpenButtonDirective = (function () {
     function OpenButtonDirective() {
     }
@@ -1320,7 +1561,7 @@ var OpenButtonDirective = (function () {
         return {
             restrict: "E",
             controller: OpenButtonController,
-            controllerAs: "open_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/OpenButton/view.html",
             replace: true,
@@ -1328,7 +1569,7 @@ var OpenButtonDirective = (function () {
                 $($element[0].children[1]).on("change", function (event) {
                     var reader = new FileReader();
                     reader.onload = function (event) {
-                        $scope.open_button.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$ctrl.motion.loadJSON(event.target.result, model_loader.getAxisMap());
                         $scope.$apply();
                     };
                     reader.readAsText(event.target.files[0]);
@@ -1342,113 +1583,43 @@ angular.module(APP_NAME).directive("openButton", [
     "ModelLoaderService",
     OpenButtonDirective.getDDO
 ]);
-var PlayPauseButtonController = (function () {
-    function PlayPauseButtonController($scope, $rootScope, motion_model, plen_controll_server_service) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.motion_model = motion_model;
-        this.plen_controll_server_service = plen_controll_server_service;
-        this.playing = false;
-        this.title = "Play a motion.";
-        $scope.$on("ComponentDisabled", function () {
-            _this.playing = true;
-            _this.title = "Pause a motion.";
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.playing = false;
-            _this.title = "Play a motion.";
-        });
+var AutoResizeDirective = (function () {
+    function AutoResizeDirective() {
     }
-    PlayPauseButtonController.prototype.onClick = function () {
-        if (this.playing === false) {
-            this.$rootScope.$broadcast("ComponentDisabled");
-            this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-            this.$rootScope.$broadcast("AnimationPlay");
-            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-                this.plen_controll_server_service.play(this.motion_model.slot);
-            }
-        }
-        else {
-            this.$rootScope.$broadcast("AnimationStop");
-            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-                this.plen_controll_server_service.stop();
-            }
-        }
-    };
-    PlayPauseButtonController.$inject = [
-        "$scope",
-        "$rootScope",
-        "SharedMotionService",
-        "PLENControlServerService"
-    ];
-    return PlayPauseButtonController;
-})();
-var PlayPauseButtonDirective = (function () {
-    function PlayPauseButtonDirective() {
-    }
-    PlayPauseButtonDirective.getDDO = function () {
+    AutoResizeDirective.getDDO = function ($window, $timeout) {
         return {
-            restrict: "E",
-            controller: PlayPauseButtonController,
-            controllerAs: "play_pause_button",
-            scope: {},
-            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
-            replace: true
+            restrict: "A",
+            scope: {
+                layout: "&autoResizeLayout",
+                onload: "&autoResizeOnload"
+            },
+            link: function ($scope, $element) {
+                if ($scope.onload() === true) {
+                    $element.width($scope.layout().width());
+                    $element.height($scope.layout().height());
+                    $scope.layout().resizeFook($element);
+                }
+                var resize_promise = false;
+                $window.addEventListener("resize", function () {
+                    if (resize_promise !== false) {
+                        $timeout.cancel(resize_promise);
+                    }
+                    resize_promise = $timeout(function () {
+                        $element.width($scope.layout().width());
+                        $element.height($scope.layout().height());
+                        $scope.layout().resizeFook($element);
+                    }, 100, false);
+                });
+            }
         };
     };
-    return PlayPauseButtonDirective;
+    return AutoResizeDirective;
 })();
-angular.module(APP_NAME).directive("playPauseButton", [
-    PlayPauseButtonDirective.getDDO
+angular.module(APP_NAME).directive("autoResize", [
+    "$window",
+    "$timeout",
+    AutoResizeDirective.getDDO
 ]);
-var PLENControlServerModalController = (function () {
-    function PLENControlServerModalController($modalInstance) {
-        this.$modalInstance = $modalInstance;
-        this.ip_addr = "127.0.0.1:17264";
-    }
-    PLENControlServerModalController.prototype.connect = function () {
-        var regexp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}$/;
-        if (regexp.test(this.ip_addr)) {
-            this.$modalInstance.close(this.ip_addr);
-        }
-        else {
-            alert("IP address has invalid format.");
-        }
-    };
-    PLENControlServerModalController.prototype.cancel = function () {
-        this.$modalInstance.dismiss();
-    };
-    PLENControlServerModalController.$inject = [
-        "$modalInstance"
-    ];
-    return PLENControlServerModalController;
-})();
-"use strict";
-var PreviousButtonController = (function () {
-    function PreviousButtonController($scope, motion_model, $rootScope) {
-        var _this = this;
-        this.motion_model = motion_model;
-        this.$rootScope = $rootScope;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    PreviousButtonController.prototype.onClick = function () {
-        this.$rootScope.$broadcast("ComponentDisabled");
-        this.$rootScope.$broadcast("FrameSave", this.motion_model.getSelectedFrameIndex());
-        this.$rootScope.$broadcast("AnimationPrevious");
-    };
-    PreviousButtonController.$inject = [
-        "$scope",
-        "SharedMotionService",
-        "$rootScope"
-    ];
-    return PreviousButtonController;
-})();
 var PreviousButtonDirective = (function () {
     function PreviousButtonDirective() {
     }
@@ -1456,7 +1627,7 @@ var PreviousButtonDirective = (function () {
         return {
             restrict: "E",
             controller: PreviousButtonController,
-            controllerAs: "previous_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/PreviousButton/view.html",
             replace: true
@@ -1467,28 +1638,6 @@ var PreviousButtonDirective = (function () {
 angular.module(APP_NAME).directive("previousButton", [
     PreviousButtonDirective.getDDO
 ]);
-"use strict";
-var ResetButtonController = (function () {
-    function ResetButtonController($scope, $rootScope) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    ResetButtonController.prototype.click = function () {
-        this.$rootScope.$broadcast("3DModelReset");
-    };
-    ResetButtonController.$inject = [
-        "$scope",
-        "$rootScope"
-    ];
-    return ResetButtonController;
-})();
 var ResetButtonDirective = (function () {
     function ResetButtonDirective() {
     }
@@ -1496,7 +1645,7 @@ var ResetButtonDirective = (function () {
         return {
             restrict: "E",
             controller: ResetButtonController,
-            controllerAs: "reset_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/ResetButton/view.html",
             replace: true
@@ -1507,52 +1656,6 @@ var ResetButtonDirective = (function () {
 angular.module(APP_NAME).directive("resetButton", [
     ResetButtonDirective.getDDO
 ]);
-"use strict";
-var SaveButtonController = (function () {
-    function SaveButtonController($rootScope, $scope, $element, motion) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.$element = $element;
-        this.motion = motion;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-        $element.on("touchstart", function () {
-            _this.onClick();
-        });
-    }
-    SaveButtonController.prototype.onClick = function () {
-        if (!this.disabled) {
-            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
-            this.setDownloadLink();
-        }
-    };
-    SaveButtonController.prototype.setDownloadLink = function () {
-        var _this = this;
-        var json_blob = new Blob([this.motion.saveJSON()], { type: "text/plain" });
-        if (navigator.msSaveBlob) {
-            navigator.msSaveBlob(json_blob, this.motion.name + ".json");
-        }
-        else {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                _this.$element[0].href = reader.result;
-            };
-            reader.readAsDataURL(json_blob);
-        }
-    };
-    SaveButtonController.$inject = [
-        "$rootScope",
-        "$scope",
-        "$element",
-        "SharedMotionService"
-    ];
-    return SaveButtonController;
-})();
 var SaveButtonDirective = (function () {
     function SaveButtonDirective() {
     }
@@ -1560,7 +1663,7 @@ var SaveButtonDirective = (function () {
         return {
             restrict: "E",
             controller: SaveButtonController,
-            controllerAs: "save_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/SaveButton/view.html",
             replace: true
@@ -1579,16 +1682,16 @@ var ScrollableContainerDirective = (function () {
             restrict: "A",
             controller: function () {
             },
-            controllerAs: "scrollable_container",
+            controllerAs: "$scrollable_container",
             template: "<div ng-transclude/>",
             transclude: true,
-            link: function (scope) {
-                scope.scrollable_container.layout = {
+            link: function ($scope) {
+                $scope.$scrollable_container.layout = {
                     width: function () {
                         return $window.innerWidth - ScrollableContainerDirective.WIDTH_OFFSET;
                     },
                     height: function () {
-                        return 158;
+                        return ScrollableContainerDirective.HEIGHT;
                     },
                     resizeFook: function () {
                     }
@@ -1597,69 +1700,13 @@ var ScrollableContainerDirective = (function () {
         };
     };
     ScrollableContainerDirective.WIDTH_OFFSET = 220;
+    ScrollableContainerDirective.HEIGHT = 158;
     return ScrollableContainerDirective;
 })();
 angular.module(APP_NAME).directive("scrollableContainer", [
     "$window",
     ScrollableContainerDirective.getDDO
 ]);
-var ShoppingcartButtonDirective = (function () {
-    function ShoppingcartButtonDirective() {
-    }
-    ShoppingcartButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            scope: {},
-            templateUrl: "./angularjs/components/ShoppingcartButton/view.html",
-            replace: true
-        };
-    };
-    return ShoppingcartButtonDirective;
-})();
-angular.module(APP_NAME).directive("shoppingcartButton", [
-    ShoppingcartButtonDirective.getDDO
-]);
-"use strict";
-var SyncButtonController = (function () {
-    function SyncButtonController($scope, $rootScope, plen_controll_server_service) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.plen_controll_server_service = plen_controll_server_service;
-        this.disabled = false;
-        this.syncing = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    SyncButtonController.prototype.onClick = function () {
-        var _this = this;
-        var success_callback = function () {
-            _this.syncing = true;
-            _this.$rootScope.$broadcast("SyncBegin");
-        };
-        if (!this.syncing) {
-            if (this.plen_controll_server_service.getStatus() === 0 /* DISCONNECTED */) {
-                this.plen_controll_server_service.connect(success_callback);
-            }
-            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-                success_callback();
-            }
-        }
-        else {
-            this.syncing = false;
-            this.$rootScope.$broadcast("SyncEnd");
-        }
-    };
-    SyncButtonController.$inject = [
-        "$scope",
-        "$rootScope",
-        "PLENControlServerService"
-    ];
-    return SyncButtonController;
-})();
 var SyncButtonDirective = (function () {
     function SyncButtonDirective() {
     }
@@ -1667,7 +1714,7 @@ var SyncButtonDirective = (function () {
         return {
             restrict: "E",
             controller: SyncButtonController,
-            controllerAs: "sync_button",
+            controllerAs: "$ctrl",
             scope: {},
             templateUrl: "./angularjs/components/SyncButton/view.html",
             replace: true
@@ -1678,18 +1725,6 @@ var SyncButtonDirective = (function () {
 angular.module(APP_NAME).directive("syncButton", [
     SyncButtonDirective.getDDO
 ]);
-"use strict";
-var TwitterButtonController = (function () {
-    function TwitterButtonController($window) {
-        this.$window = $window;
-        this.href = "http://twitter.com/share?text=あなた好みにPLENを動かそう！「PLEN - Motion Editor for Web.」は、誰でも簡単にPLENのモーションを作成できるwebアプリです。&url=http://plen.jp/playground/motion-editor/&hashtags=PLEN";
-    }
-    TwitterButtonController.prototype.click = function () {
-        this.$window.open(encodeURI(this.href), 'tweeter_window', 'width=650,height=470,menubar=no,toolbar=no,location=no,scrollbars=yes,sizable=yes');
-    };
-    TwitterButtonController.$inject = ['$window'];
-    return TwitterButtonController;
-})();
 var TwitterButtonDirective = (function () {
     function TwitterButtonDirective() {
     }
@@ -1697,7 +1732,7 @@ var TwitterButtonDirective = (function () {
         return {
             restrict: 'E',
             controller: TwitterButtonController,
-            controllerAs: 'twitter_button',
+            controllerAs: '$ctrl',
             scope: {},
             templateUrl: "./angularjs/components/TwitterButton/view.html",
             replace: true
@@ -1708,44 +1743,6 @@ var TwitterButtonDirective = (function () {
 angular.module(APP_NAME).directive("twitterButton", [
     TwitterButtonDirective.getDDO
 ]);
-"use strict";
-var AutoResizeDirective = (function () {
-    function AutoResizeDirective() {
-    }
-    AutoResizeDirective.getDDO = function ($window, $timeout) {
-        return {
-            restrict: "A",
-            scope: {
-                layout: "&autoResizeLayout",
-                onload: "&autoResizeOnload"
-            },
-            link: function (scope, element) {
-                if (scope.onload() === true) {
-                    element.width(scope.layout().width());
-                    element.height(scope.layout().height());
-                    scope.layout().resizeFook(element);
-                }
-                var resize_promise = false;
-                $window.addEventListener("resize", function () {
-                    if (resize_promise !== false) {
-                        $timeout.cancel(resize_promise);
-                    }
-                    resize_promise = $timeout(function () {
-                        element.width(scope.layout().width());
-                        element.height(scope.layout().height());
-                        scope.layout().resizeFook(element);
-                    }, 100, false);
-                });
-            }
-        };
-    };
-    return AutoResizeDirective;
-})();
-angular.module(APP_NAME).directive("autoResize", [
-    "$window",
-    "$timeout",
-    AutoResizeDirective.getDDO
-]);
 var SERVER_STATE;
 (function (SERVER_STATE) {
     SERVER_STATE[SERVER_STATE["DISCONNECTED"] = 0] = "DISCONNECTED";
@@ -1754,12 +1751,12 @@ var SERVER_STATE;
 })(SERVER_STATE || (SERVER_STATE = {}));
 ;
 var PLENControlServerService = (function () {
-    function PLENControlServerService($http, $modal, $rootScope, motion) {
+    function PLENControlServerService($http, $modal, $rootScope, three_model) {
         var _this = this;
         this.$http = $http;
         this.$modal = $modal;
         this.$rootScope = $rootScope;
-        this.motion = motion;
+        this.three_model = three_model;
         this._state = 0 /* DISCONNECTED */;
         this._syncing = false;
         this.$rootScope.$on("SyncBegin", function () {
@@ -1768,21 +1765,42 @@ var PLENControlServerService = (function () {
         this.$rootScope.$on("SyncEnd", function () {
             _this.onSyncEnd();
         });
+        this.$rootScope.$on("3DModelReset", function () {
+            if (_this._syncing === true) {
+                _.each(_this.three_model.rotation_axes, function (axis, index) {
+                    _this._socket.send('applyDiff/' + axis.name + '/0');
+                });
+            }
+        });
+        this.$rootScope.$on("FrameLoadFinished", function () {
+            if (_this._syncing === true) {
+                _.each(_this.three_model.rotation_axes, function (axis, index) {
+                    _this._socket.send('applyDiff/' + axis.name + '/' + _this.three_model.getDiffAngle(axis, index).toString());
+                });
+            }
+        });
     }
+    PLENControlServerService.prototype.checkServerVersion = function () {
+        this.$http.get("//" + this._ip_addr + "/connect").success(function () {
+            alert("Your control-server's version is old. Please use latest version.");
+        }).error(function () {
+            alert("The control-server hasn't run.");
+        });
+    };
     PLENControlServerService.prototype.connect = function (success_callback) {
         var _this = this;
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 0 /* DISCONNECTED */) {
             var modal = this.$modal.open({
                 controller: PLENControlServerModalController,
-                controllerAs: "modal",
+                controllerAs: "$ctrl",
                 templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
             });
             modal.result.then(function (ip_addr) {
                 _this._state = 2 /* WAITING */;
                 _this._ip_addr = ip_addr;
-                _this.$http.get("//" + _this._ip_addr + "/connect").success(function (response) {
-                    if (response.result === true) {
+                _this.$http.get("//" + _this._ip_addr + "/v2/connect").success(function (response) {
+                    if (response.data.result === true) {
                         _this._state = 1 /* CONNECTED */;
                         if (!_.isNull(success_callback)) {
                             success_callback();
@@ -1790,9 +1808,12 @@ var PLENControlServerService = (function () {
                     }
                     else {
                         _this._state = 0 /* DISCONNECTED */;
+                        alert("USB connection was disconnected!");
+                        _this.$rootScope.$broadcast("SyncEnd");
                     }
                 }).error(function () {
                     _this._state = 0 /* DISCONNECTED */;
+                    _this.checkServerVersion();
                 });
             });
         }
@@ -1801,14 +1822,16 @@ var PLENControlServerService = (function () {
         var _this = this;
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
-            this._state === 2 /* WAITING */;
-            this.$http.get("//" + this._ip_addr + "/disconnect").success(function (response) {
-                if (response.result === true) {
+            this._state = 2 /* WAITING */;
+            this.$http.get("//" + this._ip_addr + "/v2/disconnect").success(function (response) {
+                if (response.data.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
                     }
                 }
                 _this._state = 0 /* DISCONNECTED */;
+                alert("USB connection was disconnected!");
+                _this.$rootScope.$broadcast("SyncEnd");
             }).error(function () {
                 _this._state = 1 /* CONNECTED */;
             });
@@ -1819,12 +1842,17 @@ var PLENControlServerService = (function () {
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
-            this.$http.post("//" + this._ip_addr + "/install", json).success(function (response) {
+            this.$http.put("//" + this._ip_addr + "/v2/motions/" + json.slot.toString(), json).success(function (response) {
                 _this._state = 1 /* CONNECTED */;
-                if (response.result === true) {
+                if (response.data.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
                     }
+                }
+                else {
+                    _this._state = 0 /* DISCONNECTED */;
+                    alert("USB connection was disconnected!");
+                    _this.$rootScope.$broadcast("SyncEnd");
                 }
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
@@ -1838,12 +1866,17 @@ var PLENControlServerService = (function () {
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
             this._state = 2 /* WAITING */;
-            this.$http.get("//" + this._ip_addr + "/play/" + slot.toString()).success(function (response) {
+            this.$http.get("//" + this._ip_addr + "/v2/motions/" + slot.toString() + "/play").success(function (response) {
                 _this._state = 1 /* CONNECTED */;
-                if (response.result === true) {
+                if (response.data.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
                     }
+                }
+                else {
+                    _this._state = 0 /* DISCONNECTED */;
+                    alert("USB connection was disconnected!");
+                    _this.$rootScope.$broadcast("SyncEnd");
                 }
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
@@ -1854,13 +1887,18 @@ var PLENControlServerService = (function () {
         var _this = this;
         if (success_callback === void 0) { success_callback = null; }
         if (this._state === 1 /* CONNECTED */) {
-            this._state === 2 /* WAITING */;
-            this.$http.get("//" + this._ip_addr + "/stop").success(function (response) {
+            this._state = 2 /* WAITING */;
+            this.$http.get("//" + this._ip_addr + "/v2/motions/stop").success(function (response) {
                 _this._state = 1 /* CONNECTED */;
-                if (response.result === true) {
+                if (response.data.result === true) {
                     if (!_.isNull(success_callback)) {
                         success_callback();
                     }
+                }
+                else {
+                    _this._state = 0 /* DISCONNECTED */;
+                    alert("USB connection was disconnected!");
+                    _this.$rootScope.$broadcast("SyncEnd");
                 }
             }).error(function () {
                 _this._state = 0 /* DISCONNECTED */;
@@ -1871,16 +1909,49 @@ var PLENControlServerService = (function () {
         return this._state;
     };
     PLENControlServerService.prototype.onSyncBegin = function () {
+        var _this = this;
+        this._socket = new WebSocket('ws://' + this._ip_addr + '/v2/cmdstream');
+        this._socket.onopen = function () {
+            if (_this._socket.readyState === WebSocket.OPEN) {
+                _this._state = 1 /* CONNECTED */;
+                $("html").on("angleChange.toPLENControlServerService", function () {
+                    if (_this._state === 1 /* CONNECTED */) {
+                        var device = _this.three_model.transform_controls.object.name;
+                        var value = _this.three_model.getDiffAngle(_this.three_model.transform_controls.object);
+                        _this._socket.send('applyDiff/' + device + '/' + value.toString());
+                        _this._state = 2 /* WAITING */;
+                    }
+                });
+            }
+        };
+        this._socket.onmessage = function (event) {
+            if (event.data == 'False') {
+                if (_this._state === 2 /* WAITING */) {
+                    _this._state = 0 /* DISCONNECTED */;
+                    alert("USB connection was disconnected!");
+                    _this.$rootScope.$broadcast("SyncEnd");
+                }
+            }
+            else {
+                _this._state = 1 /* CONNECTED */;
+            }
+        };
+        this._socket.onerror = function () {
+            _this._state = 0 /* DISCONNECTED */;
+            alert("USB connection was disconnected!");
+            _this.$rootScope.$broadcast("SyncEnd");
+        };
         this._syncing = true;
     };
     PLENControlServerService.prototype.onSyncEnd = function () {
         this._syncing = false;
+        $("html").off("angleChange.toPLENControlServerService");
     };
     PLENControlServerService.$inject = [
         "$http",
         "$modal",
         "$rootScope",
-        "SharedMotionService"
+        "SharedThreeService"
     ];
     return PLENControlServerService;
 })();

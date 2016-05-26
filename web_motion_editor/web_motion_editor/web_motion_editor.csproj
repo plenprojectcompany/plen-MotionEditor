@@ -189,6 +189,9 @@
     </Content>
     <Content Include="assets\etc\plen2_3dmodel.json" />
     <Content Include="assets\etc\plen2_3dmodel.min.json" />
+    <Content Include="lib\angular.min.js.map">
+      <DependentUpon>angular.min.js</DependentUpon>
+    </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
