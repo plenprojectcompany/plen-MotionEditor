@@ -3,96 +3,92 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Let PLEN move as you like! &quot;Motion Editor&quot; is a web application to create easily a PLEN's motion." />
-    <meta name="author" content="Kazuyuki TAKASE" />
-    <title>PLEN Playground - Motion Editor</title>
-    <link rel="icon" href="/favicon.ico" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Let PLEN move as you like! &quot;Motion Editor&quot; is a web application to create easily a PLEN's motion." />
+  <meta name="author" content="Kazuyuki TAKASE" />
+  <title>PLEN Playground - Motion Editor</title>
+  <link rel="icon" href="/favicon.ico" />
 
-    <!-- Define open graph protocol. -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="PLEN Playground - Motion Editor" />
-    <meta property="og:url" content="http://plen.jp/playground/motion-editor/" />
-    <meta property="og:image" content="http://plen.jp/playground/motion-editor/assets/img/og-image.gif" />
+  <!-- Define open graph protocol. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="PLEN Playground - Motion Editor" />
+  <meta property="og:url" content="http://plen.jp/playground/motion-editor/" />
+  <meta property="og:image" content="http://plen.jp/playground/motion-editor/assets/img/og-image.gif" />
 
-    <!-- Load style file(s). -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css" type="text/css" />
-    <link rel="stylesheet" href="./assets/css/index.min.css" type="text/css" />
+  <!-- Load style file(s). -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="./assets/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="./assets/css/index.min.css" type="text/css" />
 
-    <!-- Load javascript lib(s). -->
-    <script src="./lib/jquery.min.js"></script>
-    <script src="./lib/jquery-ui-sortable.min.js"></script>
-    <script src="./lib/jquery-ui-touch-punch.fixed.min.js"></script>
-    <script src="./lib/bootstrap.min.js"></script>
-    <script src="./lib/lodash.min.js"></script>
-    <script src="./lib/three.min.js"></script>
-    <script src="./lib/OrbitControls.fixed.min.js"></script>
-    <script src="./lib/TransformControls.fixed.min.js"></script>
-    <script src="./lib/angular.min.js"></script>
-    <script src="./lib/angular-animate.min.js"></script>
-    <script src="./lib/angular-ui-sortable.min.js"></script>
-    <script src="./lib/angular-ui-bootstrap-custom-tpls.min.js"></script>
+  <!-- Load javascript lib(s). -->
+  <script src="./lib/jquery.min.js"></script>
+  <script src="./lib/jquery-ui-sortable.min.js"></script>
+  <script src="./lib/jquery-ui-touch-punch.fixed.min.js"></script>
+  <script src="./lib/bootstrap.min.js"></script>
+  <script src="./lib/lodash.min.js"></script>
+  <script src="./lib/three.min.js"></script>
+  <script src="./lib/OrbitControls.fixed.min.js"></script>
+  <script src="./lib/TransformControls.fixed.min.js"></script>
+  <script src="./lib/angular.min.js"></script>
+  <script src="./lib/angular-animate.min.js"></script>
+  <script src="./lib/angular-ui-sortable.min.js"></script>
+  <script src="./lib/angular-ui-bootstrap-custom-tpls.min.js"></script>
 
-    <!-- Load the application. -->
-    <script src="./lib/bundle.min.js"></script>
+  <!-- Load the application. -->
+  <script src="./lib/bundle.min.js"></script>
 
-    <!-- Load Google Analytics script. -->
-    <script async src="/playground/common_assets/js/ga.js"></script>
+  <!-- Load Google Analytics script. -->
+  <script async src="/playground/common_assets/js/ga.js"></script>
 </head>
 
 <!-- @attention If you use Batarang, you should remove "ng-strict-di" directive. -->
 <body ng-app="PLEN2MotionEditor" ng-strict-di>
-    <div id="left_pain">
-        <div id="logo">
-            <a href="/playground/">
-                <img src="./assets/img/logo.png" width="128" height="160" alt="logo">
-            </a>
-        </div>
-
-        <div id="menu">
-            <div id="social_icons">
-                <twitter-button></twitter-button>
-                <facebook-button></facebook-button>
-                <googleplus-button></googleplus-button>
-                <shoppingcart-button></shoppingcart-button>
-            </div>
-
-            <div class="button-group">
-                <open-button></open-button>
-                <save-button></save-button>
-            </div>
-            <div class="button-group">
-                <new-button></new-button>
-                <reset-button></reset-button>
-            </div>
-            <div class="button-group">
-                <sync-button></sync-button>
-                <install-button></install-button>
-            </div>
-            <div class="button-group">
-                <play-pause-button></play-pause-button>
-                <edit-properties-button></edit-properties-button>
-            </div>
-            <div class="button-group">
-                <previous-button></previous-button>
-                <next-button></next-button>
-            </div>
-        </div>
+  <div id="left_pain">
+    <div id="logo">
+      <a href="/playground/">
+        <img src="./assets/img/logo.png" width="128" height="160" alt="logo">
+      </a>
     </div>
 
-    <div id="right_pain">
-        <div id="indent_container">
-            <model-editor></model-editor>
-            <model-editor-panel></model-editor-panel>
-            <diff-angle-viewer></diff-angle-viewer>
+    <div id="menu">
+      <div id="social_icons">
+        <twitter-button></twitter-button>
+        <facebook-button></facebook-button>
+        <googleplus-button></googleplus-button>
+        <shoppingcart-button></shoppingcart-button>
+      </div>
 
-            <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="$scrollable_container.layout" auto-resize-onload="true">
-                <frame-editor></frame-editor>
-            </div>
-        </div>
+      <div class="button-group">
+        <open-button></open-button>
+        <save-button></save-button>
+      </div>
+      <div class="button-group">
+        <new-button></new-button>
+        <edit-properties-button></edit-properties-button>
+      </div>
+      <div class="button-group">
+        <sync-button></sync-button>
+        <install-button></install-button>
+      </div>
+      <div class="button-group">
+        <previous-button></previous-button>
+        <next-button></next-button>
+      </div>
     </div>
+  </div>
+
+  <div id="right_pain">
+    <div id="indent_container">
+      <model-editor></model-editor>
+      <model-editor-panel></model-editor-panel>
+      <diff-angle-viewer></diff-angle-viewer>
+
+      <div id="scrollable_container" scrollable-container auto-resize auto-resize-layout="$scrollable_container.layout" auto-resize-onload="true">
+        <frame-editor></frame-editor>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
