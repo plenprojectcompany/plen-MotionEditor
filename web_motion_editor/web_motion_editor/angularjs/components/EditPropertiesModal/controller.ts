@@ -24,16 +24,16 @@ class EditPropertiesModalController
     {
         _.each(this.motion.codes, (code: CodeModel) =>
         {
-            if (code.func == "loop")
+            if (code.method == "loop")
             {
                 this.loop_options.use  = true;
-                this.loop_options.args = code.args;
+                this.loop_options.args = code.arguments;
             }
 
-            if (code.func == "jump")
+            if (code.method == "jump")
             {
                 this.jump_options.use  = true;
-                this.jump_options.args = code.args;
+                this.jump_options.args = code.arguments;
             }
         });
     }
@@ -47,7 +47,7 @@ class EditPropertiesModalController
             }
 
             if (   (this.motion.name.length > 20)
-                || (!/^[\w\s]+$/.test(this.motion.name)))
+                || (!/^[\w\s\!\(\)\&]+$/.test(this.motion.name)))
             {
                 throw "Name: Required format is half-width alphanumerics and length is 20 bytes or less.";
             }

@@ -147,18 +147,18 @@ class MotionModel
 
             _.each(motion_obj.codes, (code: CodeModel) =>
             {
-                if (_.isUndefined(code.func) || !_.isString(code.func))
+                if (_.isUndefined(code.method) || !_.isString(code.method))
                 {
                     throw "Bad format!";
                 }
 
-                if (_.isUndefined(code.args) || !_.isArray(code.args))
+                if (_.isUndefined(code.arguments) || !_.isArray(code.arguments))
                 {
                     throw "Bad format!";
                 }
                 else
                 {
-                    _.each(code.args, (argment: number) =>
+                    _.each(code.arguments, (argment: number) =>
                     {
                         if (!_.isNumber(argment))
                         {
@@ -210,12 +210,12 @@ class MotionModel
             _.each(motion_obj.codes, (code: CodeModel) =>
             {
                 var args = [];
-                _.each(code.args, (argment: string) =>
+                _.each(code.arguments, (argment: string) =>
                 {
                     args.push(argment);
                 });
 
-                this.codes.push(new CodeModel(code.func, args));
+                this.codes.push(new CodeModel(code.method, args));
             });
 
             this.frames = [];
