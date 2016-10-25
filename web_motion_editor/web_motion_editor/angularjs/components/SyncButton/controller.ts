@@ -46,6 +46,8 @@ class SyncButtonController
         else
         {
             this.$rootScope.$broadcast("SyncEnd");
+            
+            this.plen_controll_server_service.disconnect();
         }
     }
 }
