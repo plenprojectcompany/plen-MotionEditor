@@ -25,22 +25,23 @@ class SyncButtonController
 
     onClick(): void
     {
-        var success_callback = () =>
-        {
-            this.syncing = true;
-            this.$rootScope.$broadcast("SyncBegin");
-        };
-
         if (!this.syncing)
         {
             if (this.plen_controll_server_service.getStatus() === SERVER_STATE.DISCONNECTED)
             {
-                this.plen_controll_server_service.connect(success_callback);
-            }
+                this.plen_controll_server_service.connect(() =>
+                {
+                    var promise: ng.IPromise<any> = this.plen_controll_server_service.asyncCheckVersionOfPLEN();
 
-            if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)
-            {
-                success_callback();
+                    promise.finally(() =>
+                    {
+                        if (this.plen_controll_server_service.getStatus() === SERVER_STATE.CONNECTED)
+                        {
+                            this.syncing = true;
+                            this.$rootScope.$broadcast("SyncBegin");
+                        }
+                    });
+                });
             }
         }
         else

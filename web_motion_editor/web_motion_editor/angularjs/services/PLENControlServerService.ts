@@ -9,44 +9,45 @@ class PLENControlServerService
 {
     private _state: SERVER_STATE = SERVER_STATE.DISCONNECTED;
     private _ip_addr: string;
-    private _socket: WebSocket;
-    private _syncing: boolean = false;
+    private _socket: WebSocket = null;
 
     static $inject = [
-        "$http",
-        "$modal",
-        "$rootScope",
-        "SharedThreeService"
+        '$q',
+        '$http',
+        '$modal',
+        '$rootScope',
+        'SharedThreeService'
     ];
 
     constructor(
-        public $http: ng.IHttpService,
-        public $modal: angular.ui.bootstrap.IModalService,
-        public $rootScope: ng.IRootScopeService,
-        public three_model: ThreeModel
+        private _$q: ng.IQService,
+        private _$http: ng.IHttpService,
+        private _$modal: angular.ui.bootstrap.IModalService,
+        private _$rootScope: ng.IRootScopeService,
+        private _three: ThreeModel
     )
     {
-        this.$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
-        this.$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
+        this._$rootScope.$on("SyncBegin", () => { this.onSyncBegin(); });
+        this._$rootScope.$on("SyncEnd", () => { this.onSyncEnd(); });
 
-        this.$rootScope.$on("3DModelReset", () =>
+        this._$rootScope.$on("3DModelReset", () =>
         {
-            if (this._syncing === true)
+            if (!_.isNull(this._socket))
             {
-                _.each(this.three_model.rotation_axes, (axis: THREE.Object3D, index: number) =>
+                _.each(this._three.rotation_axes, (axis: THREE.Object3D, index: number) =>
                 {
                     this._socket.send('applyDiff/' + axis.name + '/0');
                 });
             }
         });
 
-        this.$rootScope.$on("FrameLoadFinished", () =>
+        this._$rootScope.$on("FrameLoadFinished", () =>
         {
-            if (this._syncing === true)
+            if (!_.isNull(this._socket))
             {
-                _.each(this.three_model.rotation_axes, (axis: THREE.Object3D, index: number) =>
+                _.each(this._three.rotation_axes, (axis: THREE.Object3D, index: number) =>
                 {
-                    this._socket.send('applyDiff/' + axis.name + '/' + this.three_model.getDiffAngle(axis, index).toString());
+                    this._socket.send('applyDiff/' + axis.name + '/' + this._three.getDiffAngle(axis, index).toString());
                 });
             }
         });
@@ -54,7 +55,7 @@ class PLENControlServerService
 
     checkServerVersion(): void
     {
-        this.$http.get("//" + this._ip_addr + "/connect")
+        this._$http.get("//" + this._ip_addr + "/connect")
             .success(() =>
             {
                 alert("Your control-server's version is old. Please use latest version.");
@@ -69,7 +70,7 @@ class PLENControlServerService
     {
         if (this._state === SERVER_STATE.DISCONNECTED)
         {
-            var modal = this.$modal.open({
+            var modal = this._$modal.open({
                 controller: PLENControlServerModalController,
                 controllerAs: "$ctrl",
                 templateUrl: "./angularjs/components/PLENControlServerModal/view.html"
@@ -80,7 +81,7 @@ class PLENControlServerService
                 this._state = SERVER_STATE.WAITING;
                 this._ip_addr = ip_addr;
 
-                this.$http.get("//" + this._ip_addr + "/v2/connect")
+                this._$http.get("//" + this._ip_addr + "/v2/connect")
                     .success((response: any) =>
                     {
                         if (response.data.result === true)
@@ -98,7 +99,7 @@ class PLENControlServerService
 
                             alert("USB connection was disconnected!");
 
-                            this.$rootScope.$broadcast("SyncEnd");
+                            this._$rootScope.$broadcast("SyncEnd");
                         }
                     })
                     .error(() =>
@@ -117,7 +118,7 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/v2/disconnect")
+            this._$http.get("//" + this._ip_addr + "/v2/disconnect")
                 .success((response: any) =>
                 {
                     if (response.data.result === true)
@@ -129,10 +130,7 @@ class PLENControlServerService
                     }
 
                     this._state = SERVER_STATE.DISCONNECTED;
-
-                    alert("USB connection was disconnected!");
-
-                    this.$rootScope.$broadcast("SyncEnd");
+                    this._$rootScope.$broadcast("SyncEnd");
                 })
                 .error(() =>
                 {
@@ -147,7 +145,7 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.put("//" + this._ip_addr + "/v2/motions/" + json.slot.toString(), json)
+            this._$http.put("//" + this._ip_addr + "/v2/motions/" + json.slot.toString(), json)
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
@@ -165,7 +163,7 @@ class PLENControlServerService
 
                         alert("USB connection was disconnected!");
 
-                        this.$rootScope.$broadcast("SyncEnd");
+                        this._$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -174,7 +172,7 @@ class PLENControlServerService
                 })
                 .finally(() =>
                 {
-                    this.$rootScope.$broadcast("InstallFinished");
+                    this._$rootScope.$broadcast("InstallFinished");
                 });
         }
     }
@@ -185,7 +183,7 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/v2/motions/" + slot.toString() + "/play")
+            this._$http.get("//" + this._ip_addr + "/v2/motions/" + slot.toString() + "/play")
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
@@ -203,7 +201,7 @@ class PLENControlServerService
 
                         alert("USB connection was disconnected!");
 
-                        this.$rootScope.$broadcast("SyncEnd");
+                        this._$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -219,7 +217,7 @@ class PLENControlServerService
         {
             this._state = SERVER_STATE.WAITING;
 
-            this.$http.get("//" + this._ip_addr + "/v2/motions/stop")
+            this._$http.get("//" + this._ip_addr + "/v2/motions/stop")
                 .success((response: any) =>
                 {
                     this._state = SERVER_STATE.CONNECTED;
@@ -237,7 +235,7 @@ class PLENControlServerService
 
                         alert("USB connection was disconnected!");
 
-                        this.$rootScope.$broadcast("SyncEnd");
+                        this._$rootScope.$broadcast("SyncEnd");
                     }
                 })
                 .error(() =>
@@ -252,8 +250,49 @@ class PLENControlServerService
         return this._state;
     }
 
+    asyncCheckVersionOfPLEN(): ng.IPromise<any>
+    {
+        var url_promises: Array<ng.IPromise<any>> = _.map(
+        [
+            '//' + this._ip_addr + '/v2/version',
+            '//' + this._ip_addr + '/v2/metadata'
+        ],
+        (url) =>
+        {
+            return this._$http.get(url).then((r) => { return r.data; });
+        });
+
+        return this._$q.all(url_promises)
+            .then((responses) =>
+            {
+                try {
+                    var firmware_version: number = parseInt(responses[0].data['version'].replace(/\./g, ''));
+                    var required_verison: number = parseInt(responses[1].data['required-firmware'].replace(/[\.\~]/g, ''));
+
+                    if (firmware_version < required_verison) throw ('Firmware version of your PLEN is old. Please update version ' + responses[1].data['required-firmware'] + '.');
+                    if (required_verison < 141)              throw ('Application version of "Control Server" is old. Please update version 2.3.1 or above.');
+                }
+                catch (error)
+                {
+                    return this._$q.reject(error);
+                }
+            })
+            .catch((error: any) =>
+            {
+                this.disconnect();
+
+                alert(_.isString(error)? error : 'Application version of "Control Server" is old. Please update version 2.3.1 or above.');
+            });
+    }
+
     onSyncBegin(): void
     {
+        if (!_.isNull(this._socket))
+        {
+            this._socket.close();
+            this._socket = null;
+        }
+
         this._socket = new WebSocket('ws://' + this._ip_addr + '/v2/cmdstream');
 
         this._socket.onopen = () =>
@@ -266,8 +305,8 @@ class PLENControlServerService
                 {
                     if (this._state === SERVER_STATE.CONNECTED)
                     {
-                        var device: string = this.three_model.transform_controls.object.name;
-                        var value: number = this.three_model.getDiffAngle(this.three_model.transform_controls.object);
+                        var device: string = this._three.transform_controls.object.name;
+                        var value: number = this._three.getDiffAngle(this._three.transform_controls.object);
 
                         this._socket.send('applyDiff/' + device + '/' + value.toString());
                         this._state = SERVER_STATE.WAITING;
@@ -276,9 +315,9 @@ class PLENControlServerService
             }
         };
 
-        this._socket.onmessage = (event) =>
+        this._socket.onmessage = (e: MessageEvent) =>
         {
-            if (event.data == 'False')
+            if (e.data == 'False')
             {
                 if (this._state === SERVER_STATE.WAITING)
                 {
@@ -286,7 +325,7 @@ class PLENControlServerService
 
                     alert("USB connection was disconnected!");
 
-                    this.$rootScope.$broadcast("SyncEnd");
+                    this._$rootScope.$broadcast("SyncEnd");
                 }
             }
             else
@@ -301,15 +340,14 @@ class PLENControlServerService
 
             alert("USB connection was disconnected!");
 
-            this.$rootScope.$broadcast("SyncEnd");
+            this._$rootScope.$broadcast("SyncEnd");
         };
-
-        this._syncing = true;
     }
 
     onSyncEnd(): void
     {
-        this._syncing = false;
+        this._socket.close();
+        this._socket = null;
 
         $("html").off("angleChange.toPLENControlServerService");
     }
