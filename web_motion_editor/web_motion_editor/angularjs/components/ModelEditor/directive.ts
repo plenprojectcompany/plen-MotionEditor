@@ -1,5 +1,5 @@
-﻿/// <reference path="../../services/ModelLoaderService.ts" />
-/// <reference path="./controller.ts" />
+﻿/// <reference path='../../services/ModelLoaderService.ts' />
+/// <reference path='./controller.ts' />
 
 class ModelEditorDirective
 {
@@ -13,11 +13,11 @@ class ModelEditorDirective
     )
     {
         return {
-            restrict: "E",
+            restrict: 'E',
             controller: ModelEditorController,
-            controllerAs: "$model_editor",
+            controllerAs: '$model_editor',
             replace: true,
-            templateUrl: "./angularjs/components/ModelEditor/view.html",
+            templateUrl: './angularjs/components/ModelEditor/view.html',
             link: {
                 pre: ($scope) =>
                 {
@@ -37,17 +37,17 @@ class ModelEditorDirective
                         }
                     };
 
-                    $scope.$model_editor.three_model.init($("#canvas_wrapper"), $scope.$model_editor.layout);
+                    $scope.$model_editor.three_model.init($('#canvas_wrapper'), $scope.$model_editor.layout);
                     $scope.$model_editor.three_model.animate();
 
-                    // The hook ehn pointer is focused.
-                    $("#canvas_wrapper canvas").on("mousedown touchstart", (event: Event) =>
+                    // The hook when pointer is focused.
+                    $('#canvas_wrapper canvas').on('mousedown touchstart', (event: Event) =>
                     {
                         $scope.$model_editor.onFocus(event);
                     });
 
                     // The hook when pointer is unfocused.
-                    $("#canvas_wrapper canvas").on("mouseup mouseout touchend touchcancel touchleave", (event: Event) =>
+                    $('#canvas_wrapper canvas').on('mouseup mouseout touchend touchcancel touchleave', () =>
                     {
                         $scope.$model_editor.onUnfocus();
                         $scope.$apply();
@@ -61,9 +61,9 @@ class ModelEditorDirective
     }
 }
 
-angular.module(APP_NAME).directive("modelEditor", [
-    "$rootScope",
-    "$window",
-    "ModelLoaderService",
+angular.module(APP_NAME).directive('modelEditor', [
+    '$rootScope',
+    '$window',
+    'ModelLoaderService',
     ModelEditorDirective.getDDO
 ]);

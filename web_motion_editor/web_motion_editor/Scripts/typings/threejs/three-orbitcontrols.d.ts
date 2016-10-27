@@ -37,6 +37,8 @@ declare module THREE {
         keys: { LEFT: number; UP: number; RIGHT: number; BOTTOM: number; };
         mouseButtons: { ORBIT: MOUSE; ZOOM: MOUSE; PAN: MOUSE; };
 
+        enable(): void;
+        disable(): void;
         rotateLeft(angle?: number): void;
         rotateUp(angle?: number): void;
         panLeft(distance?: number): void;

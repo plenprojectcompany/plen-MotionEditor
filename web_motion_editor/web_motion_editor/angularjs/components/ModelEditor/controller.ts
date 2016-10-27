@@ -126,7 +126,7 @@ class ModelEditorController
     onUnfocus(): void
     {
         this.three_model.transform_controls.detach();
-        this.three_model.orbit_controls.enabled = true;
+        this.three_model.orbit_controls.enable();
 
         this.setImage();
     }
