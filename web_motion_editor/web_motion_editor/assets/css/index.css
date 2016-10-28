@@ -282,7 +282,7 @@ html, body {
 }
 
     #scrollable_container::-webkit-scrollbar {
-        height: 10px;
+        height: 12px;
     }
 
     #scrollable_container::-webkit-scrollbar-track {
@@ -291,8 +291,8 @@ html, body {
     }
 
     #scrollable_container::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
     }
 
 #frame_editor {
