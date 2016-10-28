@@ -63,6 +63,7 @@ class ThreeModel
         this.orbit_controls.zoomSpeed = 0.3;
         this.orbit_controls.minDistance = 10;
         this.orbit_controls.maxDistance = 2000;
+        this.orbit_controls.enable();
 
         this.transform_controls = new THREE.TransformControls(this.camera, this.renderer.domElement);
         this.transform_controls.setSpace("local");
@@ -140,14 +141,14 @@ class ThreeModel
                 if (axis === intersections[0].object.parent)
                 {
                     this.transform_controls.attach(axis);
-                    this.orbit_controls.enabled = false;
+                    this.orbit_controls.disable();
                     result = true;
 
                     return false;
                 }
                 else
                 {
-                    this.orbit_controls.enabled = true;
+                    this.orbit_controls.enable();
                 }
             });
         }

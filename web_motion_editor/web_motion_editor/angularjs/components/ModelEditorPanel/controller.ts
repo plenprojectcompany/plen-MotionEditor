@@ -46,6 +46,11 @@
 
                 break;
 
+            case 4:
+                this.$rootScope.$broadcast("3DModelReset");
+
+                break;
+
             default:
                 return;
         }

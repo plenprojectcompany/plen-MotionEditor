@@ -117,12 +117,12 @@ class AnimationHelper
 
         _.each(this.motion.codes, (code: CodeModel) =>
         {
-            if (code.func === "loop")
+            if (code.method === "loop")
             {
                 use_loop   = true;
-                loop_begin = code.args[0];
-                loop_end   = code.args[1];
-                loop_count = code.args[2];
+                loop_begin = code.arguments[0];
+                loop_end   = code.arguments[1];
+                loop_count = code.arguments[2];
 
 
                 if (loop_count === 255)
