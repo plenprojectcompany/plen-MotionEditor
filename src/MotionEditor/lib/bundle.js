@@ -5,6 +5,9 @@ angular.module(APP_NAME, [
     "ui.sortable",
     "ui.bootstrap"
 ]);
+angular.element(function () {
+    angular.bootstrap(document.body, [APP_NAME], { strictDi: true });
+});
 var DiffAngleViewerController = (function () {
     function DiffAngleViewerController(three_model) {
         this.three_model = three_model;

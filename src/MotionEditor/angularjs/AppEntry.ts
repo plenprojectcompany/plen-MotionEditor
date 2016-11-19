@@ -8,3 +8,9 @@ angular.module(APP_NAME, [
     "ui.sortable",
     "ui.bootstrap"
 ]);
+
+// @attention If you use Batarang, you should disable "strictDi" property.
+angular.element(() =>
+{
+    angular.bootstrap(document.body, [APP_NAME], { strictDi: true });
+});
