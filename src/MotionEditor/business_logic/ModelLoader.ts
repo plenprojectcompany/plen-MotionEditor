@@ -74,9 +74,9 @@
         return axis_map;
     }
 
-    loadJSON(): void
+    loadJSON(model_name: string = "plen2"): void
     {
-        this.$http.get("./assets/etc/plen2_3dmodel.min.json")
+        this.$http.get("./assets/etc/" + model_name + "_3dmodel.min.json")
             .success((data) =>
             {
                 var model_obj:any = data;

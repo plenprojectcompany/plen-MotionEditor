@@ -47,6 +47,51 @@ var DiffAngleViewerDirective = (function () {
 angular.module(APP_NAME).directive("diffAngleViewer", [
     DiffAngleViewerDirective.getDDO
 ]);
+var EditPropertiesButtonController = (function () {
+    function EditPropertiesButtonController($scope, $modal) {
+        var _this = this;
+        this.$modal = $modal;
+        this.disabled = false;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    EditPropertiesButtonController.prototype.onClick = function () {
+        var modal = this.$modal.open({
+            controller: EditPropertiesModalController,
+            controllerAs: "$ctrl",
+            templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
+            backdrop: 'static',
+            keyboard: false
+        });
+    };
+    EditPropertiesButtonController.$inject = [
+        "$scope",
+        "$modal"
+    ];
+    return EditPropertiesButtonController;
+})();
+var EditPropertiesButtonDirective = (function () {
+    function EditPropertiesButtonDirective() {
+    }
+    EditPropertiesButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: EditPropertiesButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
+            replace: true
+        };
+    };
+    return EditPropertiesButtonDirective;
+})();
+angular.module(APP_NAME).directive("editPropertiesButton", [
+    EditPropertiesButtonDirective.getDDO
+]);
 var EditPropertiesModalController = (function () {
     function EditPropertiesModalController($modalInstance, motion) {
         var _this = this;
@@ -118,51 +163,6 @@ var EditPropertiesModalController = (function () {
     ];
     return EditPropertiesModalController;
 })();
-var EditPropertiesButtonController = (function () {
-    function EditPropertiesButtonController($scope, $modal) {
-        var _this = this;
-        this.$modal = $modal;
-        this.disabled = false;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    EditPropertiesButtonController.prototype.onClick = function () {
-        var modal = this.$modal.open({
-            controller: EditPropertiesModalController,
-            controllerAs: "$ctrl",
-            templateUrl: "./angularjs/components/EditPropertiesModal/view.html",
-            backdrop: 'static',
-            keyboard: false
-        });
-    };
-    EditPropertiesButtonController.$inject = [
-        "$scope",
-        "$modal"
-    ];
-    return EditPropertiesButtonController;
-})();
-var EditPropertiesButtonDirective = (function () {
-    function EditPropertiesButtonDirective() {
-    }
-    EditPropertiesButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: EditPropertiesButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/EditPropertiesButton/view.html",
-            replace: true
-        };
-    };
-    return EditPropertiesButtonDirective;
-})();
-angular.module(APP_NAME).directive("editPropertiesButton", [
-    EditPropertiesButtonDirective.getDDO
-]);
 var FacebookButtonController = (function () {
     function FacebookButtonController($window) {
         this.$window = $window;
@@ -176,6 +176,24 @@ var FacebookButtonController = (function () {
     ];
     return FacebookButtonController;
 })();
+var FacebookButtonDirective = (function () {
+    function FacebookButtonDirective() {
+    }
+    FacebookButtonDirective.getDDO = function () {
+        return {
+            restrict: 'E',
+            controller: FacebookButtonController,
+            controllerAs: '$ctrl',
+            scope: {},
+            templateUrl: "./angularjs/components/FacebookButton/view.html",
+            replace: true
+        };
+    };
+    return FacebookButtonDirective;
+})();
+angular.module(APP_NAME).directive("facebookButton", [
+    FacebookButtonDirective.getDDO
+]);
 var CodeModel = (function () {
     function CodeModel(method, arguments) {
         this.method = method;
@@ -791,6 +809,23 @@ var FrameEditorController = (function () {
     ];
     return FrameEditorController;
 })();
+var FrameEditorDirective = (function () {
+    function FrameEditorDirective() {
+    }
+    FrameEditorDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: FrameEditorController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/FrameEditor/view.html"
+        };
+    };
+    return FrameEditorDirective;
+})();
+angular.module(APP_NAME).directive("frameEditor", [
+    FrameEditorDirective.getDDO
+]);
 var GoogleplusButtonController = (function () {
     function GoogleplusButtonController($window) {
         this.$window = $window;
@@ -802,121 +837,23 @@ var GoogleplusButtonController = (function () {
     GoogleplusButtonController.$inject = ["$window"];
     return GoogleplusButtonController;
 })();
-var PlayPauseButtonController = (function () {
-    function PlayPauseButtonController(plen_controll_server_service, $scope, $rootScope, motion) {
-        var _this = this;
-        this.plen_controll_server_service = plen_controll_server_service;
-        this.$rootScope = $rootScope;
-        this.motion = motion;
-        this.playing = false;
-        this.installing = false;
-        this.title = "Play a motion.";
-        $scope.$on("ComponentDisabled", function () {
-            _this.playing = true;
-            _this.title = "Pause a motion.";
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.playing = false;
-            _this.title = "Play a motion.";
-        });
-        $scope.$on("InstallFinished", function () {
-            _this.installing = false;
-        });
+var GoogleplusButtonDirective = (function () {
+    function GoogleplusButtonDirective() {
     }
-    PlayPauseButtonController.prototype.onClick = function () {
-        var _this = this;
-        if (this.playing === false) {
-            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-                var success_callback = function () {
-                    _this.plen_controll_server_service.play(_this.motion.slot, function () {
-                        _this.$rootScope.$broadcast("ComponentDisabled");
-                        _this.$rootScope.$broadcast("AnimationPlay");
-                        _this.plen_controll_server_service.play(_this.motion.slot);
-                    });
-                };
-                this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
-                this.plen_controll_server_service.install(JSON.parse(this.motion.saveJSON()), success_callback);
-                this.installing = true;
-                return;
-            }
-            this.$rootScope.$broadcast("ComponentDisabled");
-            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
-            this.$rootScope.$broadcast("AnimationPlay");
-        }
-        else if (!this.installing) {
-            this.$rootScope.$broadcast("AnimationStop");
-            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
-                this.plen_controll_server_service.stop();
-            }
-        }
-    };
-    PlayPauseButtonController.$inject = [
-        "PLENControlServerService",
-        "$scope",
-        "$rootScope",
-        "SharedMotionService"
-    ];
-    return PlayPauseButtonController;
-})();
-var ModelEditorPanelController = (function () {
-    function ModelEditorPanelController($scope, $rootScope, three_model) {
-        var _this = this;
-        this.$rootScope = $rootScope;
-        this.disabled = false;
-        this._three_model = three_model;
-        $scope.$on("ComponentDisabled", function () {
-            _this.disabled = true;
-        });
-        $scope.$on("ComponentEnabled", function () {
-            _this.disabled = false;
-        });
-    }
-    ModelEditorPanelController.prototype.onClick = function (id) {
-        switch (id) {
-            case 0:
-                this._three_model.reverse3DModel();
-                break;
-            case 1:
-                this._three_model.copyRightToLeft();
-                break;
-            case 2:
-                this._three_model.copyLeftToRight();
-                break;
-            case 3:
-                this._three_model.orbit_controls.reset();
-                break;
-            case 4:
-                this.$rootScope.$broadcast("3DModelReset");
-                break;
-            default:
-                return;
-        }
-        this.$rootScope.$broadcast("RefreshThumbnail");
-    };
-    ModelEditorPanelController.$inject = [
-        "$scope",
-        "$rootScope",
-        "SharedThreeService"
-    ];
-    return ModelEditorPanelController;
-})();
-var ModelEditorPanelDirective = (function () {
-    function ModelEditorPanelDirective() {
-    }
-    ModelEditorPanelDirective.getDDO = function () {
+    GoogleplusButtonDirective.getDDO = function () {
         return {
             restrict: "E",
-            controller: ModelEditorPanelController,
+            controller: GoogleplusButtonController,
             controllerAs: "$ctrl",
             scope: {},
-            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
+            templateUrl: "./angularjs/components/GoogleplusButton/view.html",
             replace: true
         };
     };
-    return ModelEditorPanelDirective;
+    return GoogleplusButtonDirective;
 })();
-angular.module(APP_NAME).directive("modelEditorPanel", [
-    ModelEditorPanelDirective.getDDO
+angular.module(APP_NAME).directive("googleplusButton", [
+    GoogleplusButtonDirective.getDDO
 ]);
 var ModelEditorController = (function () {
     function ModelEditorController($scope, model_loader, three_model, motion, image_store_service) {
@@ -1029,6 +966,198 @@ var ModelEditorController = (function () {
     ];
     return ModelEditorController;
 })();
+var ModelLoader = (function () {
+    function ModelLoader($rootScope, $http) {
+        this.$rootScope = $rootScope;
+        this.$http = $http;
+        this.home_quaternions = [];
+        this.rotation_axes = [];
+        this.not_axes = [];
+    }
+    ModelLoader.prototype.addRotationAxis = function (object) {
+        var _this = this;
+        if (/roll$/.test(object.name)) {
+            this.rotation_axes.push(object);
+            this.home_quaternions.push(object.quaternion.clone());
+        }
+        else if (/pitch$/.test(object.name)) {
+            this.rotation_axes.push(object);
+            this.home_quaternions.push(object.quaternion.clone());
+        }
+        else if (/yaw$/.test(object.name)) {
+            this.rotation_axes.push(object);
+            this.home_quaternions.push(object.quaternion.clone());
+        }
+        else {
+            this.not_axes.push(object);
+        }
+        if (object.children.length > 0) {
+            _.each(object.children, function (child) {
+                _this.addRotationAxis(child);
+            });
+        }
+    };
+    ModelLoader.prototype.addObject = function (object) {
+        this.scene.add(object);
+        this.addRotationAxis(object);
+    };
+    ModelLoader.prototype.setScene = function (scene) {
+        this.scene.uuid = scene.uuid;
+        this.scene.name = scene.name;
+        while (scene.children.length > 0) {
+            this.addObject(scene.children[0]);
+        }
+    };
+    ModelLoader.prototype.getAxisMap = function () {
+        var axis_map = {};
+        _.each(this.rotation_axes, function (rotation_axis, index) {
+            axis_map[rotation_axis.name] = index;
+        });
+        return axis_map;
+    };
+    ModelLoader.prototype.loadJSON = function (model_name) {
+        var _this = this;
+        if (model_name === void 0) { model_name = "plen2"; }
+        this.$http.get("./assets/etc/" + model_name + "_3dmodel.min.json").success(function (data) {
+            var model_obj = data;
+            if (model_obj.metadata.type.toLowerCase() === "object") {
+                var loader = new THREE.ObjectLoader();
+                var result = loader.parse(model_obj);
+                if (result instanceof THREE.Scene) {
+                    _this.setScene(result);
+                }
+                else {
+                    _this.addObject(result);
+                }
+                _this.$rootScope.$broadcast("3DModelLoaded");
+            }
+        }).error(function () {
+            alert("Loading a 3D model failed. (Please refresh this page.)");
+        });
+    };
+    return ModelLoader;
+})();
+angular.module(APP_NAME).service("ModelLoaderService", [
+    "$rootScope",
+    "$http",
+    ModelLoader
+]);
+var ModelEditorDirective = (function () {
+    function ModelEditorDirective() {
+    }
+    ModelEditorDirective.getDDO = function ($rootScope, $window, $location, model_loader) {
+        return {
+            restrict: 'E',
+            controller: ModelEditorController,
+            controllerAs: '$model_editor',
+            replace: true,
+            templateUrl: './angularjs/components/ModelEditor/view.html',
+            link: {
+                pre: function ($scope) {
+                    $scope.$model_editor.layout = {
+                        width: function () {
+                            return $window.innerWidth - ModelEditorDirective.WIDTH_OFFSET;
+                        },
+                        height: function () {
+                            return $window.innerHeight - ModelEditorDirective.HEIGHT_OFFSET;
+                        },
+                        resizeFook: function () {
+                            $scope.$model_editor.three_model.resize();
+                        }
+                    };
+                    $scope.$model_editor.three_model.init($('#canvas_wrapper'), $scope.$model_editor.layout);
+                    $scope.$model_editor.three_model.animate();
+                    $('#canvas_wrapper canvas').on('mousedown touchstart', function (event) {
+                        $scope.$model_editor.onFocus(event);
+                    });
+                    $('#canvas_wrapper canvas').on('mouseup mouseout touchend touchcancel touchleave', function () {
+                        $scope.$model_editor.onUnfocus();
+                        $scope.$apply();
+                    });
+                    model_loader.scene = $scope.$model_editor.three_model.scene;
+                    var model_name = $location.search()['model'];
+                    console.log(model_name);
+                    if (/^plen2$/.test(model_name) || /^plen2-mini$/.test(model_name)) {
+                        model_loader.loadJSON(model_name);
+                    }
+                    else {
+                        model_loader.loadJSON();
+                    }
+                }
+            }
+        };
+    };
+    ModelEditorDirective.WIDTH_OFFSET = 220 + 45;
+    ModelEditorDirective.HEIGHT_OFFSET = 186 + 40;
+    return ModelEditorDirective;
+})();
+angular.module(APP_NAME).directive('modelEditor', [
+    '$rootScope',
+    '$window',
+    '$location',
+    'ModelLoaderService',
+    ModelEditorDirective.getDDO
+]);
+var ModelEditorPanelController = (function () {
+    function ModelEditorPanelController($scope, $rootScope, three_model) {
+        var _this = this;
+        this.$rootScope = $rootScope;
+        this.disabled = false;
+        this._three_model = three_model;
+        $scope.$on("ComponentDisabled", function () {
+            _this.disabled = true;
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.disabled = false;
+        });
+    }
+    ModelEditorPanelController.prototype.onClick = function (id) {
+        switch (id) {
+            case 0:
+                this._three_model.reverse3DModel();
+                break;
+            case 1:
+                this._three_model.copyRightToLeft();
+                break;
+            case 2:
+                this._three_model.copyLeftToRight();
+                break;
+            case 3:
+                this._three_model.orbit_controls.reset();
+                break;
+            case 4:
+                this.$rootScope.$broadcast("3DModelReset");
+                break;
+            default:
+                return;
+        }
+        this.$rootScope.$broadcast("RefreshThumbnail");
+    };
+    ModelEditorPanelController.$inject = [
+        "$scope",
+        "$rootScope",
+        "SharedThreeService"
+    ];
+    return ModelEditorPanelController;
+})();
+var ModelEditorPanelDirective = (function () {
+    function ModelEditorPanelDirective() {
+    }
+    ModelEditorPanelDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: ModelEditorPanelController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/ModelEditorPanel/view.html",
+            replace: true
+        };
+    };
+    return ModelEditorPanelDirective;
+})();
+angular.module(APP_NAME).directive("modelEditorPanel", [
+    ModelEditorPanelDirective.getDDO
+]);
 var NewButtonController = (function () {
     function NewButtonController($rootScope, $scope, $window, motion) {
         var _this = this;
@@ -1058,6 +1187,24 @@ var NewButtonController = (function () {
     ];
     return NewButtonController;
 })();
+var NewButtonDirective = (function () {
+    function NewButtonDirective() {
+    }
+    NewButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: NewButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/NewButton/view.html",
+            replace: true
+        };
+    };
+    return NewButtonDirective;
+})();
+angular.module(APP_NAME).directive("newButton", [
+    NewButtonDirective.getDDO
+]);
 var NextButtonController = (function () {
     function NextButtonController($rootScope, motion_model, $scope) {
         var _this = this;
@@ -1083,6 +1230,24 @@ var NextButtonController = (function () {
     ];
     return NextButtonController;
 })();
+var NextButtonDirective = (function () {
+    function NextButtonDirective() {
+    }
+    NextButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: NextButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/NextButton/view.html",
+            replace: true
+        };
+    };
+    return NextButtonDirective;
+})();
+angular.module(APP_NAME).directive("nextButton", [
+    NextButtonDirective.getDDO
+]);
 var OpenButtonController = (function () {
     function OpenButtonController($scope, motion) {
         var _this = this;
@@ -1101,6 +1266,109 @@ var OpenButtonController = (function () {
     ];
     return OpenButtonController;
 })();
+var OpenButtonDirective = (function () {
+    function OpenButtonDirective() {
+    }
+    OpenButtonDirective.getDDO = function (model_loader) {
+        return {
+            restrict: "E",
+            controller: OpenButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/OpenButton/view.html",
+            replace: true,
+            link: function ($scope, $element) {
+                $($element[0].children[1]).on("change", function (event) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        $scope.$ctrl.motion.loadJSON(event.target.result, model_loader.getAxisMap());
+                        $scope.$apply();
+                    };
+                    reader.readAsText(event.target.files[0]);
+                });
+            }
+        };
+    };
+    return OpenButtonDirective;
+})();
+angular.module(APP_NAME).directive("openButton", [
+    "ModelLoaderService",
+    OpenButtonDirective.getDDO
+]);
+var PlayPauseButtonController = (function () {
+    function PlayPauseButtonController(plen_controll_server_service, $scope, $rootScope, motion) {
+        var _this = this;
+        this.plen_controll_server_service = plen_controll_server_service;
+        this.$rootScope = $rootScope;
+        this.motion = motion;
+        this.playing = false;
+        this.installing = false;
+        this.title = "Play a motion.";
+        $scope.$on("ComponentDisabled", function () {
+            _this.playing = true;
+            _this.title = "Pause a motion.";
+        });
+        $scope.$on("ComponentEnabled", function () {
+            _this.playing = false;
+            _this.title = "Play a motion.";
+        });
+        $scope.$on("InstallFinished", function () {
+            _this.installing = false;
+        });
+    }
+    PlayPauseButtonController.prototype.onClick = function () {
+        var _this = this;
+        if (this.playing === false) {
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                var success_callback = function () {
+                    _this.plen_controll_server_service.play(_this.motion.slot, function () {
+                        _this.$rootScope.$broadcast("ComponentDisabled");
+                        _this.$rootScope.$broadcast("AnimationPlay");
+                        _this.plen_controll_server_service.play(_this.motion.slot);
+                    });
+                };
+                this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
+                this.plen_controll_server_service.install(JSON.parse(this.motion.saveJSON()), success_callback);
+                this.installing = true;
+                return;
+            }
+            this.$rootScope.$broadcast("ComponentDisabled");
+            this.$rootScope.$broadcast("FrameSave", this.motion.getSelectedFrameIndex());
+            this.$rootScope.$broadcast("AnimationPlay");
+        }
+        else if (!this.installing) {
+            this.$rootScope.$broadcast("AnimationStop");
+            if (this.plen_controll_server_service.getStatus() === 1 /* CONNECTED */) {
+                this.plen_controll_server_service.stop();
+            }
+        }
+    };
+    PlayPauseButtonController.$inject = [
+        "PLENControlServerService",
+        "$scope",
+        "$rootScope",
+        "SharedMotionService"
+    ];
+    return PlayPauseButtonController;
+})();
+var PlayPauseButtonDirective = (function () {
+    function PlayPauseButtonDirective() {
+    }
+    PlayPauseButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: PlayPauseButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
+            replace: true
+        };
+    };
+    return PlayPauseButtonDirective;
+})();
+angular.module(APP_NAME).directive("playPauseButton", [
+    PlayPauseButtonDirective.getDDO
+]);
 var PLENControlServerModalController = (function () {
     function PLENControlServerModalController($modalInstance) {
         this.$modalInstance = $modalInstance;
@@ -1148,6 +1416,24 @@ var PreviousButtonController = (function () {
     ];
     return PreviousButtonController;
 })();
+var PreviousButtonDirective = (function () {
+    function PreviousButtonDirective() {
+    }
+    PreviousButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: PreviousButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/PreviousButton/view.html",
+            replace: true
+        };
+    };
+    return PreviousButtonDirective;
+})();
+angular.module(APP_NAME).directive("previousButton", [
+    PreviousButtonDirective.getDDO
+]);
 var ResetButtonController = (function () {
     function ResetButtonController($scope, $rootScope) {
         var _this = this;
@@ -1169,6 +1455,24 @@ var ResetButtonController = (function () {
     ];
     return ResetButtonController;
 })();
+var ResetButtonDirective = (function () {
+    function ResetButtonDirective() {
+    }
+    ResetButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: ResetButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/ResetButton/view.html",
+            replace: true
+        };
+    };
+    return ResetButtonDirective;
+})();
+angular.module(APP_NAME).directive("resetButton", [
+    ResetButtonDirective.getDDO
+]);
 var SaveButtonController = (function () {
     function SaveButtonController($rootScope, $scope, $element, motion) {
         var _this = this;
@@ -1214,6 +1518,57 @@ var SaveButtonController = (function () {
     ];
     return SaveButtonController;
 })();
+var SaveButtonDirective = (function () {
+    function SaveButtonDirective() {
+    }
+    SaveButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: SaveButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/SaveButton/view.html",
+            replace: true
+        };
+    };
+    return SaveButtonDirective;
+})();
+angular.module(APP_NAME).directive("saveButton", [
+    SaveButtonDirective.getDDO
+]);
+var ScrollableContainerDirective = (function () {
+    function ScrollableContainerDirective() {
+    }
+    ScrollableContainerDirective.getDDO = function ($window) {
+        return {
+            restrict: "A",
+            controller: function () {
+            },
+            controllerAs: "$scrollable_container",
+            template: "<div ng-transclude/>",
+            transclude: true,
+            link: function ($scope) {
+                $scope.$scrollable_container.layout = {
+                    width: function () {
+                        return $window.innerWidth - ScrollableContainerDirective.WIDTH_OFFSET;
+                    },
+                    height: function () {
+                        return ScrollableContainerDirective.HEIGHT;
+                    },
+                    resizeFook: function () {
+                    }
+                };
+            }
+        };
+    };
+    ScrollableContainerDirective.WIDTH_OFFSET = 220;
+    ScrollableContainerDirective.HEIGHT = 158;
+    return ScrollableContainerDirective;
+})();
+angular.module(APP_NAME).directive("scrollableContainer", [
+    "$window",
+    ScrollableContainerDirective.getDDO
+]);
 var ShoppingcartButtonDirective = (function () {
     function ShoppingcartButtonDirective() {
     }
@@ -1274,6 +1629,24 @@ var SyncButtonController = (function () {
     ];
     return SyncButtonController;
 })();
+var SyncButtonDirective = (function () {
+    function SyncButtonDirective() {
+    }
+    SyncButtonDirective.getDDO = function () {
+        return {
+            restrict: "E",
+            controller: SyncButtonController,
+            controllerAs: "$ctrl",
+            scope: {},
+            templateUrl: "./angularjs/components/SyncButton/view.html",
+            replace: true
+        };
+    };
+    return SyncButtonDirective;
+})();
+angular.module(APP_NAME).directive("syncButton", [
+    SyncButtonDirective.getDDO
+]);
 var TwitterButtonController = (function () {
     function TwitterButtonController($window) {
         this.$window = $window;
@@ -1285,264 +1658,23 @@ var TwitterButtonController = (function () {
     TwitterButtonController.$inject = ['$window'];
     return TwitterButtonController;
 })();
-var FacebookButtonDirective = (function () {
-    function FacebookButtonDirective() {
+var TwitterButtonDirective = (function () {
+    function TwitterButtonDirective() {
     }
-    FacebookButtonDirective.getDDO = function () {
+    TwitterButtonDirective.getDDO = function () {
         return {
             restrict: 'E',
-            controller: FacebookButtonController,
+            controller: TwitterButtonController,
             controllerAs: '$ctrl',
             scope: {},
-            templateUrl: "./angularjs/components/FacebookButton/view.html",
+            templateUrl: "./angularjs/components/TwitterButton/view.html",
             replace: true
         };
     };
-    return FacebookButtonDirective;
+    return TwitterButtonDirective;
 })();
-angular.module(APP_NAME).directive("facebookButton", [
-    FacebookButtonDirective.getDDO
-]);
-var FrameEditorDirective = (function () {
-    function FrameEditorDirective() {
-    }
-    FrameEditorDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: FrameEditorController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/FrameEditor/view.html"
-        };
-    };
-    return FrameEditorDirective;
-})();
-angular.module(APP_NAME).directive("frameEditor", [
-    FrameEditorDirective.getDDO
-]);
-var GoogleplusButtonDirective = (function () {
-    function GoogleplusButtonDirective() {
-    }
-    GoogleplusButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: GoogleplusButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/GoogleplusButton/view.html",
-            replace: true
-        };
-    };
-    return GoogleplusButtonDirective;
-})();
-angular.module(APP_NAME).directive("googleplusButton", [
-    GoogleplusButtonDirective.getDDO
-]);
-var PlayPauseButtonDirective = (function () {
-    function PlayPauseButtonDirective() {
-    }
-    PlayPauseButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: PlayPauseButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/PlayPauseButton/view.html",
-            replace: true
-        };
-    };
-    return PlayPauseButtonDirective;
-})();
-angular.module(APP_NAME).directive("playPauseButton", [
-    PlayPauseButtonDirective.getDDO
-]);
-var ModelLoader = (function () {
-    function ModelLoader($rootScope, $http) {
-        this.$rootScope = $rootScope;
-        this.$http = $http;
-        this.home_quaternions = [];
-        this.rotation_axes = [];
-        this.not_axes = [];
-    }
-    ModelLoader.prototype.addRotationAxis = function (object) {
-        var _this = this;
-        if (/roll$/.test(object.name)) {
-            this.rotation_axes.push(object);
-            this.home_quaternions.push(object.quaternion.clone());
-        }
-        else if (/pitch$/.test(object.name)) {
-            this.rotation_axes.push(object);
-            this.home_quaternions.push(object.quaternion.clone());
-        }
-        else if (/yaw$/.test(object.name)) {
-            this.rotation_axes.push(object);
-            this.home_quaternions.push(object.quaternion.clone());
-        }
-        else {
-            this.not_axes.push(object);
-        }
-        if (object.children.length > 0) {
-            _.each(object.children, function (child) {
-                _this.addRotationAxis(child);
-            });
-        }
-    };
-    ModelLoader.prototype.addObject = function (object) {
-        this.scene.add(object);
-        this.addRotationAxis(object);
-    };
-    ModelLoader.prototype.setScene = function (scene) {
-        this.scene.uuid = scene.uuid;
-        this.scene.name = scene.name;
-        while (scene.children.length > 0) {
-            this.addObject(scene.children[0]);
-        }
-    };
-    ModelLoader.prototype.getAxisMap = function () {
-        var axis_map = {};
-        _.each(this.rotation_axes, function (rotation_axis, index) {
-            axis_map[rotation_axis.name] = index;
-        });
-        return axis_map;
-    };
-    ModelLoader.prototype.loadJSON = function () {
-        var _this = this;
-        this.$http.get("./assets/etc/plen2_3dmodel.min.json").success(function (data) {
-            var model_obj = data;
-            if (model_obj.metadata.type.toLowerCase() === "object") {
-                var loader = new THREE.ObjectLoader();
-                var result = loader.parse(model_obj);
-                if (result instanceof THREE.Scene) {
-                    _this.setScene(result);
-                }
-                else {
-                    _this.addObject(result);
-                }
-                _this.$rootScope.$broadcast("3DModelLoaded");
-            }
-        }).error(function () {
-            alert("Loading a 3D model failed. (Please refresh this page.)");
-        });
-    };
-    return ModelLoader;
-})();
-angular.module(APP_NAME).service("ModelLoaderService", [
-    "$rootScope",
-    "$http",
-    ModelLoader
-]);
-var ModelEditorDirective = (function () {
-    function ModelEditorDirective() {
-    }
-    ModelEditorDirective.getDDO = function ($rootScope, $window, model_loader) {
-        return {
-            restrict: 'E',
-            controller: ModelEditorController,
-            controllerAs: '$model_editor',
-            replace: true,
-            templateUrl: './angularjs/components/ModelEditor/view.html',
-            link: {
-                pre: function ($scope) {
-                    $scope.$model_editor.layout = {
-                        width: function () {
-                            return $window.innerWidth - ModelEditorDirective.WIDTH_OFFSET;
-                        },
-                        height: function () {
-                            return $window.innerHeight - ModelEditorDirective.HEIGHT_OFFSET;
-                        },
-                        resizeFook: function () {
-                            $scope.$model_editor.three_model.resize();
-                        }
-                    };
-                    $scope.$model_editor.three_model.init($('#canvas_wrapper'), $scope.$model_editor.layout);
-                    $scope.$model_editor.three_model.animate();
-                    $('#canvas_wrapper canvas').on('mousedown touchstart', function (event) {
-                        $scope.$model_editor.onFocus(event);
-                    });
-                    $('#canvas_wrapper canvas').on('mouseup mouseout touchend touchcancel touchleave', function () {
-                        $scope.$model_editor.onUnfocus();
-                        $scope.$apply();
-                    });
-                    model_loader.scene = $scope.$model_editor.three_model.scene;
-                    model_loader.loadJSON();
-                }
-            }
-        };
-    };
-    ModelEditorDirective.WIDTH_OFFSET = 220 + 45;
-    ModelEditorDirective.HEIGHT_OFFSET = 186 + 40;
-    return ModelEditorDirective;
-})();
-angular.module(APP_NAME).directive('modelEditor', [
-    '$rootScope',
-    '$window',
-    'ModelLoaderService',
-    ModelEditorDirective.getDDO
-]);
-var NewButtonDirective = (function () {
-    function NewButtonDirective() {
-    }
-    NewButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: NewButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/NewButton/view.html",
-            replace: true
-        };
-    };
-    return NewButtonDirective;
-})();
-angular.module(APP_NAME).directive("newButton", [
-    NewButtonDirective.getDDO
-]);
-var NextButtonDirective = (function () {
-    function NextButtonDirective() {
-    }
-    NextButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: NextButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/NextButton/view.html",
-            replace: true
-        };
-    };
-    return NextButtonDirective;
-})();
-angular.module(APP_NAME).directive("nextButton", [
-    NextButtonDirective.getDDO
-]);
-var OpenButtonDirective = (function () {
-    function OpenButtonDirective() {
-    }
-    OpenButtonDirective.getDDO = function (model_loader) {
-        return {
-            restrict: "E",
-            controller: OpenButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/OpenButton/view.html",
-            replace: true,
-            link: function ($scope, $element) {
-                $($element[0].children[1]).on("change", function (event) {
-                    var reader = new FileReader();
-                    reader.onload = function (event) {
-                        $scope.$ctrl.motion.loadJSON(event.target.result, model_loader.getAxisMap());
-                        $scope.$apply();
-                    };
-                    reader.readAsText(event.target.files[0]);
-                });
-            }
-        };
-    };
-    return OpenButtonDirective;
-})();
-angular.module(APP_NAME).directive("openButton", [
-    "ModelLoaderService",
-    OpenButtonDirective.getDDO
+angular.module(APP_NAME).directive("twitterButton", [
+    TwitterButtonDirective.getDDO
 ]);
 var AutoResizeDirective = (function () {
     function AutoResizeDirective() {
@@ -1580,129 +1712,6 @@ angular.module(APP_NAME).directive("autoResize", [
     "$window",
     "$timeout",
     AutoResizeDirective.getDDO
-]);
-var PreviousButtonDirective = (function () {
-    function PreviousButtonDirective() {
-    }
-    PreviousButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: PreviousButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/PreviousButton/view.html",
-            replace: true
-        };
-    };
-    return PreviousButtonDirective;
-})();
-angular.module(APP_NAME).directive("previousButton", [
-    PreviousButtonDirective.getDDO
-]);
-var ResetButtonDirective = (function () {
-    function ResetButtonDirective() {
-    }
-    ResetButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: ResetButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/ResetButton/view.html",
-            replace: true
-        };
-    };
-    return ResetButtonDirective;
-})();
-angular.module(APP_NAME).directive("resetButton", [
-    ResetButtonDirective.getDDO
-]);
-var SaveButtonDirective = (function () {
-    function SaveButtonDirective() {
-    }
-    SaveButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: SaveButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/SaveButton/view.html",
-            replace: true
-        };
-    };
-    return SaveButtonDirective;
-})();
-angular.module(APP_NAME).directive("saveButton", [
-    SaveButtonDirective.getDDO
-]);
-var ScrollableContainerDirective = (function () {
-    function ScrollableContainerDirective() {
-    }
-    ScrollableContainerDirective.getDDO = function ($window) {
-        return {
-            restrict: "A",
-            controller: function () {
-            },
-            controllerAs: "$scrollable_container",
-            template: "<div ng-transclude/>",
-            transclude: true,
-            link: function ($scope) {
-                $scope.$scrollable_container.layout = {
-                    width: function () {
-                        return $window.innerWidth - ScrollableContainerDirective.WIDTH_OFFSET;
-                    },
-                    height: function () {
-                        return ScrollableContainerDirective.HEIGHT;
-                    },
-                    resizeFook: function () {
-                    }
-                };
-            }
-        };
-    };
-    ScrollableContainerDirective.WIDTH_OFFSET = 220;
-    ScrollableContainerDirective.HEIGHT = 158;
-    return ScrollableContainerDirective;
-})();
-angular.module(APP_NAME).directive("scrollableContainer", [
-    "$window",
-    ScrollableContainerDirective.getDDO
-]);
-var SyncButtonDirective = (function () {
-    function SyncButtonDirective() {
-    }
-    SyncButtonDirective.getDDO = function () {
-        return {
-            restrict: "E",
-            controller: SyncButtonController,
-            controllerAs: "$ctrl",
-            scope: {},
-            templateUrl: "./angularjs/components/SyncButton/view.html",
-            replace: true
-        };
-    };
-    return SyncButtonDirective;
-})();
-angular.module(APP_NAME).directive("syncButton", [
-    SyncButtonDirective.getDDO
-]);
-var TwitterButtonDirective = (function () {
-    function TwitterButtonDirective() {
-    }
-    TwitterButtonDirective.getDDO = function () {
-        return {
-            restrict: 'E',
-            controller: TwitterButtonController,
-            controllerAs: '$ctrl',
-            scope: {},
-            templateUrl: "./angularjs/components/TwitterButton/view.html",
-            replace: true
-        };
-    };
-    return TwitterButtonDirective;
-})();
-angular.module(APP_NAME).directive("twitterButton", [
-    TwitterButtonDirective.getDDO
 ]);
 var SERVER_STATE;
 (function (SERVER_STATE) {

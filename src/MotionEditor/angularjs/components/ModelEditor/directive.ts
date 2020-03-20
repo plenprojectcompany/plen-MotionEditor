@@ -9,6 +9,7 @@ class ModelEditorDirective
     static getDDO(
         $rootScope: ng.IRootScopeService,
         $window: ng.IWindowService,
+        $location: ng.ILocationService,
         model_loader: ModelLoader
     )
     {
@@ -54,7 +55,19 @@ class ModelEditorDirective
                     });
 
                     model_loader.scene = $scope.$model_editor.three_model.scene;
-                    model_loader.loadJSON();
+
+                    var model_name = $location.search()['model'];
+
+                    console.log(model_name);
+
+                    if (/^plen2$/.test(model_name) || /^plen2-mini$/.test(model_name))
+                    {
+                        model_loader.loadJSON(model_name);
+                    }
+                    else
+                    {
+                        model_loader.loadJSON();
+                    }
                 }
             }
         };
@@ -64,6 +77,7 @@ class ModelEditorDirective
 angular.module(APP_NAME).directive('modelEditor', [
     '$rootScope',
     '$window',
+    '$location',
     'ModelLoaderService',
     ModelEditorDirective.getDDO
 ]);
